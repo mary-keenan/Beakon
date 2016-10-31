@@ -19,13 +19,13 @@ Beakon is an app that helps connect people to small scale crowd-sourced social m
 - Suggested followers based on
  - Nearby movements
  - Ideological preferences (entered on account creation, i.e. democrat or republican)
+ - Ability to connect movement to social media (i.e. facebook posting, creating snapchat ads, hashtags, etc.)
 
 ### Stretch Goal
 - Login via facebook
 - Suggested followers/movements based on related movements
 - Well formatted and embedded display of resources (including videos)
 - Facebook notifications about movement updates
-- Ability to connect movement to social media (i.e. facebook posting, creating snapchat ads, hashtags, etc.)
 
 ## Required Resources 
 - Firebase
@@ -51,6 +51,12 @@ Beakon is an app that helps connect people to small scale crowd-sourced social m
 
 ### Cecelia
  - Design goals: I want to dive deeper into user design and mobile-interaction because I’m very interested in how mobile phones and social media can impact social movements through well-designed campaigns. This project is an app that could help connect people to social movements, so even if it isn’t going to change the world, it will offer a chance to think about how to design for that.
+  -Do user testing and get user feedback on the interactions. Write up this feedback and how we plan to change as a result.
 - Basic coding goals: organized well-written code, polished final project, not over-scoped, good git practices.
+ - Good git practices - nice commit messages, clean branches, master is always perfect.
+ - Clean code - Finish reading Clean Code and synthesize what I've learned.
+- Integrating app interaction with social media 
+ - Integrate roughly with at least one social media type by the mid-project checkin.
+ - Stretch - integrate with another social media type by the end of the project..
 - Team goals: Have meetings at reasonable hours, well organized task management (github task management), snacks (chocolate), meetings in EH.
 
