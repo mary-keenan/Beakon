@@ -41,14 +41,22 @@ Beakon is an app that helps connect people to small scale crowd-sourced social m
 
 
 ### Mary
-- Learn better git practices (fewer git crises): I’m going to make sure I know what I’m doing and why before typing random things from the internet into the command line. I’m going to use branches more and stop doing hard resets...
+- Learn better git practices (fewer git crises): I’m going to make sure I know what I’m doing and why before typing random things from the internet into the command line. I’m going to use branches more and stop doing hard resets
+* * Can measure this by looking at how clean my git history is.
 - Get better at handling large amounts of data: I try to avoid touching SQL and databases but I guess I should just suck it up and learn it. I’m going to make sure I’m involved with whatever database management stuff we use.
-- Be more efficient: I’m going to work next to other team members as often as possible because I tend to dig myself in a deeper and deeper hole the longer I work on a problem and working alongside team members will help me learn to talk my problems through instead of just consulting Mr. Google. Most of my problems are just dumb oversights.
+* * If I’ve worked on the Firebase stuff, I’ve probably succeeded
+- Figure out how to use threading: I want to incorporate threading into our app (background refreshing?). 
+* * I’ll do threading stuff for our app.
+
 
 ### Mafalda
-- I hope to improve my git practices. This will involve using more branching and having better commit messages. I will also try to do better pull requests and actually go over the code before accepting a pull request. This project will have more team members than previous projects so have better git practices will matter more.  Also team members will rely more on commit messages to know what is going on for other parts of the team.  
-- I hope to better plan my time for the project. In the last project I pushed too much work until the end. Because I was dealing with storage and with interactions between activities, my timeline made it harder for the other team members to do their work. I will try to start earlier, and ask for help sooner from my teammates. 
-- I would like to have a visually appealing projects. All of the previous layouts I did on xml have been quite hideous and I want the user to actually like the look of the app. For this project I want to work on the look of the fragments from the beginning and not skimp on this one because of time. Because this is a long projects, there can be more time placed in the implementation of the designs from the wireframes. 
+- I hope to improve my git practices. 
+* * I will use descriptive commit messages, and work off of branches. I will also review every pull request before accepting them. I will also commit more frequently than my previous projects. This project will have more team members than previous projects so have better git practices will matter more.  Also team members will rely more on commit messages to know what is going on for other parts of the team.  
+- I wish to learn more about design and create a more visually appealing project. 
+* * I will read through entirety of the material design pages from Android. I will write a summary of points that are pertinent to the app. I will then implement these designs into the layouts. All of the previous layouts I did on xml have been quite hideous and I want the user to actually like the look of the app. For this project I want to work on the look of the fragments from the beginning and not skimp on this one because of time. Because this is a long projects, there can be more time placed in the implementation of the designs from the wireframes. 
+- I want to learn how to embed videos in the app.
+* * For our app it would be useful to have videos to show what is going on. I want to learn how to display these videos. I will know if I reached this goal if there is a video in the final app. 
+
 
 ### Cecelia
  - Design goals: I want to dive deeper into user design and mobile-interaction because I’m very interested in how mobile phones and social media can impact social movements through well-designed campaigns. This project is an app that could help connect people to social movements, so even if it isn’t going to change the world, it will offer a chance to think about how to design for that.
