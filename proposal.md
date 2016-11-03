@@ -35,9 +35,9 @@ Beakon is an app that helps connect people to small scale crowd-sourced social m
 ## Individual Learning Goals
 
 ### Erica
--Git practices (issues and assigning people to them in this project)proper commit messages: with a 6 week long project, we will have a lot of commits and branching; lots of practice writing better commit messages.
--Learn to use Firebase. I had a lot of practice with SQL with the ToDoList, and Lab 1 and Lab 2. Be able to implement Firebase in an app.
--Better use of Location API. In Lab 2, locations didn’t work the very first time the code is run (have to run the app twice for locations to locate current location). This had to do with permissions and being able to run lines of code simultaneously. 
+- Git practices (issues and assigning people to them in this project)proper commit messages: with a 6 week long project, we will have a lot of commits and branching; lots of practice writing better commit messages.
+- Learn to use Firebase. I had a lot of practice with SQL with the ToDoList, and Lab 1 and Lab 2. Be able to implement Firebase in an app.
+- Better use of Location API. In Lab 2, locations didn’t work the very first time the code is run (have to run the app twice for locations to locate current location). This had to do with permissions and being able to run lines of code simultaneously. 
 
 
 ### Mary
