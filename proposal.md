@@ -44,7 +44,7 @@ Beakon is an app that helps connect people to small scale crowd-sourced social m
 - Learn better git practices (fewer git crises): I’m going to make sure I know what I’m doing and why before typing random things from the internet into the command line. I’m going to use branches more and stop doing hard resets
  - Can measure this by looking at how clean my git history is.
 - Get better at handling large amounts of data: I try to avoid touching SQL and databases but I guess I should just suck it up and learn it. I’m going to make sure I’m involved with whatever database management stuff we use.
- -If I’ve worked on the Firebase stuff, I’ve probably succeeded
+ - If I’ve worked on the Firebase stuff, I’ve probably succeeded
 - Figure out how to use threading: I want to incorporate threading into our app (background refreshing?). 
  - I’ll do threading stuff for our app.
 
