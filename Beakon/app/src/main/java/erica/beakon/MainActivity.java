@@ -16,11 +16,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fragmentManager = getSupportFragmentManager();
+
+        startFragment(new MyMovementsTab());
     }
 
     private void startFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
-//        fragmentTransaction.setCustomAnimations(R.animator.enter_from_left, R.animator.exit_to_right);
         fragmentTransaction.replace(R.id.fragment_holder, fragment, "");
         fragmentTransaction.commit();
     }
