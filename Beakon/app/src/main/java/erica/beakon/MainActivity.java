@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         handler.addUser(user);
         handler.addMovement(movement);
-        handler.getUser(1);
+//        handler.getUser(1);
 
 
 
@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
             }
         });
+
+        CardFragment cardFragment  = new CardFragment();
 
     }
 }

@@ -18,7 +18,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         pages = new ArrayList<Fragment>();
         pages.add(new MyMovementsTab());
-        pages.add(new AddMovementPage());
+        pages.add(new CardFragment());
+//        pages.add(new AddMovementPage());
     }
 
     @Override

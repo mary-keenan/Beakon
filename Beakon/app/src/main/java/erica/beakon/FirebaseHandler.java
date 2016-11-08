@@ -27,11 +27,11 @@ public class FirebaseHandler {
 
     }
 
-    public User getUser(long id){
-        User user = ref.child("Users").child(String.valueOf(id)).listener;
-        Log.d("***", user.toString());
-        return user;
-    }
+//    public User getUser(long id){
+//        User user = ref.child("Users").child(String.valueOf(id)).listener;
+//        Log.d("***", user.toString());
+//        return user;
+//    }
 //
 //    public DatabaseReference getMovementRef() {
 //
