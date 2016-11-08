@@ -28,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        User user = new User(2, "David", "david@email.com");
+        Movement movement = new Movement(2, "hillary","presidential election", "Vote", "tomorrow");
+
+        handler.addUser(user);
+        handler.addMovement(movement);
+        handler.getUser(1);
+
+
 
         fragmentManager = getSupportFragmentManager();
 
@@ -36,41 +44,29 @@ public class MainActivity extends AppCompatActivity {
 
         pagerAdapter = new
 
-                ViewPagerAdapter(getSupportFragmentManager()
+                ViewPagerAdapter(getSupportFragmentManager());
 
-        );
-
-        pager = (ViewPager)
-
-                findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.pager);
 
         pager.setAdapter(pagerAdapter);
 
         final Button myMovementsButton = (Button) findViewById(R.id.my_movements);
         final Button suggestedMovementsButton = (Button) findViewById(R.id.movements);
-        myMovementsButton.setOnClickListener(new View.OnClickListener()
-
-             {
-                 public void onClick(View v) {
-                     pager.setCurrentItem(0);
-                     myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-                     suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
-                 }
+        myMovementsButton.setOnClickListener(new View.OnClickListener() {
+             public void onClick(View v) {
+                 pager.setCurrentItem(0);
+                 myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                 suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
              }
+         });
 
-        );
-
-        suggestedMovementsButton.setOnClickListener(new View.OnClickListener()
-
-            {
-                public void onClick(View v) {
-                    pager.setCurrentItem(ViewPagerAdapter.NUM_PAGES - 1);
-                    suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-                    myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
-                }
+        suggestedMovementsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                pager.setCurrentItem(ViewPagerAdapter.NUM_PAGES - 1);
+                suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
             }
-
-        );
+        });
 
     }
 }

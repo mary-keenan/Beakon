@@ -17,18 +17,20 @@ public class FirebaseHandler {
         this.db = db;
     }
 
-    public void addUser(HashMap<String,Person> user) {
-        ref.child("bill").setValue(user);
+    public void addUser(User user) {
+        ref.child("Users").child(String.valueOf(user.getId())).setValue(user);
     }
 
-//    public void addMovement(Movement movement) {
-//
-//    }
-//
-    public DatabaseReference getUserRef(){
-        DatabaseReference userRef = ref.child("user").getRef();
-        Log.d("***", userRef.toString());
-        return userRef;
+    public void addMovement(Movement movement) {
+        ref.child("Movements").child(String.valueOf(movement.getId())).setValue(movement);
+
+
+    }
+
+    public User getUser(long id){
+        User user = ref.child("Users").child(String.valueOf(id)).listener;
+        Log.d("***", user.toString());
+        return user;
     }
 //
 //    public DatabaseReference getMovementRef() {
