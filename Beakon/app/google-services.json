@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "820173649495",
+    "firebase_url": "https://beakon-5fa96.firebaseio.com",
+    "project_id": "beakon-5fa96",
+    "storage_bucket": "beakon-5fa96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820173649495:android:919e88049d35b588",
+        "android_client_info": {
+          "package_name": "erica.beakon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820173649495-3sfgl5ct7f8f9j43j97dlmvhcfbih4al.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr8RxzSbpwpZlTKm3bUXe03wxDimXBaRo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
