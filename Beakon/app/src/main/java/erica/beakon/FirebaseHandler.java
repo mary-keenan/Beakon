@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 public class FirebaseHandler {
     FirebaseDatabase db;
     DatabaseReference ref;
@@ -15,8 +17,8 @@ public class FirebaseHandler {
         this.db = db;
     }
 
-    public void addUser(String user, String value) {
-        ref.child(user).setValue(value);
+    public void addUser(HashMap<String,Person> user) {
+        ref.child("bill").setValue(user);
     }
 
 //    public void addMovement(Movement movement) {
@@ -42,3 +44,4 @@ public class FirebaseHandler {
 //    }
 
 }
+
