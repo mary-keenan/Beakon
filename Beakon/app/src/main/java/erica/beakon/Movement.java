@@ -5,14 +5,14 @@ package erica.beakon;
  */
 public class Movement {
 
-    long id;
+    String id;
     private String name;
     private String description;
     private String steps;
     private String resources;
 
 
-    public Movement(long id, String name, String description, String steps, String resources){
+    public Movement(String id, String name, String description, String steps, String resources){
         this.id = id;
         this.name = name;
         this.description = description;
@@ -21,11 +21,11 @@ public class Movement {
 
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

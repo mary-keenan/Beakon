@@ -11,7 +11,6 @@ import android.widget.Button;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
@@ -28,12 +27,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User user = new User(2, "David", "david@email.com");
-        Movement movement = new Movement(2, "hillary","presidential election", "Vote", "tomorrow");
+        handler.addUser("David1", "david1@email.com");
+        handler.addMovement("hillary1", "election", "vote", "yesterday");
+//        handler.getData(1,);
 
-        handler.addUser(user);
-        handler.addMovement(movement);
-        handler.getUser(1);
+
+
 
 
 
