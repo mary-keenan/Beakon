@@ -55,6 +55,7 @@ public class FirebaseHandler {
         ref.child("UserMovements").child(umId).setValue(userMovement);
     }
 
+
     public void completeUserMovement(String umId) {
         ref.child("UserMovements").child(umId).child("completed").setValue(true);
     }
