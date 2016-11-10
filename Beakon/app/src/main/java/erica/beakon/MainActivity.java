@@ -5,17 +5,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReferenceFromUrl(databaseURL);
+
+    User currentUser;
 
     FirebaseHandler handler = new FirebaseHandler(database, ref);
 
@@ -27,15 +33,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        handler.addUser("David1", "david1@email.com");
-        handler.addMovement("hillary1", "election", "vote", "yesterday");
-//        handler.getData(1,);
+        handler.getData("1", new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                currentUser = dataSnapshot.child("Users").child("1").getValue(User.class);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                currentUser = null;
+                Log.d(TAG, databaseError.getMessage());
 
-//        handler.getUser(1);
-
-
-
+            }
+        });
 
         fragmentManager = getSupportFragmentManager();
 

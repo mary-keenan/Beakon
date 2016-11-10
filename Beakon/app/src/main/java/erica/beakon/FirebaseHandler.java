@@ -32,10 +32,16 @@ public class FirebaseHandler {
         ref.child("Movements").child(movementId).setValue(movement);
     }
 
-    public void getData(final long id, ValueEventListener listener) {
-//        final User[] user = new User[1];
-        Query dataRef = ref.orderByChild("id").equalTo(id).getRef();
+    public void getData(String id, ValueEventListener listener) {
+        Query dataRef;
+        if (id == null) {
+            dataRef = ref.orderByChild("id").getRef();
+        } else {
+            dataRef = ref.orderByChild("id").equalTo(id).getRef();
+        }
+
         dataRef.addListenerForSingleValueEvent(listener);
+
 //                @Override
 //                public void onDataChange(DataSnapshot dataSnapshot) {
 //                    user[0] = dataSnapshot.child("Users").child(String.valueOf(id)).getValue(User.class);

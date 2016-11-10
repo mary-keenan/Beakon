@@ -13,22 +13,22 @@ import java.util.ArrayList;
  * Created by Cecelia on 11/6/16.
  */
 
-public class MyMovementAdapter extends ArrayAdapter<String> {
+public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
-    public MyMovementAdapter(Context context, ArrayList<String> movements) {
+    public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, 0, movements);
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final String movement = getItem(position);
+        final Movement movement = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
         }
 
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
-        movementNameView.setText(movement);
+        movementNameView.setText(movement.getName());
 
         return convertView;
     }

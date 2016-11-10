@@ -11,6 +11,9 @@ public class Movement {
     private String steps;
     private String resources;
 
+    public Movement() {}
+
+
 
     public Movement(String id, String name, String description, String steps, String resources){
         this.id = id;
