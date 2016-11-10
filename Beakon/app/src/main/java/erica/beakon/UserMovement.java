@@ -5,12 +5,12 @@ package erica.beakon;
  */
 public class UserMovement {
 
-    private long id;
+    private String id;
     private Boolean completed;
     private User user;
     private Movement movement;
 
-    public UserMovement(long id, Boolean completed, User user, Movement movement){
+    public UserMovement(String id, Boolean completed, User user, Movement movement){
         this.id = id;
         this.completed = completed;
         this.user = user;
@@ -18,11 +18,11 @@ public class UserMovement {
 
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
