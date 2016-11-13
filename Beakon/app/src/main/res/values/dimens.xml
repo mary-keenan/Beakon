@@ -1,5 +1,10 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">14dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="add_movement_text">20sp</dimen>
+    <dimen name="add_movement_title">25sp</dimen>
+    <dimen name="help_text_margin">16dp</dimen>
+    <dimen name="movement_name_text">20sp</dimen>
+    <dimen name="movement_margin">10dp</dimen>
 </resources>
