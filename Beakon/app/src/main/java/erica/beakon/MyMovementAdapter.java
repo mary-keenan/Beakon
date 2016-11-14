@@ -1,5 +1,6 @@
 package erica.beakon;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,17 @@ public class MyMovementAdapter extends ArrayAdapter<String> {
 
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         movementNameView.setText(movement);
+
+        //if hashtag is clicked, go to ExpandedHashtagsPage fragment
+        final TextView hashtagsView = (TextView) convertView.findViewById(R.id.hashtag_names);
+        hashtagsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
+                hashtagFragment.setHashtag((String) hashtagsView.getText()); //give it the hashtag it's expanding
+                ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
+            }
+        });
 
         return convertView;
     }

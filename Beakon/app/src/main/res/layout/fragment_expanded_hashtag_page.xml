@@ -1,0 +1,61 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="erica.beakon.ExpandedHashtagPage">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_gravity="center_horizontal|top"
+        android:weightSum="1">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#HASHTAG"
+            android:id="@+id/hashtag_title"
+            android:layout_gravity="center_horizontal"
+            android:textSize="35dp"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hashtag_movements_list"></ListView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="243dp"
+        android:layout_gravity="center_horizontal|bottom">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hashtag_followers_list"></ListView>
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/backButtonHashtag"
+        android:background="@null"
+        android:src = "@drawable/back_accent"
+        android:layout_gravity="left|top" />
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/followButtonHashtag"
+        android:background="@null"
+        android:src = "@drawable/add"
+        android:layout_gravity="right|top" />
+
+</FrameLayout>

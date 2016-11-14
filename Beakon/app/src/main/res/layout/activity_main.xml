@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/abs_outer_frame"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="erica.beakon.MainActivity">
 
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="My Movements"
             android:id="@+id/my_movements"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorBackground" />
 
         <Button
             android:layout_width="0dp"
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="Suggested"
             android:id="@+id/movements"
-            android:background="@color/colorAccent"/>
+            android:background="@color/colorBackground"/>
 
     </LinearLayout>
 

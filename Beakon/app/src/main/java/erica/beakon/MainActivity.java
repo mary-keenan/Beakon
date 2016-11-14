@@ -1,5 +1,7 @@
 package erica.beakon;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -31,18 +33,26 @@ public class MainActivity extends AppCompatActivity {
         myMovementsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 pager.setCurrentItem(0);
-                myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-                suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+                myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBackground));
+                suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccentLight));
             }
         });
 
         suggestedMovementsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 pager.setCurrentItem(ViewPagerAdapter.NUM_PAGES-1);
-                suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-                myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+                suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBackground));
+                myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccentLight));
             }
         });
 
+    }
+
+    //switches fragments, new fragment is input
+    public void changeFragment(android.support.v4.app.Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();//.addToBackStack("tag"); //might make back button work?
+        transaction.replace(R.id.abs_outer_frame, fragment);
+        transaction.commit();
     }
 }
