@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< HEAD
     android:id="@+id/abs_outer_frame"
+=======
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+
+>>>>>>> 9302bb274baa48bbf395e942d3256ba6c8bed824
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="erica.beakon.MainActivity">
 
