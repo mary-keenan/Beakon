@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,9 @@ public class ExpandedHashtagPage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_expanded_hashtag_page, container, false);
+
+        TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
+        hashtagView.setText(this.hashtag);
 
         ArrayList<String> hashtagMovements = new ArrayList<>();
         hashtagMovements.add("Partay");
