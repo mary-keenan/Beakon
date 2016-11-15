@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ public class ExpandedHashtagPage extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_expanded_hashtag_page, container, false);
 
+        //create hashtag TV and set it to the hashtag set in setHashtag by previous fragment
         TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
         hashtagView.setText(this.hashtag);
 
@@ -50,6 +53,17 @@ public class ExpandedHashtagPage extends Fragment {
         ListView hashtagFollowersList = (ListView) view.findViewById(R.id.hashtag_followers_list);
         MyMovementAdapter hashtagFollowersAdapter = new MyMovementAdapter(getActivity(), hashtagFollowers);
         hashtagFollowersList.setAdapter(hashtagFollowersAdapter);
+
+        //create buttons
+        ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonHashtag);
+        ImageButton followButton = (ImageButton) view.findViewById(R.id.followButtonHashtag);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).onBackPressed(); //might not work if multiple backs pressed in a row?
+            }
+        });
 
         return view;
     }
