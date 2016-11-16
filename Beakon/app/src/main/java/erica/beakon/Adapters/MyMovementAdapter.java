@@ -1,6 +1,5 @@
-package erica.beakon;
+package erica.beakon.Adapters;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import erica.beakon.MainActivity;
+import erica.beakon.Pages.ExpandedHashtagPage;
+import erica.beakon.R;
 
 /**
  * Created by Cecelia on 11/6/16.
