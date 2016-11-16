@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
 
@@ -26,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        handler.addUser("David1", "david1@email.com");
-        handler.addMovement("hillary1", "election", "vote", "yesterday");
+        handler.addUser("David1", "david1@email.com",new ArrayList<String>());
+        handler.addMovement("hillary1", "election", "vote", "yesterday", new ArrayList<String>());
 //        handler.getData(1,);
 
 //        fragmentManager = getSupportFragmentManager();
