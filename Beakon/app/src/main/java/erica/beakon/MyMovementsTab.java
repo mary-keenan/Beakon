@@ -4,9 +4,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -53,11 +56,21 @@ public class MyMovementsTab extends Fragment {
 
             }
         });
-        return view;
-    }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        //create buttons
+//        final Button myMovementsButton = (Button) view.findViewById(R.id.my_movements);
+        final Button suggestedMovementsButton = (Button) view.findViewById(R.id.movements);
+
+        //set background colors of buttons -- can just hardcode color now
+//        myMovementsButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorBackground));
+//        suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+
+        suggestedMovementsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).changeFragment(new AddMovementPage()); //should change to SuggestedMovements page
+            }
+        });
+
+        return view;
     }
 }
