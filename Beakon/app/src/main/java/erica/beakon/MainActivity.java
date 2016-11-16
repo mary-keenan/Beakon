@@ -31,26 +31,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        handler.getData("1", new ValueEventListener() {
+        String id = "1";
+        handler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = dataSnapshot.child("Users").child("1").getValue(User.class);
+                setCurrentUser(dataSnapshot.getValue(User.class));
+                changeFragment(new MyMovementsTab());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                currentUser = null;
-                Log.d(TAG, databaseError.getMessage());
-
+                setCurrentUser(null);
+                Log.d(TAG, "there was no USER!!!");
             }
         });
-        handler.addUser("David1", "david1@email.com");
-        handler.addMovement("hillary1", "election", "vote", "yesterday");
-//        handler.getData(1,);
+//        handler.addUser("David1", "david1@email.com");
+//        handler.addMovement("hillary1", "election", "vote", "yesterday");
 
 //        fragmentManager = getSupportFragmentManager();
-        changeFragment(new MyMovementsTab());
     }
 
     //switches fragments, new fragment is input
@@ -59,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();//.addToBackStack("tag"); //might make back button work?
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
+    }
+
+    private void  setCurrentUser(User user) {
+        this.currentUser = user;
+        if (user.getMovements() == null) {
+            user.setEmptyMovements();
+        }
     }
 }
 

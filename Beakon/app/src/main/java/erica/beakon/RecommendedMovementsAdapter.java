@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -37,37 +38,21 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         final MainActivity activity = (MainActivity)getContext();
 
         final Button join = (Button) convertView.findViewById(R.id.join);
-        activity.handler.getData(null, new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userMovementSnapshot: dataSnapshot.child("UserMovements").getChildren()){
-                    if (userMovementSnapshot.child("movement").child("id").getValue().equals(movement.getId())) {
-                        join.setText("Leave");
-                    }
-                }
 
-            }
+        if (activity.currentUser.isInMovement(movement)) {
+            join.setText("Leave");
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(join.getText().equals("Join")) {
+                if(join.getText().equals(getContext().getString(R.string.join))) {
                     activity.handler.addUsertoMovement(activity.currentUser, movement);
-                    join.setText("Leave");
-                } else if (join.getText().equals("Leave")) {
-                    activity.handler.removeUserfromMovement(activity.currentUser.getId());
-                    join.setText("Join");
+                    join.setText(R.string.leave);
+                } else if (join.getText().equals(getContext().getString(R.string.leave))) {
+                    activity.handler.removeUserfromMovement(activity.currentUser, movement);
+                    join.setText(R.string.join);
                 }
-
-
-
-
-
             }
         });
 

@@ -1,6 +1,7 @@
 package erica.beakon;
 
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -41,33 +42,44 @@ public class FirebaseHandler {
         }
 
         dataRef.addListenerForSingleValueEvent(listener);
-
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    user[0] = dataSnapshot.child("Users").child(String.valueOf(id)).getValue(User.class);
-//                    Log.d("*****", user[0].getName());
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
     }
+
+    public void getUserChild(String id, String child, ChildEventListener listener) {
+        Query dataRef = ref.child("Users").child(id).child(child);
+        dataRef.addChildEventListener(listener);
+    }
+
+    public void getUser(String id, ValueEventListener listener) {
+        Query dataRef = ref.child("Users").child(id);
+        dataRef.addValueEventListener(listener);
+    }
+
+    public void getMovement(String id, ValueEventListener listener) {
+        Query dataRef = ref.child("Movements").child(id);
+        dataRef.addValueEventListener(listener);
+    }
+
 
     public void addUsertoMovement(User user, Movement movement) {
-        DatabaseReference umRef = ref.child("UserMovements").push();
-        String umId = umRef.getKey();
-        UserMovement userMovement = new UserMovement(umId, false, user, movement);
-        ref.child("UserMovements").child(umId).setValue(userMovement);
+        user.addMovement(movement);
+        movement.addUser(user);
+        updateUser(user);
+        updateMovement(movement);
     }
 
-
-    public void completeUserMovement(String umId) {
-        ref.child("UserMovements").child(umId).child("completed").setValue(true);
+    public void removeUserfromMovement(User user, Movement movement) {
+        user.removeMovement(movement);
+        movement.removeUser(user);
+        updateMovement(movement);
+        updateUser(user);
     }
 
-    public void removeUserfromMovement(String umId) {
-        ref.child("UserMovements").child(umId).removeValue();
+    public void updateUser(User user) {
+        ref.child("Users").child(user.getId()).setValue(user);
+    }
+
+    public void updateMovement(Movement movement) {
+        ref.child("Movements").child(movement.getId()).setValue(movement);
     }
 
 }

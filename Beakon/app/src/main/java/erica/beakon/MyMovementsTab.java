@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.DragAndDropPermissions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 
 public class MyMovementsTab extends Fragment {
 
+    public static final String TAG = "MY MOVEMENTS TAB";
+    final ArrayList<Movement> movements = new ArrayList<>();
 
     public MyMovementsTab() {}
 
@@ -30,33 +34,13 @@ public class MyMovementsTab extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_my_movements_tab, container, false);
 
-        final ArrayList<Movement> movements = new ArrayList<>();
+        setUpChangeFragmentsButton(view);
+        setUsersMovementsListener();
+        setUpListView(view);
+        return view;
+    }
 
-        ((MainActivity)getActivity()).handler.getData(null, new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot userMovementSnapshot: dataSnapshot.child("UserMovements").getChildren()){
-                    if (userMovementSnapshot.child("user").child("id").getValue().equals(((MainActivity)getActivity()).currentUser.getId())) {
-                        movements.add(userMovementSnapshot.child("movement").getValue(Movement.class));
-
-
-                    }
-                }
-
-                ListView movementsList = (ListView) view.findViewById(R.id.my_movements_list);
-                MyMovementAdapter movementsAdapter = new MyMovementAdapter(getActivity(), movements);
-                movementsList.setAdapter(movementsAdapter);
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("MyMovementsTab", databaseError.getMessage());
-
-            }
-        });
-
+    private void setUpChangeFragmentsButton(View view) {
         //create buttons
 //        final Button myMovementsButton = (Button) view.findViewById(R.id.my_movements);
         final Button suggestedMovementsButton = (Button) view.findViewById(R.id.movements);
@@ -70,7 +54,70 @@ public class MyMovementsTab extends Fragment {
                 ((MainActivity) getActivity()).changeFragment(new AddMovementPage()); //should change to SuggestedMovements page
             }
         });
+    }
 
-        return view;
+    private void setUsersMovementsListener() {
+        getMainActivity().handler.getUserChild(getMainActivity().currentUser.getId(), "movements", getUsersMovementsValueEventListener());
+    }
+
+    private void setUpListView(View view) {
+        MyMovementAdapter adapter = new MyMovementAdapter(getContext(), movements);
+        ListView listView = (ListView) view.findViewById(R.id.my_movements_list);
+        listView.setAdapter(adapter);
+    }
+
+    private ValueEventListener getMovementAddedValueEventListener() {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+               movements.add(dataSnapshot.getValue(Movement.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("MyMovementsTab", "there is a problem on the listener for the movement added to my movements");
+            }
+        };
+    }
+
+    private ChildEventListener getUsersMovementsValueEventListener() {
+        return new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                addMovement(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                removeMovement(Integer.valueOf(dataSnapshot.getValue(String.class)));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("MyMovementsTab", databaseError.getMessage());
+            }
+        };
+    }
+
+    private void removeMovement(int index) {
+        movements.remove(index);
+    }
+
+    private void addMovement(String id) {
+        getMainActivity().handler.getMovement(id, getMovementAddedValueEventListener());
+    }
+
+    private MainActivity getMainActivity() {
+        return ((MainActivity)getActivity());
     }
 }
