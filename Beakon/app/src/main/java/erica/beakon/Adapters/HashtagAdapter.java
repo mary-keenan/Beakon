@@ -44,6 +44,8 @@ public class HashtagAdapter extends ArrayAdapter<String> {
                 }
             });
 
+
+
             return view;
         }
     }

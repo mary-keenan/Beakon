@@ -24,6 +24,8 @@ import erica.beakon.R;
 
 public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
+    String hashtagName;
+
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, 0, movements);
     }
@@ -36,26 +38,25 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
         }
 
+        //set movement name
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         movementNameView.setText(movement.getName());
-
+        //create the hashtag table and first row
         TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT,1.0f);
         TableLayout hashtagTable = (TableLayout) convertView.findViewById(R.id.hashtag_table);
-
-        ArrayList<String> hashtagList = movement.getHashtagList();
         TableRow hashtagRow = new TableRow(getContext());
-
-        movementNameView.measure(0,0);
-        Log.d("TV-WIDTH_____", String.valueOf(movementNameView.getMeasuredWidth()));
-
+        //get list of hashtags from movement
+        ArrayList<String> hashtagList = movement.getHashtagList();
         //initialize some variables here
-        int rowWidth = 800; //placeholder value
+        int rowWidth = 800; //placeholder value -- ideally, we'd programatically find out view width since it's dynamic
         int counter = 0; //keep track of number of characters in row
 
-        for (int i = 0; i < hashtagList.size(); i++){ //loop through hashtag list
-            String hashtagText = hashtagList.get(i) + " "; //add space at end to shows diff between hashtags
+        //loop through hashtag list, put them in rows, set onClickListeners, etc
+        for (int i = 0; i < hashtagList.size(); i++){
+            hashtagName = hashtagList.get(i) + " "; //add space at end to shows diff between hashtags
             TextView hashtagTV = new TextView(getContext()); //create hashtag TV
-            hashtagTV.setText(hashtagText); //set text of hashtag TV
+            hashtagTV.setText(hashtagName); //set text of hashtag TV
+            setOnClick(hashtagTV); //set on click listener
             hashtagTV.measure(0,0); //measure hashtag TV dimensions
             int hashtagWidth = hashtagTV.getMeasuredWidth(); //save measured width in variable
             //add to existing row or make a new one based on length of string
@@ -63,7 +64,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
                 hashtagRow.addView(hashtagTV); //add the TV to the row
                 counter+= hashtagWidth; //update the counter
             }
-            else { //if row would be too long with hashtag
+            else { //if row would be too long with hashtag, put it in new row
                 hashtagTable.addView(hashtagRow, tableParams); //add row to table without adding new hashtag to row
                 counter = hashtagWidth; //start new counter with next hashtagWidth
                 hashtagRow = new TableRow(getContext()); //make new hashtag row
@@ -71,14 +72,19 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             }
         }
         hashtagTable.addView(hashtagRow, tableParams); //add last row to table so we don't leave a row behind
-
-
-        //if hashtag is clicked, go to ExpandedHashtagsPage fragment
-//        final TextView hashtagsView = (TextView) convertView.findViewById(R.id.hashtag_names);
-//        final ListView hashtagView = (ListView) convertView.findViewById(R.id.hashtag_list);
-//        HashtagAdapter hashtagAdapter = new HashtagAdapter(getContext(), movement.getHashtagList());
-//        hashtagView.setAdapter(hashtagAdapter);
-
         return convertView;
+    }
+
+    //basically the HashtagAdapter, but since I'm using a Table Layout I did it differently (i.e. this instead)
+    private void setOnClick(final TextView tv){
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String hashtagName = (String) tv.getText();
+                ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
+                hashtagFragment.setHashtag(hashtagName); //give it the hashtag it's expanding
+                ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
+            }
+        });
     }
 }
