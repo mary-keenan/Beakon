@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     //switches fragments, new fragment is input
     public void changeFragment(android.support.v4.app.Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();//.addToBackStack("tag"); //might make back button work?
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction().add(fragment, "tag").addToBackStack("another_tag");
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
