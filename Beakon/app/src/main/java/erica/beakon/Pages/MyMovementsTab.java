@@ -30,7 +30,7 @@ public class MyMovementsTab extends Fragment {
         ArrayList<String> hashtags = new ArrayList<>();
         hashtags.add("#stillwithher");
         hashtags.add("#feelthebern");
-        hashtags.add("#yayyyyyyyyyyyyyyyyyyyyyyyy");
+        hashtags.add("#yay");
         hashtags.add("#bob");
         Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
         movements.add(rally);
