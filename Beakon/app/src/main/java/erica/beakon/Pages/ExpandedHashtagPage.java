@@ -61,7 +61,7 @@ public class ExpandedHashtagPage extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).onBackPressed(); //might not work if multiple backs pressed in a row?
+                getActivity().onBackPressed(); //might not work if multiple backs pressed in a row?
             }
         });
 

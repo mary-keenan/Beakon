@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseHandler handler = new FirebaseHandler(database, ref);
 
-    static final String TAG = "MainActivity";
+//    static final String TAG = "MainActivity";
 //    FragmentManager fragmentManager;
 
     @Override

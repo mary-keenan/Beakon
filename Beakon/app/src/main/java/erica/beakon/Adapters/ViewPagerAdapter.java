@@ -6,8 +6,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
+import erica.beakon.Pages.CardFragment;
 import erica.beakon.Pages.AddMovementPage;
-import erica.beakon.Pages.MyMovementsTab;
+
 
 /**
  * Created by Cecelia on 11/6/16.
@@ -20,8 +21,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
         pages = new ArrayList<Fragment>();
-        pages.add(new MyMovementsTab());
         pages.add(new AddMovementPage());
+        pages.add(new CardFragment());
     }
 
     @Override
