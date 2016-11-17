@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
 
@@ -37,19 +38,19 @@ public class ExpandedHashtagPage extends Fragment {
         TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
         hashtagView.setText(this.hashtag);
 
-        ArrayList<String> hashtagMovements = new ArrayList<>();
-        hashtagMovements.add("Partay");
-        hashtagMovements.add("Prank");
-        hashtagMovements.add("Sleep");
+        ArrayList<Movement> hashtagMovements = new ArrayList<>();
+        hashtagMovements.add(new Movement());
+        hashtagMovements.add(new Movement());
+        hashtagMovements.add(new Movement());
 
         ListView hashtagMovementsList = (ListView) view.findViewById(R.id.hashtag_movements_list);
         MyMovementAdapter hashtagMovementsAdapter = new MyMovementAdapter(getActivity(), hashtagMovements);
         hashtagMovementsList.setAdapter(hashtagMovementsAdapter);
 
-        ArrayList<String> hashtagFollowers = new ArrayList<>();
-        hashtagFollowers.add("Gary");
-        hashtagFollowers.add("Cecelia");
-        hashtagFollowers.add("Loki");
+        ArrayList<Movement> hashtagFollowers = new ArrayList<>();
+        hashtagFollowers.add(new Movement());
+        hashtagFollowers.add(new Movement());
+        hashtagFollowers.add(new Movement());
 
         ListView hashtagFollowersList = (ListView) view.findViewById(R.id.hashtag_followers_list);
         MyMovementAdapter hashtagFollowersAdapter = new MyMovementAdapter(getActivity(), hashtagFollowers);
