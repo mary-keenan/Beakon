@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -38,23 +39,36 @@ public class ExpandedHashtagPage extends Fragment {
         TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
         hashtagView.setText(this.hashtag);
 
-        ArrayList<Movement> hashtagMovements = new ArrayList<>();
-        hashtagMovements.add(new Movement());
-        hashtagMovements.add(new Movement());
-        hashtagMovements.add(new Movement());
+        //search firebase for hashtag using hashtag name
 
-        ListView hashtagMovementsList = (ListView) view.findViewById(R.id.hashtag_movements_list);
-        MyMovementAdapter hashtagMovementsAdapter = new MyMovementAdapter(getActivity(), hashtagMovements);
-        hashtagMovementsList.setAdapter(hashtagMovementsAdapter);
+        ArrayList<Movement> movements = new ArrayList<>();
+        ArrayList<String> hashtags = new ArrayList<>();
+        hashtags.add("#stillwithher");
+        hashtags.add("#feelthebern");
+        hashtags.add("#yay");
+        hashtags.add("#bob");
+        Movement bob = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
+        movements.add(bob);
+        movements.add(bob);
 
-        ArrayList<Movement> hashtagFollowers = new ArrayList<>();
-        hashtagFollowers.add(new Movement());
-        hashtagFollowers.add(new Movement());
-        hashtagFollowers.add(new Movement());
+        ListView movementsList = (ListView) view.findViewById(R.id.hashtag_movements_list);
+        MyMovementAdapter movementsAdapter = new MyMovementAdapter(getActivity(), movements);
+        movementsList.setAdapter(movementsAdapter);
 
-        ListView hashtagFollowersList = (ListView) view.findViewById(R.id.hashtag_followers_list);
-        MyMovementAdapter hashtagFollowersAdapter = new MyMovementAdapter(getActivity(), hashtagFollowers);
-        hashtagFollowersList.setAdapter(hashtagFollowersAdapter);
+//        ArrayList<Movement> hashtagFollowers = new ArrayList<>();
+//        hashtagFollowers.add(new Movement());
+//        hashtagFollowers.add(new Movement());
+//        hashtagFollowers.add(new Movement());
+
+        ArrayList<Movement> followers = new ArrayList<>();
+
+        Movement aUser = new Movement("2", "Rally", "description", "steps", "resources", new ArrayList<String>());
+        followers.add(aUser);
+        followers.add(aUser);
+
+        ListView followerView = (ListView) view.findViewById(R.id.hashtag_followers_list);
+        MyMovementAdapter followerAdapter = new MyMovementAdapter(getActivity(), followers);
+        followerView.setAdapter(followerAdapter);
 
         //create buttons
         ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonHashtag);
@@ -76,4 +90,8 @@ public class ExpandedHashtagPage extends Fragment {
 
         return view;
     }
+
+//    public Hashtag searchFirebaseHashtag(String hashtagName){
+//
+//    }
 }

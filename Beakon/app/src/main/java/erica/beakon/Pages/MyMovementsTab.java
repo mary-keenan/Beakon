@@ -1,22 +1,11 @@
 package erica.beakon.Pages;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.view.DragAndDropPermissions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
-
-import erica.beakon.Objects.Movement;
-import erica.beakon.Adapters.MyMovementAdapter;
-import erica.beakon.MainActivity;
-import erica.beakon.R;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +14,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.Objects.Movement;
+import erica.beakon.R;
 
 public class MyMovementsTab extends MovementsTab {
 
@@ -46,6 +38,16 @@ public class MyMovementsTab extends MovementsTab {
         if (!movements.isEmpty()) {
             setUpListView(view);
         }
+
+        ArrayList<Movement> movements = new ArrayList<>();
+        ArrayList<String> hashtags = new ArrayList<>();
+        hashtags.add("#stillwithher");
+        hashtags.add("#feelthebern");
+        hashtags.add("#yay");
+        hashtags.add("#bob");
+        Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
+        movements.add(rally);
+        movements.add(rally);
 
         return view;
     }

@@ -9,16 +9,18 @@ public class User {
     private String id;
     private String name;
     private String email;
+    private ArrayList<String> hashtagList;
     private ArrayList<String> movements;
 
     public User() {
 
     }
 
-    public User(String id, String name, String email){
+    public User(String id, String name, String email, ArrayList<String> hashtagList){
         this.id = id;
         this.name = name;
         this.email = email;
+        this.hashtagList = hashtagList;
         this.movements = new ArrayList<>();
     }
 
@@ -46,7 +48,15 @@ public class User {
         this.email = email;
     }
 
-    public ArrayList<String> getMovements() { return this.movements; }
+    public ArrayList<String> getHashtagList() {
+        return hashtagList;
+    }
+
+    public void setHashtagList(ArrayList<String> hashtagList) {
+        this.hashtagList = hashtagList;}
+
+    public ArrayList<String> getMovements() {
+            return this.movements;}
 
     public void setMovements(ArrayList<String> movements){ this.movements = movements; }
 

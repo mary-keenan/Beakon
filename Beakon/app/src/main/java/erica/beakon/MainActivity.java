@@ -13,6 +13,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import java.util.ArrayList;
+
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
 import erica.beakon.Objects.User;
@@ -58,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.commitAllowingStateLoss();
     }
 
-    private void  setCurrentUserFromData(DataSnapshot snapshot) {
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), snapshot.child("email").getValue().toString());
+    private void setCurrentUserFromData(DataSnapshot snapshot) {
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(),
+                snapshot.child("email").getValue().toString(), (ArrayList<String>) snapshot.child("hashtags").getValue());
 
         if (snapshot.hasChild("movements")) {
             for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
@@ -71,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //No call for super(). Bug on API Level > 11.
+    }
+
+    public FirebaseHandler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(FirebaseHandler handler) {
+        this.handler = handler;
     }
 }
 
