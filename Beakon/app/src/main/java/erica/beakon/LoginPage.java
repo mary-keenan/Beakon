@@ -1,7 +1,6 @@
 package erica.beakon;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +14,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+
 public class LoginPage extends Activity {
     private CallbackManager callbackManager;
 
@@ -22,15 +22,13 @@ public class LoginPage extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Intent intent = new Intent(this, MainActivity.class);
-
         FacebookSdk.sdkInitialize(getApplicationContext());
-
 
         callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.login_fragment);
 
+        final Intent intent = new Intent(this, MainActivity.class);
         if (Profile.getCurrentProfile() != null) {
             startActivity(intent);
         }
@@ -55,6 +53,7 @@ public class LoginPage extends Activity {
                     };
                 } else {
                     startActivity(intent);
+
                 }
 
                 Log.d("FacebookLogin", "onSuccess" + loginResult);
@@ -75,6 +74,10 @@ public class LoginPage extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String getCurrentUserID(){
+        return Profile.getCurrentProfile().getId();
     }
 
 }
