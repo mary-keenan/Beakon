@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Pages.MyMovementsTab">
+    tools:context="erica.beakon.Pages.RecommendedMovementsTab">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:text="My Movements"
                 android:id="@+id/my_movements"
-                android:background="@color/colorBackground" />
+                android:background="@color/colorAccentLight" />
 
             <Button
                 android:layout_width="0dp"
@@ -32,27 +32,16 @@
                 android:layout_height="wrap_content"
                 android:text="Suggested"
                 android:id="@+id/movements"
-                android:background="@color/colorAccentLight"/>
-
+                android:background="@color/colorBackground"/>
         </LinearLayout>
-
-        <!--<android.support.v4.view.ViewPager-->
-            <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-            <!--android:id="@+id/pager"-->
-            <!--android:layout_below="@+id/tab_buttons"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-            <!--android:layout_marginRight="@dimen/activity_horizontal_margin"-->
-            <!--android:layout_marginTop="@dimen/activity_vertical_margin"-->
-            <!--android:layout_marginBottom="@dimen/activity_vertical_margin"/>-->
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="456dp"
-            android:id="@+id/my_movements_list"
-            android:layout_below="@id/tab_buttons"></ListView>
+            android:layout_height="wrap_content"
+            android:id="@+id/recommended_movements_list"
+            android:layout_below="@+id/tab_buttons"></ListView>
 
     </RelativeLayout>
+
 
 </FrameLayout>

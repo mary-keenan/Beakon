@@ -3,69 +3,57 @@ package erica.beakon;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import erica.beakon.location.LocationHandler;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
+import erica.beakon.Adapters.FirebaseHandler;
+import erica.beakon.Pages.MyMovementsTab;
+import erica.beakon.Objects.User;
+
 
 public class MainActivity extends AppCompatActivity implements  ActivityCompat.OnRequestPermissionsResultCallback {
     static final String TAG = "MainActivity";
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReferenceFromUrl(databaseURL);
-
-    FirebaseHandler handler = new FirebaseHandler(database, ref);
-    FragmentManager fragmentManager;
     LocationHandler locationHandler;
-    ViewPager pager;
+    public User currentUser;
+    public FirebaseHandler handler = new FirebaseHandler(database, ref);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fragmentManager = getSupportFragmentManager();
         locationHandler = new LocationHandler(this);
 
-        setupPager();
-        setupButtons();
+        String id = "1";
 
-    }
-
-    private void setupPager() {
-        PagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(pagerAdapter);
-    }
-
-    private void setupButtons() {
-        final Button myMovementsButton = (Button) findViewById(R.id.my_movements);
-        final Button suggestedMovementsButton = (Button) findViewById(R.id.movements);
-        myMovementsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                pager.setCurrentItem(0);
-                myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-                suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+        handler.getUser(id, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                setCurrentUserFromData(dataSnapshot);
+                changeFragment(new MyMovementsTab());
             }
-        });
 
-        suggestedMovementsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                pager.setCurrentItem(ViewPagerAdapter.NUM_PAGES - 1);
-                suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
-                myMovementsButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                currentUser = null;
+                Log.d(TAG, "there was no USER!!!");
             }
         });
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] args, int[] grantResults) {
-        switch (requestCode)  {
+        switch (requestCode) {
             case LocationHandler.PERMISSIONS_REQUEST_GPS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
@@ -77,6 +65,24 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
                     Log.d(TAG, "NO PERMISSIONS");
                 }
                 return;
+            }
+        };
+    }
+
+    //switches fragments, new fragment is input
+    public void changeFragment(android.support.v4.app.Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction().add(fragment, "tag").addToBackStack("another_tag");
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commitAllowingStateLoss();
+    }
+
+    private void  setCurrentUserFromData(DataSnapshot snapshot) {
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), snapshot.child("email").getValue().toString());
+
+        if (snapshot.hasChild("movements")) {
+            for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
+                this.currentUser.addMovement(movementId);
             }
         }
     }
