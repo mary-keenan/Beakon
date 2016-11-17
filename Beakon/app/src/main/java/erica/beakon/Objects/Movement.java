@@ -1,5 +1,8 @@
 package erica.beakon.Objects;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by mafaldaborges on 11/7/16.
  */
@@ -10,6 +13,10 @@ public class Movement {
     private String description;
     private String steps;
     private String resources;
+    private ArrayList<String> users;
+
+    public Movement() {}
+
 
 
     public Movement(String id, String name, String description, String steps, String resources){
@@ -60,4 +67,19 @@ public class Movement {
     public void setResources(String resources) {
         this.resources = resources;
     }
+
+    public ArrayList<String> getUsers() { return users; }
+
+    public void setUsers(ArrayList<String> users){ this.users = users; }
+
+    public void addUser(User user) {
+        if (this.users == null) {
+            setEmptyUsers();
+        }
+        this.users.add(user.getId());
+    }
+
+    private void setEmptyUsers() { this.setUsers(new ArrayList<String>()); }
+
+    public void removeUser(User user) { this.users.remove(user.getId()); }
 }

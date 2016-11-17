@@ -11,8 +11,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
+import erica.beakon.Objects.User;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReferenceFromUrl(databaseURL);
 
-    User currentUser;
+    public User currentUser;
 
-    FirebaseHandler handler = new FirebaseHandler(database, ref);
+    public FirebaseHandler handler = new FirebaseHandler(database, ref);
 
     static final String TAG = "MainActivity";
 //    FragmentManager fragmentManager;
@@ -35,20 +38,16 @@ public class MainActivity extends AppCompatActivity {
         handler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                setCurrentUser(dataSnapshot.getValue(User.class));
+                setCurrentUserFromData(dataSnapshot);
                 changeFragment(new MyMovementsTab());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                setCurrentUser(null);
+                currentUser = null;
                 Log.d(TAG, "there was no USER!!!");
             }
         });
-//        handler.addUser("David1", "david1@email.com");
-//        handler.addMovement("hillary1", "election", "vote", "yesterday");
-
-//        fragmentManager = getSupportFragmentManager();
     }
 
     //switches fragments, new fragment is input
@@ -56,14 +55,19 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();//.addToBackStack("tag"); //might make back button work?
         transaction.replace(R.id.fragment_container, fragment);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
-    private void  setCurrentUser(User user) {
-        this.currentUser = user;
-        if (user.getMovements() == null) {
-            user.setEmptyMovements();
+    private void  setCurrentUserFromData(DataSnapshot snapshot) {
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), snapshot.child("email").getValue().toString());
+        for (String movementId: (ArrayList<String>)snapshot.child("movements").getValue()) {
+            this.currentUser.addMovement(movementId);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
     }
 }
 
