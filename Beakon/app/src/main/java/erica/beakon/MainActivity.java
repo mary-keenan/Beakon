@@ -43,5 +43,13 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
     }
+
+    public FirebaseHandler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(FirebaseHandler handler) {
+        this.handler = handler;
+    }
 }
 

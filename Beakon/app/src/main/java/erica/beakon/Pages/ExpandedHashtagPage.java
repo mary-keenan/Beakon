@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
 
@@ -37,24 +38,31 @@ public class ExpandedHashtagPage extends Fragment {
         TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
         hashtagView.setText(this.hashtag);
 
-//        ArrayList<String> hashtagMovements = new ArrayList<>();
-//        hashtagMovements.add("Partay");
-//        hashtagMovements.add("Prank");
-//        hashtagMovements.add("Sleep");
+        //search firebase for hashtag using hashtag name
 
-//
-//        ListView hashtagMovementsList = (ListView) view.findViewById(R.id.hashtag_movements_list);
-//        MyMovementAdapter hashtagMovementsAdapter = new MyMovementAdapter(getActivity(), hashtagMovements);
-//        hashtagMovementsList.setAdapter(hashtagMovementsAdapter);
-//
-//        ArrayList<String> hashtagFollowers = new ArrayList<>();
-//        hashtagFollowers.add("Gary");
-//        hashtagFollowers.add("Cecelia");
-//        hashtagFollowers.add("Loki");
-//
-//        ListView hashtagFollowersList = (ListView) view.findViewById(R.id.hashtag_followers_list);
-//        MyMovementAdapter hashtagFollowersAdapter = new MyMovementAdapter(getActivity(), hashtagFollowers);
-//        hashtagFollowersList.setAdapter(hashtagFollowersAdapter);
+        ArrayList<Movement> movements = new ArrayList<>();
+        ArrayList<String> hashtags = new ArrayList<>();
+        hashtags.add("#stillwithher");
+        hashtags.add("#feelthebern");
+        hashtags.add("#yay");
+        hashtags.add("#bob");
+        Movement bob = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
+        movements.add(bob);
+        movements.add(bob);
+
+        ListView movementsList = (ListView) view.findViewById(R.id.hashtag_movements_list);
+        MyMovementAdapter movementsAdapter = new MyMovementAdapter(getActivity(), movements);
+        movementsList.setAdapter(movementsAdapter);
+
+        ArrayList<Movement> followers = new ArrayList<>();
+
+        Movement aUser = new Movement("2", "Rally", "description", "steps", "resources", new ArrayList<String>());
+        followers.add(aUser);
+        followers.add(aUser);
+
+        ListView followerView = (ListView) view.findViewById(R.id.hashtag_followers_list);
+        MyMovementAdapter followerAdapter = new MyMovementAdapter(getActivity(), followers);
+        followerView.setAdapter(followerAdapter);
 
         //create buttons
         ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonHashtag);
