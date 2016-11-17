@@ -10,7 +10,7 @@ public class User {
     private String name;
     private String email;
     private ArrayList<String> hashtagList;
-
+    private ArrayList<String> movements;
 
     public User() {
 
@@ -21,6 +21,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.hashtagList = hashtagList;
+        this.movements = new ArrayList<>();
     }
 
     public String getId() {
@@ -52,6 +53,22 @@ public class User {
     }
 
     public void setHashtagList(ArrayList<String> hashtagList) {
-        this.hashtagList = hashtagList;
+        this.hashtagList = hashtagList;}
+
+    public ArrayList<String> getMovements() {
+            return this.movements;}
+
+    public void setMovements(ArrayList<String> movements){ this.movements = movements; }
+
+    public void setEmptyMovements() {setMovements(new ArrayList<String>());}
+
+    public void addMovement(Movement movement) { this.movements.add(movement.getId()); }
+
+    public void addMovement(String movementId) { this.movements.add(movementId); }
+
+    public void removeMovement(Movement movement) { this.movements.remove(movement.getId()); }
+
+    public boolean isInMovement(Movement movement) {
+        return this.getMovements().contains(movement.getId());
     }
 }

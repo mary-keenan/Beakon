@@ -55,6 +55,11 @@ public class ExpandedHashtagPage extends Fragment {
         MyMovementAdapter movementsAdapter = new MyMovementAdapter(getActivity(), movements);
         movementsList.setAdapter(movementsAdapter);
 
+//        ArrayList<Movement> hashtagFollowers = new ArrayList<>();
+//        hashtagFollowers.add(new Movement());
+//        hashtagFollowers.add(new Movement());
+//        hashtagFollowers.add(new Movement());
+
         ArrayList<Movement> followers = new ArrayList<>();
 
         Movement aUser = new Movement("2", "Rally", "description", "steps", "resources", new ArrayList<String>());

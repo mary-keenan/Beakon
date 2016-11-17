@@ -13,6 +13,9 @@ public class Movement {
     private String steps;
     private String resources;
     private ArrayList<String> hashtagList;
+    private ArrayList<String> users;
+
+    public Movement() {}
 
     public Movement(String id, String name, String description, String steps, String resources, ArrayList<String> hashtagList){
         this.id = id;
@@ -22,6 +25,7 @@ public class Movement {
         this.resources = resources;
         this.hashtagList = hashtagList;
     }
+
 
     public String getId() {
         return id;
@@ -70,4 +74,19 @@ public class Movement {
     public void setHashtagList(ArrayList<String> hashtagList) {
         this.hashtagList = hashtagList;
     }
+
+    public ArrayList<String> getUsers() { return users; }
+
+    public void setUsers(ArrayList<String> users){ this.users = users; }
+
+    public void addUser(User user) {
+        if (this.users == null) {
+            setEmptyUsers();
+        }
+        this.users.add(user.getId());
+    }
+
+    private void setEmptyUsers() { this.setUsers(new ArrayList<String>()); }
+
+    public void removeUser(User user) { this.users.remove(user.getId()); }
 }

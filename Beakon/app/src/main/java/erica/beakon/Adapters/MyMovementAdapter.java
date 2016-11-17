@@ -18,9 +18,6 @@ import erica.beakon.Objects.Movement;
 import erica.beakon.Pages.ExpandedHashtagPage;
 import erica.beakon.R;
 
-/**
- * Created by Cecelia on 11/6/16.
- */
 
 public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
@@ -41,6 +38,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         //set movement name
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         movementNameView.setText(movement.getName());
+
         //create the hashtag table and first row
         TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT,1.0f);
         TableLayout hashtagTable = (TableLayout) convertView.findViewById(R.id.hashtag_table);
@@ -52,23 +50,24 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         int counter = 0; //keep track of number of characters in row
 
         //loop through hashtag list, put them in rows, set onClickListeners, etc
-        for (int i = 0; i < hashtagList.size(); i++){
-            hashtagName = hashtagList.get(i) + " "; //add space at end to shows diff between hashtags
-            TextView hashtagTV = new TextView(getContext()); //create hashtag TV
-            hashtagTV.setText(hashtagName); //set text of hashtag TV
-            setOnClick(hashtagTV); //set on click listener
-            hashtagTV.measure(0,0); //measure hashtag TV dimensions
-            int hashtagWidth = hashtagTV.getMeasuredWidth(); //save measured width in variable
-            //add to existing row or make a new one based on length of string
-            if (counter + hashtagWidth < rowWidth) { //if adding new hashtag won't go over the limit
-                hashtagRow.addView(hashtagTV); //add the TV to the row
-                counter+= hashtagWidth; //update the counter
-            }
-            else { //if row would be too long with hashtag, put it in new row
-                hashtagTable.addView(hashtagRow, tableParams); //add row to table without adding new hashtag to row
-                counter = hashtagWidth; //start new counter with next hashtagWidth
-                hashtagRow = new TableRow(getContext()); //make new hashtag row
-                hashtagRow.addView(hashtagTV); //add hashtag TV to new row
+        if (hashtagList != null) {
+            for (int i = 0; i < hashtagList.size(); i++) {
+                hashtagName = hashtagList.get(i) + " "; //add space at end to shows diff between hashtags
+                TextView hashtagTV = new TextView(getContext()); //create hashtag TV
+                hashtagTV.setText(hashtagName); //set text of hashtag TV
+                setOnClick(hashtagTV); //set on click listener
+                hashtagTV.measure(0, 0); //measure hashtag TV dimensions
+                int hashtagWidth = hashtagTV.getMeasuredWidth(); //save measured width in variable
+                //add to existing row or make a new one based on length of string
+                if (counter + hashtagWidth < rowWidth) { //if adding new hashtag won't go over the limit
+                    hashtagRow.addView(hashtagTV); //add the TV to the row
+                    counter += hashtagWidth; //update the counter
+                } else { //if row would be too long with hashtag, put it in new row
+                    hashtagTable.addView(hashtagRow, tableParams); //add row to table without adding new hashtag to row
+                    counter = hashtagWidth; //start new counter with next hashtagWidth
+                    hashtagRow = new TableRow(getContext()); //make new hashtag row
+                    hashtagRow.addView(hashtagTV); //add hashtag TV to new row
+                }
             }
         }
         hashtagTable.addView(hashtagRow, tableParams); //add last row to table so we don't leave a row behind
