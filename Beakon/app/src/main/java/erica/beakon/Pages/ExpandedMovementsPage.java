@@ -1,4 +1,4 @@
-package erica.beakon;
+package erica.beakon.Pages;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,18 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import erica.beakon.R;
 
-public class AddMovementPage extends Fragment {
+public class ExpandedMovementsPage extends Fragment {
 
 
-    public AddMovementPage() {}
-
+    public ExpandedMovementsPage() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_movement_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_expanded_movements_page, container, false);
 
 
         return view;

@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/movement_margin">
 
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="0.8"
@@ -12,17 +11,32 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Movement Name"
             android:textSize="@dimen/movement_name_text"
             android:id="@+id/movement_name"/>
 
-        <TextView
+        <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="#hello #world #welcome #home"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:shrinkColumns="*"
+            android:id="@+id/hashtag_table">
+        </TableLayout>
+
+        <!--<ListView-->
+            <!--android:layout_width="366dp"-->
+            <!--android:layout_height="51dp"-->
+            <!--android:text="#hello #world #welcome #home"-->
+            <!--android:textColor="@color/colorPrimaryDark"-->
+            <!--android:id="@+id/hashtag_list"/>-->
+
+        <!--<TextView-->
+        <!--android:layout_width="366dp"-->
+        <!--android:layout_height="51dp"-->
+        <!--android:text="#hello #world"-->
+        <!--android:textColor="@color/colorPrimaryDark"-->
+        <!--android:id="@+id/hashtag_list"/>-->
 
     </LinearLayout>
 
