@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -84,4 +85,8 @@ public class ExpandedHashtagPage extends Fragment {
 
         return view;
     }
+
+//    public Hashtag searchFirebaseHashtag(String hashtagName){
+//
+//    }
 }

@@ -38,6 +38,11 @@ public class FirebaseHandler {
         ref.child("Movements").child(movementId).setValue(movement);
     }
 
+    public void addMovementtoHashtag(String name, ArrayList<Movement> movementList, ArrayList<User> userList) {
+        Hashtag hashtag = new Hashtag(name, movementList, userList);
+        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+    }
+
     public void getData(final long id, ValueEventListener listener) {
 //        final User[] user = new User[1];
         Query dataRef = ref.orderByChild("id").equalTo(id).getRef();

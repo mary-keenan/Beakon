@@ -53,6 +53,7 @@ public class AddMovementPage extends Fragment {
                 String movementResources = resourcesInput.getText().toString();
                 ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().split(" ")));
                 firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags);
+//                firebaseHandler.addHashtag();
                 //add movement to user
                 ((MainActivity) getActivity()).changeFragment(new MyMovementsTab());
             }
