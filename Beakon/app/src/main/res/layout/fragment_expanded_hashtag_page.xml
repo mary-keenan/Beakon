@@ -43,19 +43,19 @@
     </LinearLayout>
 
     <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_width"
         android:id="@+id/backButtonHashtag"
         android:background="@null"
         android:src = "@drawable/back_accent"
         android:layout_gravity="left|top" />
 
     <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
         android:id="@+id/followButtonHashtag"
         android:background="@null"
         android:src = "@drawable/add"
-        android:layout_gravity="right|top" />
+        android:layout_gravity="right|bottom" />
 
 </FrameLayout>

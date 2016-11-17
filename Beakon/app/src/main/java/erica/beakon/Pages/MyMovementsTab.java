@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -15,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -33,6 +36,14 @@ public class MyMovementsTab extends MovementsTab {
         view = inflater.inflate(R.layout.fragment_my_movements_tab, container, false);
 //        movements = new ArrayList<Movement>();
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
+//        setUpChangeFragmentsButton(view, new AddMovementPage(), R.id.goto_add_movement_button);
+        ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
+        addMovementBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).changeFragment(new AddMovementPage());
+            }
+        });
         setUsersMovementsListener();
         adapter = new MyMovementAdapter(getContext(), movements);
         if (!movements.isEmpty()) {

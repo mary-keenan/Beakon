@@ -30,23 +30,31 @@
                     android:textSize="25dp"
                     android:id="@+id/card_movement_name" />
 
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Join"
-                    android:id="@+id/join"
-                    android:layout_toRightOf="@id/card_movement_name"
-                    android:layout_gravity="right" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Reject"
-                    android:id="@+id/reject"
+                <ImageButton
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/check"
+                    android:background="@color/colorBackground"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/join_btn"
                     android:layout_gravity="right"
-                    android:layout_below="@+id/join"
-                    android:layout_toRightOf="@+id/card_movement_name" />
+                    android:layout_alignTop="@+id/card_movement_name"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+                <ImageButton
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src = "@drawable/x"
+                    android:background="@color/colorBackground"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/reject_btn"
+                    android:layout_gravity="right"
+                    android:layout_alignBottom="@+id/card_movement_name"
+                    android:layout_alignLeft="@+id/join_btn"
+                    android:layout_alignStart="@+id/join_btn" />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -4,40 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/tab_buttons">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:layout_height="wrap_content"
-            android:text="My Movements"
-            android:id="@+id/my_movements"
-            android:background="@color/colorAccentLight" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:layout_height="wrap_content"
-            android:text="Suggested"
-            android:id="@+id/this_page"
-            android:background="@color/colorBackground"/>
-    </LinearLayout>
-
-    <Button
+    <ImageButton
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/check"
         android:id="@+id/add_movement_button"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorBackground"
         android:layout_gravity="right|bottom" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -137,4 +112,13 @@
 
 
     </LinearLayout>
+
+    <ImageButton
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
+        android:id="@+id/back_add_movement_btn"
+        android:background="@null"
+        android:src="@drawable/back_accent"
+        android:layout_gravity="left|top" />
+
 </FrameLayout>

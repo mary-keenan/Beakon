@@ -55,4 +55,12 @@
 
     </RelativeLayout>
 
+    <ImageButton
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
+        android:id="@+id/goto_add_movement_btn"
+        android:src="@drawable/add"
+        android:background="@null"
+        android:layout_gravity="right|bottom" />
+
 </FrameLayout>

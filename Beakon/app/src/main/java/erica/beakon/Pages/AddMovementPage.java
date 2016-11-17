@@ -1,6 +1,7 @@
 package erica.beakon.Pages;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,17 +32,17 @@ public class AddMovementPage extends Fragment {
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
 
         //create buttons
-        final Button myMovementsButton = (Button) view.findViewById(R.id.my_movements);
-        Button addMovementBtn = (Button) view.findViewById(R.id.add_movement_button);
+        final ImageButton backBtn = (ImageButton) view.findViewById(R.id.back_add_movement_btn);
+        ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.add_movement_button);
         final EditText nameInput = (EditText) view.findViewById(R.id.movement_name);
         final EditText descriptionInput = (EditText) view.findViewById(R.id.movement_description);
         final EditText stepsInput = (EditText) view.findViewById(R.id.movement_steps);
         final EditText resourcesInput = (EditText) view.findViewById(R.id.movement_res);
         final EditText hashtagsInput = (EditText) view.findViewById(R.id.movement_hashtags);
 
-        myMovementsButton.setOnClickListener(new View.OnClickListener() {
+        backBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((MainActivity) getActivity()).changeFragment(new MyMovementsTab()); //should change to SuggestedMovements page
+                getActivity().onBackPressed();
             }
         });
 
