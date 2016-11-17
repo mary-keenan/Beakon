@@ -13,46 +13,53 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.google.firebase.database.DatabaseError;
+
+import java.util.ArrayList;
+
 import erica.beakon.MainActivity;
+import erica.beakon.Objects.User;
 
 
 public class LocationHandler {
 
+    static final private String TAG = "LOCATION_HANDLER";
     public static final int PERMISSIONS_REQUEST_GPS = 1;
 
-    LocationManager locationManager;
+    public LocationManager locationManager;
     Context context;
     Location location;
+    LocationListener listener;
+    ArrayList<String> nearbyUsers;
 
     public LocationHandler(Context context) {
         this.context = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         this.location = null;
-        getCurrentLocation();
+        this.listener = null;
     }
 
     public void getCurrentLocation() {
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                updateLocation(location);
+        if (this.listener != null) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+            } else {
+                verifyLocationPermissionStatus();
             }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         } else {
-            verifyLocationPermissionStatus();
+            throw new NullPointerException("The location listener has not been set.");
         }
+
     }
 
-    private void updateLocation(Location location) {
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public void updateLocation(Location location) {
        this.location = location;
     }
 
@@ -86,6 +93,43 @@ public class LocationHandler {
                 requestLocationPermission();
             }
         }).execute();
+    }
+
+    public void setLocationListener(LocationListener locationListener) {
+        listener = locationListener;
+    }
+
+    public GeoLocation geoLocationFromLocation(Location location) {
+        return new GeoLocation(location.getLatitude(), location.getLongitude());
+    }
+
+    public GeoQueryEventListener getNearbyLocationsListener() {
+        return new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                nearbyUsers.add(key);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                nearbyUsers.remove(key);
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+                Log.d(TAG, error.getMessage());
+            }
+        };
     }
 }
 

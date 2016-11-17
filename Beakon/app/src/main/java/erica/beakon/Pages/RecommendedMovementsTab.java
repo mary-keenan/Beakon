@@ -43,6 +43,11 @@ public class RecommendedMovementsTab extends MovementsTab {
         if (!movements.isEmpty()) {
             setUpListView(view);
         }
+
+        if (getMainActivity().locationHandler.getLocation() != null) {
+            Log.d(TAG, getMainActivity().locationHandler.getLocation().toString());
+        }
+
         return view;
     }
 

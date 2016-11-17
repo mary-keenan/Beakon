@@ -75,7 +75,16 @@
 package erica.beakon.Adapters;
 
 
+import android.location.Location;
+import android.util.Log;
+
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.firebase.geofire.LocationCallback;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -86,6 +95,8 @@ import erica.beakon.Objects.User;
 
 
 public class FirebaseHandler {
+
+    static final String TAG = "FIREBASE_HANDLER";
     FirebaseDatabase db;
     DatabaseReference ref;
 
@@ -95,12 +106,39 @@ public class FirebaseHandler {
         this.db = db;
     }
 
+    private GeoFire getGeoFire() {
+        DatabaseReference geoRef = ref.child("GeoFire");
+        return new GeoFire(geoRef);
+    }
+
     public void addUser(String name, String email) {
         DatabaseReference userRef = ref.child("Users").push();
         String userId = userRef.getKey();
         User user = new User(userId, name, email);
         ref.child("Users").child(userId).setValue(user);
 
+    }
+
+    public void setUserGeoLocation(User user, Location location) {
+        getGeoFire().setLocation(user.getId(), new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                if (error != null) {
+                    Log.e(TAG, "There was an error saving the location to GeoFire: " + error);
+                } else {
+                    Log.d(TAG, "Location saved on server successfully!");
+                }
+            }
+        });
+    }
+
+    public void getUserGeoLocation(User user, LocationCallback callback) {
+        getGeoFire().getLocation(user.getId(), callback);
+    }
+
+    public void getNearbyUsers(GeoLocation location, GeoQueryEventListener listener) {
+        GeoQuery geoQuery = getGeoFire().queryAtLocation(location, 0.6);
+        geoQuery.addGeoQueryEventListener(listener);
     }
 
     public void addMovement(String name, String description, String steps, String resources) {
