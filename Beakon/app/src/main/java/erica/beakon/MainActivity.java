@@ -13,14 +13,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import java.util.ArrayList;
-
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
 import erica.beakon.Objects.User;
 
 
 public class MainActivity extends AppCompatActivity {
+//    LoginPage loginPage;
+
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReferenceFromUrl(databaseURL);
@@ -33,9 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         String id = "1";
+        //String id = loginPage.getCurrentUserId();
 
         handler.getUser(id, new ValueEventListener() {
             @Override
@@ -83,5 +86,7 @@ public class MainActivity extends AppCompatActivity {
     public void setHandler(FirebaseHandler handler) {
         this.handler = handler;
     }
+
 }
+
 

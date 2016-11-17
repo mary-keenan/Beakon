@@ -83,6 +83,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import erica.beakon.LoginPage;
 import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
@@ -91,6 +92,7 @@ import erica.beakon.Objects.User;
 public class FirebaseHandler {
     FirebaseDatabase db;
     DatabaseReference ref;
+    LoginPage loginPage;
 
 
     public FirebaseHandler(FirebaseDatabase db, DatabaseReference ref) {
@@ -99,8 +101,9 @@ public class FirebaseHandler {
     }
 
     public void addUser(String name, String email, ArrayList<String> hashtagList) {
-        DatabaseReference userRef = ref.child("Users").push();
-        String userId = userRef.getKey();
+//        DatabaseReference userRef = ref.child("Users").push();
+//        String userId = userRef.getKey();
+        String userId = loginPage.getCurrentUserID();
         User user = new User(userId, name, email, hashtagList);
         ref.child("Users").child(userId).setValue(user);
     }
