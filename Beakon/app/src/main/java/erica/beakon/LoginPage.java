@@ -5,45 +5,59 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import com.facebook.CallbackManager;
-import com.facebook.CustomTabActivity;
-import com.facebook.FacebookActivity;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 public class LoginPage extends Activity {
     private CallbackManager callbackManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Intent intent = new Intent(this, MainActivity.class);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
+
 
         callbackManager = CallbackManager.Factory.create();
 
-
-
-
         setContentView(R.layout.login_fragment);
+
+        if (Profile.getCurrentProfile() != null) {
+            startActivity(intent);
+        }
 
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email");
 
-        final Intent intent = new Intent(this, MainActivity.class);
-
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+            private ProfileTracker profileTracker;
+
             @Override
             public void onSuccess(LoginResult loginResult) {
+                if (Profile.getCurrentProfile() == null){
+                    profileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            profileTracker.stopTracking();
+                            Profile.setCurrentProfile(currentProfile);
+                        }
+                    };
+                } else {
+                    startActivity(intent);
+                }
+
                 Log.d("FacebookLogin", "onSuccess" + loginResult);
-                startActivity(intent);
             }
 
             @Override

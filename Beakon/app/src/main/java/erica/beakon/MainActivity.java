@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        handler.addUser("David1", "david1@email.com");
-        handler.addMovement("hillary1", "election", "vote", "yesterday");
+//        handler.addUser("David1", "david1@email.com");
+//        handler.addMovement("hillary1", "election", "vote", "yesterday");
 //        handler.getData(1,);
 
 
