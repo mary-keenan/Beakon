@@ -28,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
     public FirebaseHandler handler = new FirebaseHandler(database, ref);
 
     static final String TAG = "MainActivity";
-//    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         String id = "1";
+
         handler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -60,8 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void  setCurrentUserFromData(DataSnapshot snapshot) {
         this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), snapshot.child("email").getValue().toString());
-        for (String movementId: (ArrayList<String>)snapshot.child("movements").getValue()) {
-            this.currentUser.addMovement(movementId);
+
+        if (snapshot.hasChild("movements")) {
+            for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
+                this.currentUser.addMovement(movementId);
+            }
         }
     }
 

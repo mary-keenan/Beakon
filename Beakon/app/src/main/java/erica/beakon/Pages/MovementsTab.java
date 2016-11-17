@@ -51,11 +51,13 @@ abstract public class MovementsTab extends Fragment {
     }
 
     protected void removeMovement(String id) {
-        movements.remove(id);
+        this.movements.remove(id);
     }
 
     protected void addMovement(String id) {
-        getMainActivity().handler.getMovement(id, getMovementAddedValueEventListener());
+        if (isAdded()) {
+            getMainActivity().handler.getMovement(id, getMovementAddedValueEventListener());
+        }
     }
 
     abstract ValueEventListener getMovementAddedValueEventListener();
