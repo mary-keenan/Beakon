@@ -6,16 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
 import erica.beakon.Objects.Movement;
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.R;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
+import java.util.ArrayList;
 
 public class MyMovementsTab extends MovementsTab {
 
@@ -37,6 +35,16 @@ public class MyMovementsTab extends MovementsTab {
         if (!movements.isEmpty()) {
             setUpListView(view);
         }
+
+        ArrayList<Movement> movements = new ArrayList<>();
+        ArrayList<String> hashtags = new ArrayList<>();
+        hashtags.add("#stillwithher");
+        hashtags.add("#feelthebern");
+        hashtags.add("#yay");
+        hashtags.add("#bob");
+        Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
+        movements.add(rally);
+        movements.add(rally);
 
         return view;
     }

@@ -25,6 +25,7 @@ import erica.beakon.Objects.User;
 
 public class MainActivity extends AppCompatActivity implements  ActivityCompat.OnRequestPermissionsResultCallback {
     static final String TAG = "MainActivity";
+
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReferenceFromUrl(databaseURL);
@@ -34,11 +35,14 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         locationHandler = new LocationHandler(this);
 
         String id = "1";
+        //String id = loginPage.getCurrentUserId();
 
         firebaseHandler.getUser(id, new ValueEventListener() {
             @Override
@@ -82,8 +86,9 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         transaction.commitAllowingStateLoss();
     }
 
-    private void  setCurrentUserFromData(DataSnapshot snapshot) {
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), snapshot.child("email").getValue().toString());
+    private void setCurrentUserFromData(DataSnapshot snapshot) {
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(),
+                snapshot.child("email").getValue().toString(), (ArrayList<String>) snapshot.child("hashtags").getValue());
 
         if (snapshot.hasChild("movements")) {
             for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
@@ -113,5 +118,13 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
         };
     };
+
+    public FirebaseHandler getHandler() {
+        return firebaseHandler;
+    }
+
+    public void setHandler(FirebaseHandler handler) {
+        this.firebaseHandler = handler;
+    }
 
 }

@@ -90,6 +90,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
+import erica.beakon.LoginPage;
+import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
 
@@ -99,6 +103,7 @@ public class FirebaseHandler {
     static final String TAG = "FIREBASE_HANDLER";
     FirebaseDatabase db;
     DatabaseReference ref;
+    LoginPage loginPage;
 
 
     public FirebaseHandler(FirebaseDatabase db, DatabaseReference ref) {
@@ -116,7 +121,14 @@ public class FirebaseHandler {
         String userId = userRef.getKey();
         User user = new User(userId, name, email);
         ref.child("Users").child(userId).setValue(user);
+    }
 
+    public void addUser(String name, String email, ArrayList<String> hashtagList) {
+//        DatabaseReference userRef = ref.child("Users").push();
+//        String userId = userRef.getKey();
+        String userId = loginPage.getCurrentUserID();
+        User user = new User(userId, name, email, hashtagList);
+        ref.child("Users").child(userId).setValue(user);
     }
 
     public void setUserGeoLocation(User user, Location location) {
@@ -147,6 +159,22 @@ public class FirebaseHandler {
         Movement movement = new Movement(movementId, name, description, steps, resources);
         ref.child("Movements").child(movementId).setValue(movement);
     }
+
+    public void addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList) {
+        DatabaseReference movementRef = ref.child("Movements").push();
+        String movementId = movementRef.getKey();
+        Movement movement = new Movement(movementId, name, description, steps, resources, hashtagList);
+        ref.child("Movements").child(movementId).setValue(movement);
+    }
+
+//    public void addMovementtoHashtag(String name, ArrayList<Movement> movementList, ArrayList<User> userList) {
+//        Hashtag hashtag = new Hashtag(name, movementList, userList);
+//        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+//    }
+
+//    public void getData(final long id, ValueEventListener listener) {
+////        final User[] user = new User[1];
+//        Query dataRef = ref.orderByChild("id").equalTo(id).getRef();
 
     public void getById(String id, ValueEventListener listener) {
         Query dataRef;
