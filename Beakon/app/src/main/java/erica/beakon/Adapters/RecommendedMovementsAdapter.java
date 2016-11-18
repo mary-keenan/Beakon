@@ -5,7 +5,6 @@ import erica.beakon.MainActivity;
 import erica.beakon.R;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,7 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
 
         final Button join = (Button) convertView.findViewById(R.id.join);
 
-        if (activity.currentUser.getMovements().contains(movement)) {
+        if (activity.currentUser.getMovements().contains(movement.getId())) {
             join.setText("Leave");
         }
 
@@ -44,10 +43,10 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
             @Override
             public void onClick(View view) {
                 if(join.getText().equals(getContext().getString(R.string.join))) {
-                    activity.handler.addUsertoMovement(activity.currentUser, movement);
+                    activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
                     join.setText(R.string.leave);
                 } else if (join.getText().equals(getContext().getString(R.string.leave))) {
-                    activity.handler.removeUserfromMovement(activity.currentUser, movement);
+                    activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
                     join.setText(R.string.join);
                 }
             }

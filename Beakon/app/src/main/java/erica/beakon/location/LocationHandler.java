@@ -36,9 +36,10 @@ public class LocationHandler {
 
     public LocationHandler(Context context) {
         this.context = context;
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         this.location = null;
         this.listener = null;
+        this.nearbyUsers = new ArrayList<>();
     }
 
     public void getCurrentLocation() {
@@ -130,6 +131,10 @@ public class LocationHandler {
                 Log.d(TAG, error.getMessage());
             }
         };
+    }
+
+    public ArrayList<String> getNearbyUsers() {
+        return nearbyUsers;
     }
 }
 

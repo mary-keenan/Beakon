@@ -1,7 +1,6 @@
 package erica.beakon.Pages;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
-import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -29,84 +26,49 @@ public class RecommendedMovementsTab extends MovementsTab {
     public static final String TAG = "REC_MOVEMENTS_TAB";
     View view;
     RecommendedMovementsAdapter adapter;
+    HashMap<String, Integer> movementRanks;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_recommended_movements, container, false);
-//        movements = new ArrayList<>();
+        this.movementRanks = new HashMap<>();
         setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements);
         setMovementsListener();
-        setUsersMovementsListener();
-        adapter = new RecommendedMovementsAdapter(getContext(), movements);
-        if (!movements.isEmpty()) {
-            setUpListView(view);
-        }
-
-        if (getMainActivity().locationHandler.getLocation() != null) {
-            Log.d(TAG, getMainActivity().locationHandler.getLocation().toString());
-        }
+        initializeListView();
 
         return view;
     }
 
+    private void initializeListView() {
+        adapter = new RecommendedMovementsAdapter(getContext(), movements);
+
+        if (!movements.isEmpty()) {
+            setUpListView(view);
+        }
+    }
     private void setUpListView(View view) {
         ListView movementsList = (ListView) view.findViewById(R.id.recommended_movements_list);
         movementsList.setAdapter(adapter);
     }
 
     private void setMovementsListener() {
-        getMainActivity().handler.getMovements(populateMovementsValueEventListener());
+        if (getMainActivity().locationHandler.getNearbyUsers().isEmpty()) {
+            // try to get location and nearby users
+            // does it make sense to try again in the flow or will it have been tried recently enough that it doesnt make sense?
+        } else {
+            for (String userId: getMainActivity().locationHandler.getNearbyUsers()) {
+                getMainActivity().firebaseHandler.getUserChild(userId, "movements", populateMovementsEventListener());
+            }
+        }
     }
 
-    private void setUsersMovementsListener() {
-        getMainActivity().handler.getUserChild(getMainActivity().currentUser.getId(), "movements", userMovementsChangeListener());
-    }
-
-    private ChildEventListener userMovementsChangeListener() {
-        return new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                removeMovement(dataSnapshot.getValue(String.class));
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                addMovement(dataSnapshot.getValue(String.class));
-                if (movements.size() == 1) {
-                    setUpListView(view);
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-    }
-
-    public ChildEventListener populateMovementsValueEventListener() {
+    public ChildEventListener populateMovementsEventListener() {
        return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Movement movement = dataSnapshot.getValue(Movement.class);
-                if (!getMainActivity().currentUser.getMovements().contains(movement.getId())) {
-                    addMovement(movement.getId());
-                    if (movements.size() == 1) {
-                        setUpListView(view);
-                    }
-                }
+                updateMovementRanks(dataSnapshot.getValue(String.class));
+                addMovement(dataSnapshot.getValue(String.class));
             }
 
             @Override
@@ -116,7 +78,7 @@ public class RecommendedMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                removeMovement(Integer.valueOf(dataSnapshot.getValue(String.class)));
+
             }
 
             @Override
@@ -135,7 +97,10 @@ public class RecommendedMovementsTab extends MovementsTab {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                movements.add(dataSnapshot.getValue(Movement.class));
+                Movement movement = dataSnapshot.getValue(Movement.class);
+                if (!movementsAlreadyHas(movement)) {
+                    movements.add(dataSnapshot.getValue(Movement.class));
+                }
                 if (movements.size() == 1) {
                     setUpListView(view);
                 }
@@ -147,6 +112,23 @@ public class RecommendedMovementsTab extends MovementsTab {
                 Log.d("MyMovementsTab", "there is a problem on the listener for the movement added to my movements");
             }
         };
+    }
+
+    private void updateMovementRanks(String movementId) {
+        if (movementRanks.containsKey(movementId)) {
+            movementRanks.put(movementId, movementRanks.get(movementId) + 1);
+        } else {
+            movementRanks.put(movementId, 1);
+        }
+    }
+
+    private boolean movementsAlreadyHas(Movement movement) {
+        for (Movement m: movements) {
+            if (m.getId().equals(movement.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -1,29 +1,20 @@
 package erica.beakon.Pages;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.view.DragAndDropPermissions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import erica.beakon.Objects.Movement;
 import erica.beakon.Adapters.MyMovementAdapter;
-import erica.beakon.MainActivity;
 import erica.beakon.R;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 
 public class MyMovementsTab extends MovementsTab {
@@ -52,7 +43,7 @@ public class MyMovementsTab extends MovementsTab {
 
 
     private void setUsersMovementsListener() {
-        getMainActivity().handler.getUserChild(getMainActivity().currentUser.getId(), "movements", populateMovementsValueEventListener());
+        getMainActivity().firebaseHandler.getUserChild(getMainActivity().currentUser.getId(), "movements", populateMovementsEventListener());
     }
 
     private void setUpListView(View view) {
@@ -78,7 +69,7 @@ public class MyMovementsTab extends MovementsTab {
         };
     }
 
-    protected ChildEventListener populateMovementsValueEventListener() {
+    protected ChildEventListener populateMovementsEventListener() {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -92,7 +83,7 @@ public class MyMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                removeMovement(Integer.valueOf(dataSnapshot.getValue(String.class)));
+                removeMovement(dataSnapshot.getValue(String.class));
             }
 
             @Override

@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.firebase.geofire.GeoLocation;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import erica.beakon.location.LocationHandler;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     private DatabaseReference ref = database.getReferenceFromUrl(databaseURL);
     public LocationHandler locationHandler;
     public User currentUser;
-    public FirebaseHandler handler = new FirebaseHandler(database, ref);
+    public FirebaseHandler firebaseHandler = new FirebaseHandler(database, ref);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +40,12 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
         String id = "1";
 
-        handler.getUser(id, new ValueEventListener() {
+        firebaseHandler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 setCurrentUserFromData(dataSnapshot);
                 locationHandler.setLocationListener(getLocationListener());
+                locationHandler.getCurrentLocation();
                 changeFragment(new MyMovementsTab());
             }
 
@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 locationHandler.updateLocation(location);
-                handler.setUserGeoLocation(currentUser, location);
-                handler.getNearbyUsers(locationHandler.geoLocationFromLocation(location), locationHandler.getNearbyLocationsListener());
+                firebaseHandler.setUserGeoLocation(currentUser, location);
+                firebaseHandler.getNearbyUsers(locationHandler.geoLocationFromLocation(location), locationHandler.getNearbyLocationsListener());
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
