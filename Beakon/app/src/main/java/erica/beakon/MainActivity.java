@@ -1,14 +1,19 @@
 package erica.beakon;
 
-import android.os.Bundle;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import erica.beakon.location.LocationHandler;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -18,18 +23,15 @@ import erica.beakon.Pages.MyMovementsTab;
 import erica.beakon.Objects.User;
 
 
-public class MainActivity extends AppCompatActivity {
-//    LoginPage loginPage;
+public class MainActivity extends AppCompatActivity implements  ActivityCompat.OnRequestPermissionsResultCallback {
+    static final String TAG = "MainActivity";
 
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference ref = database.getReferenceFromUrl(databaseURL);
-
+    public LocationHandler locationHandler;
     public User currentUser;
-
-    public FirebaseHandler handler = new FirebaseHandler(database, ref);
-
-    static final String TAG = "MainActivity";
+    public FirebaseHandler firebaseHandler = new FirebaseHandler(database, ref);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        locationHandler = new LocationHandler(this);
+
         String id = "1";
         //String id = loginPage.getCurrentUserId();
 
-        handler.getUser(id, new ValueEventListener() {
+        firebaseHandler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 setCurrentUserFromData(dataSnapshot);
+                locationHandler.setLocationListener(getLocationListener());
+                locationHandler.getCurrentLocation();
                 changeFragment(new MyMovementsTab());
             }
 
@@ -53,6 +59,23 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "there was no USER!!!");
             }
         });
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] args, int[] grantResults) {
+        switch (requestCode) {
+            case LocationHandler.PERMISSIONS_REQUEST_GPS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "PERMISSION GRANTED");
+                    this.locationHandler.getCurrentLocation();
+                } else {
+                    // do something about not being able to get the permission
+                    Log.d(TAG, "NO PERMISSIONS");
+                }
+                return;
+            }
+        };
     }
 
     //switches fragments, new fragment is input
@@ -74,19 +97,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        //No call for super(). Bug on API Level > 11.
-    }
+    private LocationListener getLocationListener() {
+        return new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                locationHandler.updateLocation(location);
+                firebaseHandler.setUserGeoLocation(currentUser, location);
+                firebaseHandler.getNearbyUsers(locationHandler.geoLocationFromLocation(location), locationHandler.getNearbyLocationsListener());
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {
+                Log.d("LocHand", provider);
+            }
+
+            public void onProviderDisabled(String provider) {
+                Log.d("LocHand", provider);
+            }
+
+        };
+    };
 
     public FirebaseHandler getHandler() {
-        return handler;
+        return firebaseHandler;
     }
 
     public void setHandler(FirebaseHandler handler) {
-        this.handler = handler;
+        this.firebaseHandler = handler;
     }
 
 }
-
-
