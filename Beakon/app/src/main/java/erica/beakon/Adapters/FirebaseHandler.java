@@ -98,28 +98,26 @@ public class FirebaseHandler {
         this.db = db;
     }
 
-    public void addUser(String name, String email, ArrayList<String> hashtagList) {
+    public User addUser(String name, String email, ArrayList<String> hashtagList) {
         DatabaseReference userRef = ref.child("Users").push();
         String userId = userRef.getKey();
         User user = new User(userId, name, email, hashtagList);
         ref.child("Users").child(userId).setValue(user);
+        return user;
     }
 
-    public void addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList) {
+    public Movement addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList) {
         DatabaseReference movementRef = ref.child("Movements").push();
         String movementId = movementRef.getKey();
         Movement movement = new Movement(movementId, name, description, steps, resources, hashtagList);
         ref.child("Movements").child(movementId).setValue(movement);
+        return movement;
     }
 
-//    public void addMovementtoHashtag(String name, ArrayList<Movement> movementList, ArrayList<User> userList) {
-//        Hashtag hashtag = new Hashtag(name, movementList, userList);
-//        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
-//    }
-
-//    public void getData(final long id, ValueEventListener listener) {
-////        final User[] user = new User[1];
-//        Query dataRef = ref.orderByChild("id").equalTo(id).getRef();
+    public void addHashtag(String name, ArrayList<String> movementList, ArrayList<String> userList) {
+        Hashtag hashtag = new Hashtag(name, movementList, userList);
+        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+    }
 
     public void getById(String id, ValueEventListener listener) {
         Query dataRef;
@@ -151,6 +149,10 @@ public class FirebaseHandler {
         dataRef.addValueEventListener(listener);
     }
 
+    public void getHashtag(String name, ValueEventListener listener){
+        Query dataRef = ref.child("Hashtags").child(name);
+        dataRef.addValueEventListener(listener);
+    }
 
     public void addUsertoMovement(User user, Movement movement) {
         user.addMovement(movement);
@@ -166,6 +168,34 @@ public class FirebaseHandler {
         updateUser(user);
     }
 
+    public void addUsertoHashtag(User user, Hashtag hashtag) {
+        user.addHashtag(hashtag.getName());
+        hashtag.addUser(user);
+        updateUser(user);
+        updateHashtag(hashtag);
+    }
+
+    public void addMovementtoHashtag(Movement movement, Hashtag hashtag) {
+        movement.addHashtag(hashtag.getName());
+        hashtag.addMovement(movement);
+        updateMovement(movement);
+        updateHashtag(hashtag);
+    }
+
+    public void removeUserfromHashtag(User user, Hashtag hashtag) {
+        user.removeHashtag(hashtag.getName());
+        hashtag.removeUser(user);
+        updateHashtag(hashtag);
+        updateUser(user);
+    }
+
+    public void removeMovementfromHashtag(Movement movement, Hashtag hashtag) {
+        movement.removeHashtag(hashtag.getName());
+        hashtag.removeMovement(movement);
+        updateHashtag(hashtag);
+        updateMovement(movement);
+    }
+
     public void updateUser(User user) {
         ref.child("Users").child(user.getId()).setValue(user);
     }
@@ -174,6 +204,14 @@ public class FirebaseHandler {
         ref.child("Movements").child(movement.getId()).setValue(movement);
     }
 
+    public void updateHashtag(Hashtag hashtag) {
+        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+    }
+
+    public void getAllHashtags(ValueEventListener listener) {
+        Query dataRef = ref.child("Hashtags");
+        dataRef.addListenerForSingleValueEvent(listener);
+    }
 }
 
 

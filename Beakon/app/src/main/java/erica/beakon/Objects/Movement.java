@@ -75,6 +75,14 @@ public class Movement {
         this.hashtagList = hashtagList;
     }
 
+    public void addHashtag(String hashtag){
+        hashtagList.add(hashtag);
+    }
+
+    public void removeHashtag(String hashtag){
+        hashtagList.remove(hashtag);
+    }
+
     public ArrayList<String> getUsers() { return users; }
 
     public void setUsers(ArrayList<String> users){ this.users = users; }

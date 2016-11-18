@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.MainActivity;
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.Objects.Hashtag;
@@ -22,11 +23,17 @@ import erica.beakon.R;
 public class ExpandedHashtagPage extends Fragment {
 
     String hashtag;
+    FirebaseHandler handler = ((MainActivity) getActivity()).getHandler();
 
     public ExpandedHashtagPage(){}
 
     public void setHashtag(String hashtag) {
         this.hashtag = hashtag;
+    }
+
+    public void getHashtagInfo() {
+//        handler.get;
+
     }
 
     @Override
