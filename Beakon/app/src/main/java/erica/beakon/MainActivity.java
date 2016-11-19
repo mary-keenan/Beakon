@@ -87,14 +87,18 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(),
-                snapshot.child("email").getValue().toString(), (ArrayList<String>) snapshot.child("hashtags").getValue());
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString()
+                , (ArrayList<String>) snapshot.child("hashtags").getValue());
 
         if (snapshot.hasChild("movements")) {
             for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
                 this.currentUser.addMovement(movementId);
             }
         }
+    }
+
+    public User getCurrentUser() {
+        return this.currentUser;
     }
 
     private LocationListener getLocationListener() {
@@ -117,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
             }
 
         };
-    };
+    }
+
 
     public FirebaseHandler getHandler() {
         return firebaseHandler;
