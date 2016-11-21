@@ -29,7 +29,7 @@
 //
 //    }
 //
-//    public void addMovement(String name, String description, String steps, String resources) {
+//    public void getMovement(String name, String description, String steps, String resources) {
 //        DatabaseReference movementRef = ref.child("Movements").push();
 //        String movementId = movementRef.getKey();
 //        Movement movement = new Movement(movementId, name, description, steps, resources);

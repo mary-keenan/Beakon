@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.facebook.Profile;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import erica.beakon.location.LocationHandler;
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         setContentView(R.layout.activity_main);
         locationHandler = new LocationHandler(this);
 
-        String id = "1";
-        //String id = loginPage.getCurrentUserId();
+        Profile currentProfile = Profile.getCurrentProfile();
+        String id = currentProfile.getId();
 
         firebaseHandler.getUser(id, new ValueEventListener() {
             @Override

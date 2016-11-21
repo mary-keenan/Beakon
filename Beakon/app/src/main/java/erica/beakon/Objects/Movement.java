@@ -98,4 +98,8 @@ public class Movement {
     private void setEmptyUsers() { this.setUsers(new ArrayList<String>()); }
 
     public void removeUser(User user) { this.users.remove(user.getId()); }
+
+    public boolean hasUsers() {
+        return !(this.users == null || this.users.isEmpty());
+    }
 }
