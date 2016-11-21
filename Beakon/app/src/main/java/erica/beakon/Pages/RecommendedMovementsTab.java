@@ -18,10 +18,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
+import erica.beakon.Adapters.StorageHandler;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -31,9 +34,8 @@ public class RecommendedMovementsTab extends MovementsTab {
 
     public static final String TAG = "REC_MOVEMENTS_TAB";
 
-    final String POPULAR_MOVEMENTS_FILENAME = "movements";
-    final String POPULAR_MOVEMENTS_RANKS_FILENAME = "movementsRanks";
     final int POPULAR_MOVEMENTS_LIMIT = 2;
+    StorageHandler storageHandler;
     View view;
     ListView nearbyListView;
     ListView popularListView;
@@ -46,6 +48,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        storageHandler = new StorageHandler(getContext());
         popularMovements = new ArrayList<>();
         this.movementNearbyRanks = new HashMap<>();
         this.movementPopularRanks = new HashMap<>();
@@ -64,58 +67,28 @@ public class RecommendedMovementsTab extends MovementsTab {
     @Override
     public void onPause() {
         super.onPause();
-        savePopularMovements();
-        savePopularMovementsRanks();
+        storageHandler.savePopularMovements(popularMovements);
+        storageHandler.savePopularMovementsRanks(movementPopularRanks);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        popularMovements = (ArrayList<Movement>) loadSavedObject(POPULAR_MOVEMENTS_FILENAME);
-        movementPopularRanks = (HashMap<String, Integer>) loadSavedObject(POPULAR_MOVEMENTS_RANKS_FILENAME);
+        popularMovements = (ArrayList<Movement>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_FILENAME, new Callable<Object>() {
+            public Object call() {
+                return getMovementRanksFromPopularMovements();
+            }
+        });
+        movementPopularRanks = (HashMap<String, Integer>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_RANKS_FILENAME, new Callable<Object>() {
+            public Object call() {
+                return new ArrayList<Movement>();
+            }
+        });
         initializeListViews();
         popularAdapter.notifyDataSetChanged();
     }
 
-    private void savePopularMovements() {
-        saveToInternalStorage(POPULAR_MOVEMENTS_FILENAME, popularMovements);
-    }
 
-    private void savePopularMovementsRanks() {
-        saveToInternalStorage(POPULAR_MOVEMENTS_RANKS_FILENAME, movementPopularRanks);
-    }
-
-    private void saveToInternalStorage(String fileName, Object o) {
-        try {
-            File file = new File(getContext().getFilesDir(), fileName + ".ser");
-            FileOutputStream fileOut = new FileOutputStream(file);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOut);
-            objectOutputStream.writeObject(o);
-            objectOutputStream.close();
-            fileOut.close();
-        } catch(Exception ex) {
-            Log.d(TAG, ex.getMessage());
-        }
-    }
-
-    private Object loadSavedObject(String fileName) {
-        String filePath = getContext().getFilesDir() + "/" + fileName + ".ser";
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
-            return ois.readObject(); //need to check for case where popularmovements was empty
-        } catch (Exception ex) {
-            Log.d(TAG, ex.getMessage());
-            if (fileName.equals(POPULAR_MOVEMENTS_RANKS_FILENAME)) {
-                //in case the movements ranks are not saved but the popular movements were
-                //this should only happen during developement/testing
-                return getMovementRanksFromPopularMovements();
-            } else {
-                //return an empty arraylist because there are not any movements saved
-                return new ArrayList<Movement>();
-            }
-
-        }
-    }
 
     private void initializeView() {
         setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements);
