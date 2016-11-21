@@ -7,6 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,15 +25,14 @@ import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
-import static java.util.Collections.max;
 import static java.util.Collections.min;
 
-/**
- * Created by erica on 11/7/16.
- */
 public class RecommendedMovementsTab extends MovementsTab {
 
     public static final String TAG = "REC_MOVEMENTS_TAB";
+
+    final String POPULAR_MOVEMENTS_FILENAME = "movements";
+    final String POPULAR_MOVEMENTS_RANKS_FILENAME = "movementsRanks";
     final int POPULAR_MOVEMENTS_LIMIT = 2;
     View view;
     ListView nearbyListView;
@@ -39,16 +44,77 @@ public class RecommendedMovementsTab extends MovementsTab {
     HashMap<String, Integer> movementPopularRanks;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        view = inflater.inflate(R.layout.fragment_recommended_movements, container, false);
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         popularMovements = new ArrayList<>();
         this.movementNearbyRanks = new HashMap<>();
         this.movementPopularRanks = new HashMap<>();
-        initializeView();
         setMovementsListeners();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment_recommended_movements, container, false);
+        initializeView();
         return view;
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        savePopularMovements();
+        savePopularMovementsRanks();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        popularMovements = (ArrayList<Movement>) loadSavedObject(POPULAR_MOVEMENTS_FILENAME);
+        movementPopularRanks = (HashMap<String, Integer>) loadSavedObject(POPULAR_MOVEMENTS_RANKS_FILENAME);
+        initializeListViews();
+        popularAdapter.notifyDataSetChanged();
+    }
+
+    private void savePopularMovements() {
+        saveToInternalStorage(POPULAR_MOVEMENTS_FILENAME, popularMovements);
+    }
+
+    private void savePopularMovementsRanks() {
+        saveToInternalStorage(POPULAR_MOVEMENTS_RANKS_FILENAME, movementPopularRanks);
+    }
+
+    private void saveToInternalStorage(String fileName, Object o) {
+        try {
+            File file = new File(getContext().getFilesDir(), fileName + ".ser");
+            FileOutputStream fileOut = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOut);
+            objectOutputStream.writeObject(o);
+            objectOutputStream.close();
+            fileOut.close();
+        } catch(Exception ex) {
+            Log.d(TAG, ex.getMessage());
+        }
+    }
+
+    private Object loadSavedObject(String fileName) {
+        String filePath = getContext().getFilesDir() + "/" + fileName + ".ser";
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath));
+            return ois.readObject(); //need to check for case where popularmovements was empty
+        } catch (Exception ex) {
+            Log.d(TAG, ex.getMessage());
+            if (fileName.equals(POPULAR_MOVEMENTS_RANKS_FILENAME)) {
+                //in case the movements ranks are not saved but the popular movements were
+                //this should only happen during developement/testing
+                return getMovementRanksFromPopularMovements();
+            } else {
+                //return an empty arraylist because there are not any movements saved
+                return new ArrayList<Movement>();
+            }
+
+        }
     }
 
     private void initializeView() {
@@ -277,6 +343,14 @@ public class RecommendedMovementsTab extends MovementsTab {
             }
         }
         return false;
+    }
+
+    private HashMap<String, Integer> getMovementRanksFromPopularMovements() {
+        HashMap<String, Integer> ranks = new HashMap<>();
+        for (Movement m: popularMovements) {
+            ranks.put(m.getId(), m.getUsers().size());
+        }
+        return ranks;
     }
 
 }

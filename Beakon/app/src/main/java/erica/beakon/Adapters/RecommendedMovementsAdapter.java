@@ -36,18 +36,18 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         final Button join = (Button) convertView.findViewById(R.id.join);
 
         if (activity.currentUser.getMovements().contains(movement.getId())) {
-            join.setText("Leave");
+            join.setText(R.string.leave);
         }
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(join.getText().equals(getContext().getString(R.string.join))) {
-                    activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
                     join.setText(R.string.leave);
+                    activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
                 } else if (join.getText().equals(getContext().getString(R.string.leave))) {
-                    activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
                     join.setText(R.string.join);
+                    activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
                 }
             }
         });
