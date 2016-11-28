@@ -1,24 +1,16 @@
 package erica.beakon.Pages;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
-import erica.beakon.R;
 
 
 abstract public class MovementsTab extends Fragment {
@@ -56,13 +48,13 @@ abstract public class MovementsTab extends Fragment {
 
     protected void addMovement(String id) {
         if (isAdded()) {
-            getMainActivity().handler.getMovement(id, getMovementAddedValueEventListener());
+            getMainActivity().firebaseHandler.getMovement(id, getMovementAddedValueEventListener());
         }
     }
 
     abstract ValueEventListener getMovementAddedValueEventListener();
 
-    abstract ChildEventListener populateMovementsValueEventListener();
+    abstract ChildEventListener populateMovementsEventListener();
 
     protected MainActivity getMainActivity() {
         return ((MainActivity)getActivity());

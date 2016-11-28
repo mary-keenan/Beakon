@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Beakon</string>
+    <string name="facebook_app_id">675119015988642</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="fb_login_protocol_scheme">fb675119015988642</string>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_movement_help_text">Movements are small scale one time activities, for example: signing a petition or attending a rally.</string>
     <string name="leave">Leave</string>

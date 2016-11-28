@@ -16,6 +16,14 @@ public class User {
 
     }
 
+    public User(String id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.hashtagList = new ArrayList<>();
+        this.movements = new ArrayList<>();
+    }
+
     public User(String id, String name, String email, ArrayList<String> hashtagList){
         this.id = id;
         this.name = name;

@@ -17,6 +17,15 @@ public class Movement {
 
     public Movement() {}
 
+    public Movement(String id, String name, String description, String steps, String resources){
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.steps = steps;
+        this.resources = resources;
+        this.hashtagList = new ArrayList<>();
+    }
+
     public Movement(String id, String name, String description, String steps, String resources, ArrayList<String> hashtagList){
         this.id = id;
         this.name = name;
