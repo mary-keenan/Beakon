@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
+import erica.beakon.Objects.User;
 import erica.beakon.Pages.ExpandedHashtagPage;
 import erica.beakon.R;
 
@@ -22,9 +25,11 @@ import erica.beakon.R;
 public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
     String hashtagName;
+    ArrayList<Movement> movements;
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, 0, movements);
+        this.movements = movements;
     }
 
     @Override
@@ -38,6 +43,9 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         //set movement name
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         movementNameView.setText(movement.getName());
+
+        CheckBox completeBtn = (CheckBox) convertView.findViewById(R.id.completed_box);
+        ImageButton deleteBtn = (ImageButton) convertView.findViewById(R.id.deleteButton);
 
         //create the hashtag table and first row
         TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT,1.0f);
@@ -71,6 +79,22 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             }
         }
         hashtagTable.addView(hashtagRow, tableParams); //add last row to table so we don't leave a row behind
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movements.remove(movement);
+                notifyDataSetChanged();
+                // Todo: hashtag tables never disappear, just gets added on to the next TV?
+            }
+        });
+
+        completeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         return convertView;
     }
 
@@ -86,4 +110,8 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             }
         });
     }
-}
+
+    public void add(Movement movement) {
+        movements.add(movement);
+        notifyDataSetChanged();
+    }}

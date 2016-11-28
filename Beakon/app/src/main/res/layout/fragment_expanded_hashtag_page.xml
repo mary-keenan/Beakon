@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/hashtag_movements_list"></ListView>
 
-
     </LinearLayout>
 
     <LinearLayout
@@ -38,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/hashtag_followers_list"></ListView>
-
 
     </LinearLayout>
 

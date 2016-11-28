@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -59,6 +60,7 @@ public class MyMovementsTab extends MovementsTab {
         Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
         movements.add(rally);
         movements.add(rally);
+
 
         return view;
     }

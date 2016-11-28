@@ -63,7 +63,7 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
             }
         });
 
-        //Todo: Make it so it will permanently stop suggesting a deleted item
+        //Todo: Make it so it will permanently stop suggesting a deleted item -- DONE?
         rejectBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
