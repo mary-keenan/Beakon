@@ -12,16 +12,14 @@ public class User {
     private ArrayList<String> hashtagList;
     private ArrayList<String> movements;
 
-    public User() {
+    public User() {}
 
-    }
-
-    public User(String id, String name, String email, ArrayList<String> hashtagList){
+    public User(String id, String name, String email, ArrayList<String> hashtagList, ArrayList<String> movementList){
         this.id = id;
         this.name = name;
         this.email = email;
         this.hashtagList = hashtagList;
-        this.movements = new ArrayList<>();
+        this.movements = movementList;
     }
 
     public String getId() {

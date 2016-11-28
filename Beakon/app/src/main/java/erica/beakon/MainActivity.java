@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
         this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(),
-                snapshot.child("email").getValue().toString(), (ArrayList<String>) snapshot.child("hashtags").getValue());
+                snapshot.child("email").getValue().toString(), (ArrayList<String>) snapshot.child("hashtags").getValue(), (ArrayList<String>) snapshot.child("movements").getValue());
 
         if (snapshot.hasChild("movements")) {
             for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {

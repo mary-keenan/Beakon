@@ -23,6 +23,7 @@ import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
+import erica.beakon.Objects.User;
 import erica.beakon.R;
 
 
@@ -60,9 +61,12 @@ public class AddMovementPage extends Fragment {
                 String movementSteps = stepsInput.getText().toString(); // get movement steps
                 String movementResources = resourcesInput.getText().toString(); // get movement resources
                 final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().split(" "))); // get movement hashtags (list)
-                final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags); // create movement with data
-                final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
+
                 final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
+                userList.add("-KXgJqjMVKw4eLlWhmSz"); // hardcoding user ID for now
+
+                final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
+                final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
                 movementList.add(movement.getId());
                 // Todo: add userId to userList, which is put in hashtag -- get user information via FB login stuff?
 
@@ -71,22 +75,28 @@ public class AddMovementPage extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
-                            Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);// get hashtag info from database
+                            final Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);// get hashtag info from database
                             Log.d("----------", hashtag.getName());
-                            firebaseHandler.addMovementtoHashtag(movement, hashtag); // add new movement (and eventually the user) id to hashtag
+                            firebaseHandler.addMovementtoHashtag(movement, hashtag); // add new movement id to hashtag
+                            firebaseHandler.getUser("-KXgJqjMVKw4eLlWhmSz", new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    User user = dataSnapshot.getValue(User.class);
+                                    Log.d("~~~", user.getName());
+                                    firebaseHandler.addUsertoHashtag(user, hashtag);
+                                    firebaseHandler.addUsertoMovement(user, movement);
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {}
+                            });
                         }
                         else { // if the hasthag doesn't exist in the database
                             firebaseHandler.addHashtag(dataSnapshot.getKey(), movementList, userList); // add hashtag to database
                         }
                     }
-
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
+                    public void onCancelled(DatabaseError databaseError) {}
                 });
-
-                    //Todo: add movement to user and user to movement
                 ((MainActivity) getActivity()).changeFragment(new MyMovementsTab());
             }
         });

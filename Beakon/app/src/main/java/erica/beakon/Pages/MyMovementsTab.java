@@ -51,17 +51,6 @@ public class MyMovementsTab extends MovementsTab {
             setUpListView(view);
         }
 
-        ArrayList<Movement> movements = new ArrayList<>();
-        ArrayList<String> hashtags = new ArrayList<>();
-        hashtags.add("#stillwithher");
-        hashtags.add("#feelthebern");
-        hashtags.add("#yay");
-        hashtags.add("#bob");
-        Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
-        movements.add(rally);
-        movements.add(rally);
-
-
         return view;
     }
 

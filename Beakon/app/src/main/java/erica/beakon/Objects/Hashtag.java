@@ -30,23 +30,23 @@ public class Hashtag {
         return movementList;
     }
 
-    public void addMovement(Movement movement) {
-        this.movementList.add(movement.getId());
+    public void addMovement(String movementID) {
+        this.movementList.add(movementID);
     }
 
-    public void removeMovement(Movement movement) {
-        this.movementList.remove(movement.getId());
+    public void removeMovement(String movementID) {
+        this.movementList.remove(movementID);
     }
 
     public ArrayList<String> getUserList() {
         return userList;
     }
 
-    public void addUser(User user) {
-        this.movementList.add(user.getId());
+    public void addUser(String userID) {
+        this.userList.add(userID);
     }
 
-    public void removeUser(User user) {
-        this.movementList.remove(user.getId());
+    public void removeUser(String userID) {
+        this.userList.remove(userID);
     }
 }

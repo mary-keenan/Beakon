@@ -28,17 +28,18 @@ import erica.beakon.R;
 
 public class ExpandedHashtagPage extends Fragment {
 
-    String hashtag;
+    String hashtagName;
     ArrayList<String> movementIDList = new ArrayList<>(); //list of movement IDs (stored in hashtag)
     ArrayList<String> userIDList = new ArrayList<>(); //list of user IDs (stored in hashtag)
     ArrayList<Movement> movementList = new ArrayList<>(); //list of movements fetched using movement IDs
     ArrayList<User> followerList = new ArrayList<>(); //list of followers fetched using user IDs
+    Hashtag hashtag;
 
     public ExpandedHashtagPage(){}
 
-    public void setHashtag(String hashtag) {
+    public void setHashtag(String hashtagName) {
         //lets you set the hashtag right after you create page, before you change fragments
-        this.hashtag = hashtag;
+        this.hashtagName = hashtagName;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ExpandedHashtagPage extends Fragment {
 
         //create hashtag TV and set it to the hashtag set in setHashtag by previous fragment
         TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
-        hashtagView.setText(this.hashtag);
+        hashtagView.setText(this.hashtagName);
 
         //create buttons
         final ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonHashtag);
@@ -67,11 +68,11 @@ public class ExpandedHashtagPage extends Fragment {
         followerLV.setAdapter(followerAdapter); //starts empty
 
         //search firebase for hashtag information (movement and user ID lists) using hashtag name
-        firebaseHandler.getHashtag("bob", new ValueEventListener() {
+        firebaseHandler.getHashtag("renegade", new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
-                    Hashtag hashtag = dataSnapshot.getValue(Hashtag.class); // store hashtag info in hashtag object
+                    hashtag = dataSnapshot.getValue(Hashtag.class); // store hashtag info in hashtag object
                     movementIDList = hashtag.getMovementList(); // get movement id list from hashtag
                     userIDList = hashtag.getUserList(); // get user id list from hashtag
                     if (movementIDList != null){ // if the movement list isn't empty
@@ -117,6 +118,17 @@ public class ExpandedHashtagPage extends Fragment {
             public void onClick(View v) {
                 //follow the hashtag (see movements with this hashtag in suggested movements?)
                 // Todo: add hashtag to list of hashtags the User follows (need userId)
+                firebaseHandler.getUser("-KXgJqjMVKw4eLlWhmSz", new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        Log.d("~~~", user.getName());
+                        firebaseHandler.addUsertoHashtag(user, hashtag);
+                        followButton.setBackgroundResource(R.drawable.check);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
             }
         });
 

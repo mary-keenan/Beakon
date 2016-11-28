@@ -102,25 +102,26 @@ public class FirebaseHandler {
         this.db = db;
     }
 
-    public User addUser(String name, String email, ArrayList<String> hashtagList) {
+    public User addUser(String name, String email, ArrayList<String> hashtagList, ArrayList<String> movementList) {
         DatabaseReference userRef = ref.child("Users").push();
         String userId = userRef.getKey();
-        User user = new User(userId, name, email, hashtagList);
+        User user = new User(userId, name, email, hashtagList, movementList);
         ref.child("Users").child(userId).setValue(user);
         return user;
     }
 
-    public Movement addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList) {
+    public Movement addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList, ArrayList<String> followerList) {
         DatabaseReference movementRef = ref.child("Movements").push();
         String movementId = movementRef.getKey();
-        Movement movement = new Movement(movementId, name, description, steps, resources, hashtagList);
+        Movement movement = new Movement(movementId, name, description, steps, resources, hashtagList, followerList);
         ref.child("Movements").child(movementId).setValue(movement);
         return movement;
     }
 
-    public void addHashtag(String name, ArrayList<String> movementList, ArrayList<String> userList) {
+    public Hashtag addHashtag(String name, ArrayList<String> movementList, ArrayList<String> userList) {
         Hashtag hashtag = new Hashtag(name, movementList, userList);
         ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+        return hashtag;
     }
 
     public void getById(String id, ValueEventListener listener) {
@@ -145,7 +146,7 @@ public class FirebaseHandler {
 
     public void getUser(String id, ValueEventListener listener) {
         Query dataRef = ref.child("Users").child(id);
-        dataRef.addValueEventListener(listener);
+        dataRef.addListenerForSingleValueEvent(listener);
     }
 
     public void getMovement(String id, ValueEventListener listener) {
@@ -160,7 +161,7 @@ public class FirebaseHandler {
 
     public void addUsertoMovement(User user, Movement movement) {
         user.addMovement(movement);
-        movement.addUser(user);
+        movement.addFollower(user);
         updateUser(user);
         updateMovement(movement);
     }
@@ -174,34 +175,38 @@ public class FirebaseHandler {
 
     public void addUsertoHashtag(User user, Hashtag hashtag) {
         user.addHashtag(hashtag.getName());
-        hashtag.addUser(user);
+        hashtag.addUser(user.getId());
         updateUser(user);
         updateHashtag(hashtag);
     }
 
     public void addMovementtoHashtag(Movement movement, Hashtag hashtag) {
         movement.addHashtag(hashtag.getName());
-        hashtag.addMovement(movement);
+        hashtag.addMovement(movement.getId());
         updateMovement(movement);
         updateHashtag(hashtag);
     }
 
     public void removeUserfromHashtag(User user, Hashtag hashtag) {
         user.removeHashtag(hashtag.getName());
-        hashtag.removeUser(user);
+        hashtag.removeUser(user.getId());
         updateHashtag(hashtag);
         updateUser(user);
     }
 
     public void removeMovementfromHashtag(Movement movement, Hashtag hashtag) {
         movement.removeHashtag(hashtag.getName());
-        hashtag.removeMovement(movement);
+        hashtag.removeMovement(movement.getId());
         updateHashtag(hashtag);
         updateMovement(movement);
     }
 
     public void updateUser(User user) {
         ref.child("Users").child(user.getId()).setValue(user);
+    }
+
+    public void updateUser(String userID, String field, String value) {
+        ref.child("Users").child(userID).child(field).setValue(value);
     }
 
     public void updateMovement(Movement movement) {
