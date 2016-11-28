@@ -10,6 +10,8 @@ public class Hashtag {
     private ArrayList<String> movementList;
     private ArrayList<String> userList;
 
+    public Hashtag(){}
+
     public Hashtag(String name, ArrayList<String> movementList, ArrayList<String> userList) {
         this.name = name;
         this.movementList = movementList;

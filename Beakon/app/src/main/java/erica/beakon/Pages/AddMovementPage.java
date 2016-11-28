@@ -55,26 +55,30 @@ public class AddMovementPage extends Fragment {
         addMovementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String movementName = nameInput.getText().toString();
-                String movementDescription = descriptionInput.getText().toString();
-                String movementSteps = stepsInput.getText().toString();
-                String movementResources = resourcesInput.getText().toString();
-                final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().split(" ")));
-                final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags);
-                final ArrayList<String> movementList = new ArrayList<>();
+                String movementName = nameInput.getText().toString(); // get movement name
+                String movementDescription = descriptionInput.getText().toString(); // get movement description
+                String movementSteps = stepsInput.getText().toString(); // get movement steps
+                String movementResources = resourcesInput.getText().toString(); // get movement resources
+                final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().split(" "))); // get movement hashtags (list)
+                final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags); // create movement with data
+                final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
+                final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
                 movementList.add(movement.getId());
-                //loop through hashtags, check if they already exist --> update, or if they don't --> add
-                firebaseHandler.getAllHashtags(new ValueEventListener() {
+                // Todo: add userId to userList, which is put in hashtag -- get user information via FB login stuff?
+
+                //loop through hashtags in handler, check if they already exist here --> update, or if they don't --> add
+                firebaseHandler.getBatchHashtags(movementHashtags, new ValueEventListener() { // called for each hashtag in list; handler loops through them
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (int i = 0; i < movementHashtags.size()-1; i++) {
-                            if (dataSnapshot.hasChild(movementHashtags.get(i))) {
-                                Hashtag hashtag = dataSnapshot.child(movementHashtags.get(i)).getValue(Hashtag.class);//
-                                firebaseHandler.addMovementtoHashtag(movement, hashtag);
-                            }
-                            else {
-                                firebaseHandler.addHashtag(movementHashtags.get(i), movementList, new ArrayList<String>());                            }
-                    }}
+                        if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
+                            Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);// get hashtag info from database
+                            Log.d("----------", hashtag.getName());
+                            firebaseHandler.addMovementtoHashtag(movement, hashtag); // add new movement (and eventually the user) id to hashtag
+                        }
+                        else { // if the hasthag doesn't exist in the database
+                            firebaseHandler.addHashtag(dataSnapshot.getKey(), movementList, userList); // add hashtag to database
+                        }
+                    }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -82,8 +86,7 @@ public class AddMovementPage extends Fragment {
                     }
                 });
 
-
-                    //Todo: add movement to user
+                    //Todo: add movement to user and user to movement
                 ((MainActivity) getActivity()).changeFragment(new MyMovementsTab());
             }
         });

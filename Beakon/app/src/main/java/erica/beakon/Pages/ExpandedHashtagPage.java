@@ -23,7 +23,7 @@ import erica.beakon.R;
 public class ExpandedHashtagPage extends Fragment {
 
     String hashtag;
-    FirebaseHandler handler = ((MainActivity) getActivity()).getHandler();
+//    FirebaseHandler handler = ((MainActivity) getActivity()).getHandler();
 
     public ExpandedHashtagPage(){}
 

@@ -208,9 +208,25 @@ public class FirebaseHandler {
         ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
     }
 
-    public void getAllHashtags(ValueEventListener listener) {
-        Query dataRef = ref.child("Hashtags");
-        dataRef.addListenerForSingleValueEvent(listener);
+    public void getBatchHashtags(ArrayList<String> hashtagBatch, ValueEventListener listener){ // for adding new movements
+        for (int i = 0; i < hashtagBatch.size() - 1; i++) {
+            DatabaseReference dataRef = ref.child("Hashtags").child(hashtagBatch.get(i));
+            dataRef.addListenerForSingleValueEvent(listener);
+        }
+    }
+
+    public void getBatchMovements(ArrayList<String> movementBatch, ValueEventListener listener){ // for expanded hashtag page
+        for (int i = 0; i < movementBatch.size() - 1; i++) {
+            DatabaseReference dataRef = ref.child("Hashtags").child(movementBatch.get(i));
+            dataRef.addListenerForSingleValueEvent(listener);
+        }
+    }
+
+    public void getBatchUsers(ArrayList<String> userBatch, ValueEventListener listener){ // for expanded hashtag and users page
+        for (int i = 0; i < userBatch.size() - 1; i++) {
+            DatabaseReference dataRef = ref.child("Hashtags").child(userBatch.get(i));
+            dataRef.addListenerForSingleValueEvent(listener);
+        }
     }
 }
 
