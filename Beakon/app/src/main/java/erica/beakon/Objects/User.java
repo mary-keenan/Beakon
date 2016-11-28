@@ -55,8 +55,11 @@ public class User {
     public void setHashtagList(ArrayList<String> hashtagList) {
         this.hashtagList = hashtagList;}
 
-    public ArrayList<String> getMovements() {
-            return this.movements;}
+    public void addHashtag(String hashtag){this.hashtagList.add(hashtag);}
+
+    public void removeHashtag(String hashtag){this.hashtagList.remove(hashtag);}
+
+    public ArrayList<String> getMovements() {return this.movements;}
 
     public void setMovements(ArrayList<String> movements){ this.movements = movements; }
 

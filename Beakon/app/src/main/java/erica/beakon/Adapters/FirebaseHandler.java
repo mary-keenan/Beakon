@@ -174,6 +174,7 @@ public class FirebaseHandler {
         ref.child("Movements").child(movement.getId()).setValue(movement);
     }
 
+
 }
 
 
