@@ -210,6 +210,7 @@ public class FirebaseHandler {
 
     public void addUsertoMovement(User user, Movement movement) {
         user.addMovement(movement);
+        setMovementofUserStatus(user, movement,false);
         movement.addUser(user);
         updateUser(user);
         updateMovement(movement);
@@ -228,15 +229,16 @@ public class FirebaseHandler {
 
     public void updateMovement(Movement movement) {
         ref.child("Movements").child(movement.getId()).setValue(movement);
+//        ref.child("Movements").child(movement.getId()).child("status").setValue(false);
     }
 
     public void getMovementofUserStatus(User user, Movement movement, ValueEventListener listener) {
-        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child("status");
+        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movement.getId());
         dataRef.addValueEventListener(listener);
     }
 
     public void setMovementofUserStatus(User user, Movement movement, boolean isComplete) {
-        ref.child("Users").child(user.getId()).child("movements").child("status").setValue(isComplete);
+        ref.child("Users").child(user.getId()).child("movements").child(movement.getId()).child("status").setValue(isComplete);
     }
 
 }

@@ -51,7 +51,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
         }
 
-        final MainActivity activity = new MainActivity();
+        final MainActivity activity = (MainActivity) getContext();
 
         currentUser = activity.getCurrentUser();
 
@@ -67,7 +67,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue().equals(true)) {
                     checkBox.setChecked(true);
-                } else if (dataSnapshot.getValue().equals(false)) {
+                } else if (dataSnapshot.child("status").getValue().equals(false)) {
                     checkBox.setChecked(false);
                 }
             }

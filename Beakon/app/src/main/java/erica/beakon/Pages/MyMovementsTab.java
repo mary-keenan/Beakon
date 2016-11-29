@@ -90,7 +90,7 @@ public class MyMovementsTab extends MovementsTab {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                getMovement(dataSnapshot.getValue(String.class));
+                getMovement(dataSnapshot.getValue().toString());
             }
 
             @Override

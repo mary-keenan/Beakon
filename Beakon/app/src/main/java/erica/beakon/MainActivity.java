@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         Profile currentProfile = Profile.getCurrentProfile();
         String id = currentProfile.getId();
 
-        firebaseHandler.getUser(id, new ValueEventListener() {
+
+
+         firebaseHandler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 setCurrentUserFromData(dataSnapshot);
