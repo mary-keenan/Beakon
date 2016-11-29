@@ -58,7 +58,7 @@ public class StorageHandler {
                 return onError.call();
             } catch (Exception e){
                 Log.d(TAG, e.getMessage());
-                return false;
+                return null;
             }
 
         }
