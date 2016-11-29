@@ -29,7 +29,7 @@
 //
 //    }
 //
-//    public void addMovement(String name, String description, String steps, String resources) {
+//    public void getMovement(String name, String description, String steps, String resources) {
 //        DatabaseReference movementRef = ref.child("Movements").push();
 //        String movementId = movementRef.getKey();
 //        Movement movement = new Movement(movementId, name, description, steps, resources);
@@ -76,6 +76,7 @@ package erica.beakon.Adapters;
 
 
 import android.location.Location;
+import android.renderscript.Sampler;
 import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
@@ -100,10 +101,11 @@ import erica.beakon.Objects.User;
 
 public class FirebaseHandler {
 
-    static final String TAG = "FIREBASE_HANDLER";
     FirebaseDatabase db;
     DatabaseReference ref;
     LoginPage loginPage;
+
+    String TAG = "FirebaseHandler";
 
 
     public FirebaseHandler(FirebaseDatabase db, DatabaseReference ref) {
@@ -116,18 +118,17 @@ public class FirebaseHandler {
         return new GeoFire(geoRef);
     }
 
-    public void addUser(String name, String email) {
-        DatabaseReference userRef = ref.child("Users").push();
-        String userId = userRef.getKey();
-        User user = new User(userId, name, email);
-        ref.child("Users").child(userId).setValue(user);
+    public void addUser(String fbId, String name) {
+//        String userId = loginPage.getCurrentUserID();
+        User user = new User(fbId, name);
+        ref.child("Users").child(fbId).setValue(user);
     }
 
-    public void addUser(String name, String email, ArrayList<String> hashtagList) {
+    public void addUser(String name, ArrayList<String> hashtagList) {
 //        DatabaseReference userRef = ref.child("Users").push();
 //        String userId = userRef.getKey();
         String userId = loginPage.getCurrentUserID();
-        User user = new User(userId, name, email, hashtagList);
+        User user = new User(userId, name, hashtagList);
         ref.child("Users").child(userId).setValue(user);
     }
 
@@ -227,6 +228,15 @@ public class FirebaseHandler {
 
     public void updateMovement(Movement movement) {
         ref.child("Movements").child(movement.getId()).setValue(movement);
+    }
+
+    public void getMovementofUserStatus(User user, Movement movement, ValueEventListener listener) {
+        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child("status");
+        dataRef.addValueEventListener(listener);
+    }
+
+    public void setMovementofUserStatus(User user, Movement movement, boolean isComplete) {
+        ref.child("Users").child(user.getId()).child("movements").child("status").setValue(isComplete);
     }
 
 }

@@ -108,7 +108,9 @@ public class LocationHandler {
         return new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                nearbyUsers.add(key);
+                if (!nearbyUsers.contains(key)) {
+                    nearbyUsers.add(key);
+                }
             }
 
             @Override
