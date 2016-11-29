@@ -75,8 +75,9 @@ public class RecommendedMovementsTab extends MovementsTab {
     public void onResume() {
         super.onResume();
         popularMovements = (ArrayList<Movement>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_FILENAME, new Callable<Object>() {
-            public Object call() {
-                return getMovementRanksFromPopularMovements();
+            public ArrayList<Movement> call() {
+                movementPopularRanks = getMovementRanksFromPopularMovements();
+                return popularMovements;
             }
         });
         movementPopularRanks = (HashMap<String, Integer>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_RANKS_FILENAME, new Callable<Object>() {
