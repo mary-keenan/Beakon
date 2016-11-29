@@ -42,11 +42,11 @@ abstract public class MovementsTab extends Fragment {
         this.movements.remove(index);
     }
 
-    protected void removeMovement(String id) {
-        this.movements.remove(id);
+    protected void removeMovement(Movement movement) {
+        this.movements.remove(movement);
     }
 
-    protected void addMovement(String id) {
+    protected void getMovement(String id) {
         if (isAdded()) {
             getMainActivity().firebaseHandler.getMovement(id, getMovementAddedValueEventListener());
         }
@@ -58,6 +58,15 @@ abstract public class MovementsTab extends Fragment {
 
     protected MainActivity getMainActivity() {
         return ((MainActivity)getActivity());
+    }
+
+    protected Movement getMovementById(String id) {
+        for (Movement m: movements) {
+            if (m.getId().equals(id)) {
+                return m;
+            }
+        }
+        throw new NullPointerException("No movement exists with that id in nearby movements");
     }
 
 }

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import erica.beakon.Objects.Movement;
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.R;
@@ -20,6 +22,8 @@ public class MyMovementsTab extends MovementsTab {
     public static final String TAG = "MY MOVEMENTS TAB";
     MyMovementAdapter adapter;
     View view;
+    ListView listView;
+    TextView message;
 
     public MyMovementsTab() {}
 
@@ -28,7 +32,10 @@ public class MyMovementsTab extends MovementsTab {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_my_movements_tab, container, false);
-//        movements = new ArrayList<Movement>();
+
+        listView = (ListView) view.findViewById(R.id.my_movements_list);
+        message = (TextView) view.findViewById(R.id.no_movments_message);
+
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
         setUsersMovementsListener();
         adapter = new MyMovementAdapter(getContext(), movements);
@@ -55,7 +62,9 @@ public class MyMovementsTab extends MovementsTab {
     }
 
     private void setUpListView(View view) {
-        ListView listView = (ListView) view.findViewById(R.id.my_movements_list);
+        message.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.VISIBLE);
+
         listView.setAdapter(adapter);
     }
 
@@ -81,7 +90,7 @@ public class MyMovementsTab extends MovementsTab {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                addMovement(dataSnapshot.getValue(String.class));
+                getMovement(dataSnapshot.getValue(String.class));
             }
 
             @Override
@@ -91,7 +100,11 @@ public class MyMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                removeMovement(dataSnapshot.getValue(String.class));
+                removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
+                if (movements.isEmpty()) {
+                    listView.setVisibility(View.INVISIBLE);
+                    message.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

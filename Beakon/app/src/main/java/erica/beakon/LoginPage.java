@@ -59,12 +59,11 @@ public class LoginPage extends Activity {
                             Profile.setCurrentProfile(currentProfile);
                         }
                     };
+                    startActivity(intent);
                 } else {
                     Log.d("***", Profile.getCurrentProfile().getFirstName());
                     firebaseHandler.addUser(Profile.getCurrentProfile().getId(),Profile.getCurrentProfile().getFirstName());
                     startActivity(intent);
-
-
                 }
 
                 Log.d("FacebookLogin", "onSuccess" + loginResult);
