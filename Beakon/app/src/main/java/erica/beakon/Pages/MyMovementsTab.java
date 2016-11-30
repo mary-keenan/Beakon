@@ -50,6 +50,8 @@ public class MyMovementsTab extends MovementsTab {
         message = (TextView) view.findViewById(R.id.no_movments_message);
         logoutButton = (Button) view.findViewById(R.id.logout);
 
+
+
         final Intent intent = new Intent(getActivity(), LoginPage.class);
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -59,22 +61,21 @@ public class MyMovementsTab extends MovementsTab {
                 startActivity(intent);
             }
         });
-
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
         setUsersMovementsListener();
         if (!movements.isEmpty() && movements != null) {
             setUpListView();
         }
 
-        ArrayList<Movement> movements = new ArrayList<>();
-        ArrayList<String> hashtags = new ArrayList<>();
-        hashtags.add("#stillwithher");
-        hashtags.add("#feelthebern");
-        hashtags.add("#yay");
-        hashtags.add("#bob");
-        Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
-        movements.add(rally);
-        movements.add(rally);
+//        ArrayList<Movement> movements = new ArrayList<>();
+//        ArrayList<String> hashtags = new ArrayList<>();
+//        hashtags.add("#stillwithher");
+//        hashtags.add("#feelthebern");
+//        hashtags.add("#yay");
+//        hashtags.add("#bob");
+//        Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
+//        movements.add(rally);
+//        movements.add(rally);
 
         return view;
     }
@@ -116,7 +117,7 @@ public class MyMovementsTab extends MovementsTab {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                getMovement(dataSnapshot.getValue().toString());
+                getMovement(dataSnapshot.getKey().toString());
             }
 
             @Override

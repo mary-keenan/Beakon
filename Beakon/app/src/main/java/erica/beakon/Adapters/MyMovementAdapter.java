@@ -47,6 +47,8 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Movement movement = getItem(position);
 
+        Log.d(TAG,movement.getId());
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
         }
@@ -65,7 +67,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue().equals(true)) {
+                if (dataSnapshot.child("status").getValue().equals(true)) {
                     checkBox.setChecked(true);
                 } else if (dataSnapshot.child("status").getValue().equals(false)) {
                     checkBox.setChecked(false);
@@ -78,12 +80,10 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             }
         });
 
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (currentUser!= null) {
-                    firebaseHandler.setMovementofUserStatus(currentUser,movement, b);
-                }
+            public void onClick(View view) {
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, checkBox.isChecked());
             }
         });
 

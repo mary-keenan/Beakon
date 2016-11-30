@@ -61,7 +61,6 @@ public class LoginPage extends Activity {
                     };
                     startActivity(intent);
                 } else {
-                    Log.d("***", Profile.getCurrentProfile().getFirstName());
                     firebaseHandler.addUser(Profile.getCurrentProfile().getId(),Profile.getCurrentProfile().getFirstName());
                     startActivity(intent);
                 }
