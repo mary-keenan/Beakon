@@ -29,6 +29,12 @@
             android:text="Suggested"
             android:id="@+id/this_page"
             android:background="@color/colorBackground"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGOUT"/>
     </LinearLayout>
 
     <Button

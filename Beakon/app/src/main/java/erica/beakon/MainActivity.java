@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import erica.beakon.location.LocationHandler;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
         Profile currentProfile = Profile.getCurrentProfile();
         String id = currentProfile.getId();
+        //LoginManager.getInstance().logOut();
 
 
 

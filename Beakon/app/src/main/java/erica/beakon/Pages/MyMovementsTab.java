@@ -1,16 +1,30 @@
 package erica.beakon.Pages;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import erica.beakon.LoginPage;
+import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.R;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.DeviceLoginManager;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +38,7 @@ public class MyMovementsTab extends MovementsTab {
     View view;
     ListView listView;
     TextView message;
-
+    Button logoutButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,12 +48,22 @@ public class MyMovementsTab extends MovementsTab {
 
         listView = (ListView) view.findViewById(R.id.my_movements_list);
         message = (TextView) view.findViewById(R.id.no_movments_message);
+        logoutButton = (Button) view.findViewById(R.id.logout);
+
+        final Intent intent = new Intent(getActivity(), LoginPage.class);
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logOut();
+                startActivity(intent);
+            }
+        });
 
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
         setUsersMovementsListener();
-
         if (!movements.isEmpty() && movements != null) {
-            setUpListView(view);
+            setUpListView();
         }
 
         ArrayList<Movement> movements = new ArrayList<>();
@@ -60,9 +84,8 @@ public class MyMovementsTab extends MovementsTab {
         getMainActivity().firebaseHandler.getUserChild(getMainActivity().currentUser.getId(), "movements", populateMovementsEventListener());
     }
 
-    private void setUpListView(View view) {
+    private void setUpListView() {
         adapter = new MyMovementAdapter(getContext(), movements);
-
         message.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
 
@@ -75,7 +98,7 @@ public class MyMovementsTab extends MovementsTab {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 movements.add(dataSnapshot.getValue(Movement.class));
                 if (movements.size() == 1) {
-                    setUpListView(view);
+                    setUpListView();
                 }
                 if (adapter!=null) {
                     adapter.notifyDataSetChanged();
