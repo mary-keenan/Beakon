@@ -236,7 +236,7 @@ public class FirebaseHandler {
     }
 
     public void getMovementofUserStatus(User user, Movement movement, ValueEventListener listener) {
-        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movement.getId());
+        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movement.getId()).child("status");
         dataRef.addValueEventListener(listener);
     }
 
