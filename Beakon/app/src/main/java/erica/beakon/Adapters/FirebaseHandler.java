@@ -212,7 +212,10 @@ public class FirebaseHandler {
         user.addMovement(movement);
         setMovementofUserStatus(user, movement,false);
         movement.addUser(user);
-        updateUser(user);
+//        updateUser(user);
+        for(String id : user.getMovements()){
+            ref.child("Users").child(user.getId()).child("movements").child(id).child("status").setValue(false);
+        }
         updateMovement(movement);
     }
 
