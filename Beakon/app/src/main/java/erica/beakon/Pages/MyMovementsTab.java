@@ -25,7 +25,6 @@ public class MyMovementsTab extends MovementsTab {
     ListView listView;
     TextView message;
 
-    public MyMovementsTab() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +37,8 @@ public class MyMovementsTab extends MovementsTab {
 
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
         setUsersMovementsListener();
-        adapter = new MyMovementAdapter(getContext(), movements);
-        if (!movements.isEmpty()) {
+
+        if (!movements.isEmpty() && movements != null) {
             setUpListView(view);
         }
 
@@ -62,6 +61,8 @@ public class MyMovementsTab extends MovementsTab {
     }
 
     private void setUpListView(View view) {
+        adapter = new MyMovementAdapter(getContext(), movements);
+
         message.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
 
@@ -76,7 +77,9 @@ public class MyMovementsTab extends MovementsTab {
                 if (movements.size() == 1) {
                     setUpListView(view);
                 }
-                adapter.notifyDataSetChanged();
+                if (adapter!=null) {
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -90,7 +93,7 @@ public class MyMovementsTab extends MovementsTab {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                getMovement(dataSnapshot.getValue(String.class));
+                getMovement(dataSnapshot.getValue().toString());
             }
 
             @Override

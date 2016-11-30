@@ -51,7 +51,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
         }
 
-        final MainActivity activity = new MainActivity();
+        final MainActivity activity = (MainActivity) getContext();
 
         currentUser = activity.getCurrentUser();
 
@@ -62,26 +62,28 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
         movementNameView.setText(movement.getName());
 
-//        firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.getValue().equals(true)) {
-//                    checkBox.setChecked(true);
-//                } else if (dataSnapshot.getValue().equals(false)) {
-//                    checkBox.setChecked(false);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue().equals(true)) {
+                    checkBox.setChecked(true);
+                } else if (dataSnapshot.child("status").getValue().equals(false)) {
+                    checkBox.setChecked(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                firebaseHandler.setMovementofUserStatus(currentUser,movement, b);
+                if (currentUser!= null) {
+                    firebaseHandler.setMovementofUserStatus(currentUser,movement, b);
+                }
             }
         });
 

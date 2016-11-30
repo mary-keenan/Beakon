@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
@@ -45,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         Profile currentProfile = Profile.getCurrentProfile();
         String id = currentProfile.getId();
 
-        firebaseHandler.getUser(id, new ValueEventListener() {
+
+
+         firebaseHandler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 setCurrentUserFromData(dataSnapshot);
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
                 , (ArrayList<String>) snapshot.child("hashtags").getValue());
 
         if (snapshot.hasChild("movements")) {
-            for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
+            for (String movementId : ((HashMap<String,String>) snapshot.child("movements").getValue()).keySet()) {
                 this.currentUser.addMovement(movementId);
             }
         }
