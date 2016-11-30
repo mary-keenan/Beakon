@@ -14,12 +14,25 @@ public class User {
 
     public User() {}
 
-    public User(String id, String name, String email, ArrayList<String> hashtagList, ArrayList<String> movementList){
+    public User(String id, String name, ArrayList<String> hashtagList, ArrayList<String> movementList){
         this.id = id;
         this.name = name;
-        this.email = email;
         this.hashtagList = hashtagList;
         this.movements = movementList;
+    }
+
+    public User(String id, String name, ArrayList<String> hashtagList){
+        this.id = id;
+        this.name = name;
+        this.hashtagList = hashtagList;
+        this.movements = new ArrayList<>();
+    }
+
+    public User(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.hashtagList = new ArrayList<>();
+        this.movements = new ArrayList<>();
     }
 
     public String getId() {

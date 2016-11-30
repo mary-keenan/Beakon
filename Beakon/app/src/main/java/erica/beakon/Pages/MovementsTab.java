@@ -1,24 +1,16 @@
 package erica.beakon.Pages;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
-import erica.beakon.R;
 
 
 abstract public class MovementsTab extends Fragment {
@@ -50,22 +42,31 @@ abstract public class MovementsTab extends Fragment {
         this.movements.remove(index);
     }
 
-    protected void removeMovement(String id) {
-        this.movements.remove(id);
+    protected void removeMovement(Movement movement) {
+        this.movements.remove(movement);
     }
 
-    protected void addMovement(String id) {
+    protected void getMovement(String id) {
         if (isAdded()) {
-            getMainActivity().handler.getMovement(id, getMovementAddedValueEventListener());
+            getMainActivity().firebaseHandler.getMovement(id, getMovementAddedValueEventListener());
         }
     }
 
     abstract ValueEventListener getMovementAddedValueEventListener();
 
-    abstract ChildEventListener populateMovementsValueEventListener();
+    abstract ChildEventListener populateMovementsEventListener();
 
     protected MainActivity getMainActivity() {
         return ((MainActivity)getActivity());
+    }
+
+    protected Movement getMovementById(String id) {
+        for (Movement m: movements) {
+            if (m.getId().equals(id)) {
+                return m;
+            }
+        }
+        throw new NullPointerException("No movement exists with that id in nearby movements");
     }
 
 }

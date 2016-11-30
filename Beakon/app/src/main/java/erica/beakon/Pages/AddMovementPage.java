@@ -63,7 +63,9 @@ public class AddMovementPage extends Fragment {
                 final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().split(" "))); // get movement hashtags (list)
 
                 final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
-                userList.add("-KXgJqjMVKw4eLlWhmSz"); // hardcoding user ID for now
+                final String userID = ((MainActivity) getActivity()).currentUser.getId();
+                Log.d("...", userID);
+                userList.add(userID); // hardcoding user ID for now
 
                 final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
                 final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
@@ -78,7 +80,7 @@ public class AddMovementPage extends Fragment {
                             final Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);// get hashtag info from database
                             Log.d("----------", hashtag.getName());
                             firebaseHandler.addMovementtoHashtag(movement, hashtag); // add new movement id to hashtag
-                            firebaseHandler.getUser("-KXgJqjMVKw4eLlWhmSz", new ValueEventListener() {
+                            firebaseHandler.getUser(userID, new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     User user = dataSnapshot.getValue(User.class);

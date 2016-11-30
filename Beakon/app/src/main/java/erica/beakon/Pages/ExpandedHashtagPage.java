@@ -66,9 +66,9 @@ public class ExpandedHashtagPage extends Fragment {
         ListView followerLV = (ListView) view.findViewById(R.id.hashtag_followers_list);
         final FollowerAdapter followerAdapter = new FollowerAdapter(getActivity(), followerList);
         followerLV.setAdapter(followerAdapter); //starts empty
-
+        String h = "renegade";
         //search firebase for hashtag information (movement and user ID lists) using hashtag name
-        firebaseHandler.getHashtag("renegade", new ValueEventListener() {
+        firebaseHandler.getHashtag(h, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) { // if the hashtag exists in database

@@ -9,12 +9,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import erica.beakon.Objects.Movement;
+import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 import erica.beakon.Adapters.MyMovementAdapter;
@@ -27,6 +30,8 @@ public class MyMovementsTab extends MovementsTab {
     public static final String TAG = "MY MOVEMENTS TAB";
     MyMovementAdapter adapter;
     View view;
+    ListView listView;
+    TextView message;
 
     public MyMovementsTab() {}
 
@@ -35,7 +40,10 @@ public class MyMovementsTab extends MovementsTab {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_my_movements_tab, container, false);
-//        movements = new ArrayList<Movement>();
+
+        listView = (ListView) view.findViewById(R.id.my_movements_list);
+        message = (TextView) view.findViewById(R.id.no_movments_message);
+
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
 //        setUpChangeFragmentsButton(view, new AddMovementPage(), R.id.goto_add_movement_button);
         ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
@@ -56,11 +64,13 @@ public class MyMovementsTab extends MovementsTab {
 
 
     private void setUsersMovementsListener() {
-        getMainActivity().handler.getUserChild(getMainActivity().currentUser.getId(), "movements", populateMovementsValueEventListener());
+        getMainActivity().firebaseHandler.getUserChild(getMainActivity().currentUser.getId(), "movements", populateMovementsEventListener());
     }
 
     private void setUpListView(View view) {
-        ListView listView = (ListView) view.findViewById(R.id.my_movements_list);
+        message.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.VISIBLE);
+
         listView.setAdapter(adapter);
     }
 
@@ -82,11 +92,11 @@ public class MyMovementsTab extends MovementsTab {
         };
     }
 
-    protected ChildEventListener populateMovementsValueEventListener() {
+    protected ChildEventListener populateMovementsEventListener() {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                addMovement(dataSnapshot.getValue(String.class));
+                getMovement(dataSnapshot.getValue(String.class));
             }
 
             @Override
@@ -96,7 +106,11 @@ public class MyMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                removeMovement(Integer.valueOf(dataSnapshot.getValue(String.class)));
+                removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
+                if (movements.isEmpty()) {
+                    listView.setVisibility(View.INVISIBLE);
+                    message.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

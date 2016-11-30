@@ -1,11 +1,13 @@
 package erica.beakon.Objects;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by mafaldaborges on 11/7/16.
  */
-public class Movement {
+public class Movement implements Serializable {
 
     String id;
     private String name;
@@ -17,7 +19,7 @@ public class Movement {
 
     public Movement() {}
 
-    public Movement(String id, String name, String description, String steps, String resources, ArrayList<String> hashtagList, ArrayList<String> followerList){
+    public Movement(String id, String name, String description, String steps, String resources, ArrayList<String> hashtagList, ArrayList<String> followerList) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -27,6 +29,25 @@ public class Movement {
         this.followerList = followerList;
     }
 
+    public Movement(String id, String name, String description, String steps, String resources, ArrayList<String> hashtagList){
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.steps = steps;
+        this.resources = resources;
+        this.hashtagList = hashtagList;
+        this.followerList = new ArrayList<>();
+    }
+
+    public Movement(String id, String name, String description, String steps, String resources){
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.steps = steps;
+        this.resources = resources;
+        this.followerList = new ArrayList<>();
+        this.hashtagList = new ArrayList<>();
+    }
 
     public String getId() {
         return id;
@@ -98,4 +119,8 @@ public class Movement {
     private void setEmptyUsers() { this.setFollowers(new ArrayList<String>()); }
 
     public void removeUser(User user) { this.followerList.remove(user.getId()); }
+
+    public boolean hasUsers() {
+        return !(this.followerList == null || this.followerList.isEmpty());
+    }
 }

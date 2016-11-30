@@ -29,7 +29,7 @@
 //
 //    }
 //
-//    public void addMovement(String name, String description, String steps, String resources) {
+//    public void getMovement(String name, String description, String steps, String resources) {
 //        DatabaseReference movementRef = ref.child("Movements").push();
 //        String movementId = movementRef.getKey();
 //        Movement movement = new Movement(movementId, name, description, steps, resources);
@@ -79,6 +79,16 @@ import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import android.location.Location;
+import android.renderscript.Sampler;
+import android.util.Log;
+
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.firebase.geofire.LocationCallback;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -87,25 +97,62 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import erica.beakon.LoginPage;
 import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
 
 
 public class FirebaseHandler {
+
     FirebaseDatabase db;
     DatabaseReference ref;
+    LoginPage loginPage;
+
+    String TAG = "FirebaseHandler";
 
 
     public FirebaseHandler(FirebaseDatabase db, DatabaseReference ref) {
         this.ref = ref;
         this.db = db;
     }
+    private GeoFire getGeoFire() {
+        DatabaseReference geoRef = ref.child("GeoFire");
+        return new GeoFire(geoRef);
+    }
 
-    public User addUser(String name, String email, ArrayList<String> hashtagList, ArrayList<String> movementList) {
-        DatabaseReference userRef = ref.child("Users").push();
-        String userId = userRef.getKey();
-        User user = new User(userId, name, email, hashtagList, movementList);
+    public void setUserGeoLocation(User user, Location location) {
+        getGeoFire().setLocation(user.getId(), new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                if (error != null) {
+                    Log.e(TAG, "There was an error saving the location to GeoFire: " + error);
+                } else {
+                    Log.d(TAG, "Location saved on server successfully!");
+                }
+            }
+        });
+    }
+
+    public void getUserGeoLocation(User user, LocationCallback callback) {
+        getGeoFire().getLocation(user.getId(), callback);
+    }
+
+    public void getNearbyUsers(GeoLocation location, GeoQueryEventListener listener) {
+        GeoQuery geoQuery = getGeoFire().queryAtLocation(location, 0.6);
+        geoQuery.addGeoQueryEventListener(listener);
+    }
+
+
+    public void addUser(String fbId, String name) {
+//        String userId = loginPage.getCurrentUserID();
+        User user = new User(fbId, name);
+        ref.child("Users").child(fbId).setValue(user);
+    }
+
+    public User addUser(String name, ArrayList<String> hashtagList, ArrayList<String> movementList) {
+        String userId = loginPage.getCurrentUserID();
+        User user = new User(userId, name, hashtagList, movementList);
         ref.child("Users").child(userId).setValue(user);
         return user;
     }
@@ -237,6 +284,16 @@ public class FirebaseHandler {
             dataRef.addListenerForSingleValueEvent(listener);
         }
     }
+
+    public void getMovementofUserStatus(User user, Movement movement, ValueEventListener listener) {
+        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child("status");
+        dataRef.addValueEventListener(listener);
+    }
+
+    public void setMovementofUserStatus(User user, Movement movement, boolean isComplete) {
+        ref.child("Users").child(user.getId()).child("movements").child("status").setValue(isComplete);
+    }
+
 }
 
 
