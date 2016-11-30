@@ -37,7 +37,6 @@ public class MyMovementsTab extends MovementsTab {
 
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
         setUsersMovementsListener();
-        adapter = new MyMovementAdapter(getContext(), movements);
 
         if (!movements.isEmpty() && movements != null) {
             setUpListView(view);
@@ -62,6 +61,8 @@ public class MyMovementsTab extends MovementsTab {
     }
 
     private void setUpListView(View view) {
+        adapter = new MyMovementAdapter(getContext(), movements);
+
         message.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
 
@@ -76,7 +77,9 @@ public class MyMovementsTab extends MovementsTab {
                 if (movements.size() == 1) {
                     setUpListView(view);
                 }
-                adapter.notifyDataSetChanged();
+                if (adapter!=null) {
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
