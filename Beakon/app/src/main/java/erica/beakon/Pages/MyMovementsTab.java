@@ -25,7 +25,6 @@ public class MyMovementsTab extends MovementsTab {
     ListView listView;
     TextView message;
 
-    public MyMovementsTab() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,7 +38,8 @@ public class MyMovementsTab extends MovementsTab {
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
         setUsersMovementsListener();
         adapter = new MyMovementAdapter(getContext(), movements);
-        if (!movements.isEmpty()) {
+
+        if (!movements.isEmpty() && movements != null) {
             setUpListView(view);
         }
 
