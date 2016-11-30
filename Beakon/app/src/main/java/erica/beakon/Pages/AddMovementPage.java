@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.MainActivity;
@@ -64,13 +65,11 @@ public class AddMovementPage extends Fragment {
 
                 final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
                 final String userID = ((MainActivity) getActivity()).currentUser.getId();
-                Log.d("...", userID);
                 userList.add(userID); // hardcoding user ID for now
 
                 final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
                 final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
                 movementList.add(movement.getId());
-                // Todo: add userId to userList, which is put in hashtag -- get user information via FB login stuff?
 
                 //loop through hashtags in handler, check if they already exist here --> update, or if they don't --> add
                 firebaseHandler.getBatchHashtags(movementHashtags, new ValueEventListener() { // called for each hashtag in list; handler loops through them
@@ -83,7 +82,8 @@ public class AddMovementPage extends Fragment {
                             firebaseHandler.getUser(userID, new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    User user = dataSnapshot.getValue(User.class);
+                                    ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkLists(dataSnapshot);
+                                    User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
                                     Log.d("~~~", user.getName());
                                     firebaseHandler.addUsertoHashtag(user, hashtag);
                                     firebaseHandler.addUsertoMovement(user, movement);

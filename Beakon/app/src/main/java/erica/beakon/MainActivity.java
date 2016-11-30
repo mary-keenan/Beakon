@@ -91,18 +91,9 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
-        ArrayList<String> hashtagList = new ArrayList<>();
-        ArrayList<String> movementList = new ArrayList<>();
+        ArrayList<ArrayList<String>> lists = checkLists(snapshot);
 
-        if (snapshot.child("hashtagList").getValue() != null && snapshot.child("hashtagList").getValue().getClass() != HashMap.class){
-            hashtagList = (ArrayList<String>) snapshot.child("hashtagList").getValue();
-        }
-
-        if (snapshot.child("movements").getValue() != null && snapshot.child("movements").getValue().getClass() != HashMap.class){
-            movementList = (ArrayList<String>) snapshot.child("movements").getValue();
-        }
-
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), hashtagList, movementList);
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
 
 //        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), (ArrayList<String>) snapshot.child("hashtagList").getValue(), (ArrayList<String>) snapshot.child("movements").getValue());
         this.currentUser.initializeLists(this.currentUser);
@@ -149,4 +140,22 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         this.firebaseHandler = handler;
     }
 
+    public ArrayList<ArrayList<String>> checkLists(DataSnapshot dataSnapshot) {
+        ArrayList<ArrayList<String>> lists = new ArrayList<>();
+        ArrayList<String> hashtagList = new ArrayList<>();
+        ArrayList<String> movementList = new ArrayList<>();
+
+        if (dataSnapshot.child("hashtagList").getValue() != null && dataSnapshot.child("hashtagList").getValue().getClass() != HashMap.class){
+            hashtagList = (ArrayList<String>) dataSnapshot.child("hashtagList").getValue();
+        }
+
+        if (dataSnapshot.child("movements").getValue() != null && dataSnapshot.child("movements").getValue().getClass() != HashMap.class){
+            movementList = (ArrayList<String>) dataSnapshot.child("movements").getValue();
+        }
+
+        lists.add(hashtagList);
+        lists.add(movementList);
+
+        return lists;
+    }
 }
