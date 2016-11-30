@@ -138,12 +138,14 @@ public class RecommendedMovementsTab extends MovementsTab {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Movement movement = dataSnapshot.getValue(Movement.class);
+                movement.initializeLists(movement);
                 addPopularMovementIfRanking(movement);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Movement movement = dataSnapshot.getValue(Movement.class);
+                movement.initializeLists(movement);
                 if (popularMovementsAlreadyHas(movement)) {
                     updatePopularMovement(movement);
                 }
@@ -152,6 +154,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Movement movement = dataSnapshot.getValue(Movement.class);
+                movement.initializeLists(movement);
                 removePopularMovement(movement);
             }
 

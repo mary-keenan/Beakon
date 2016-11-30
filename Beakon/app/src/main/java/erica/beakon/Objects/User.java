@@ -35,6 +35,14 @@ public class User {
         this.movements = new ArrayList<>();
     }
 
+    public User initializeLists(User user){
+        if (user.getMovements() == null){
+            user.setMovements(new ArrayList<String>());}
+        if (user.getHashtagList() == null){
+            user.setHashtagList(new ArrayList<String>());}
+        return user;
+    }
+
     public String getId() {
         return id;
     }

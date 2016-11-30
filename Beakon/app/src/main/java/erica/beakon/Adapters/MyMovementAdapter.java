@@ -48,43 +48,52 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final Movement movement = getItem(position);
+        Movement movement = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
         }
 
-        final MainActivity activity = new MainActivity();
+        final MainActivity activity = (MainActivity) getContext();
 
         currentUser = activity.getCurrentUser();
 
 //        firebaseHandler.setMovementofUserStatus(currentUser,movement, true);
+
+        if (movement == null){
+            movement = new Movement("KXgdDeEWsCExk5yZMYZ", "Houston, we have a problem", "The movement here doesn't exist", "So we made a fake one", "but it's fake so watch out");
+        }
 
         //set movement name
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
         movementNameView.setText(movement.getName());
 
-//        firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.getValue().equals(true)) {
-//                    checkBox.setChecked(true);
-//                } else if (dataSnapshot.getValue().equals(false)) {
-//                    checkBox.setChecked(false);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    if (dataSnapshot.getValue().equals(true)) {
+                        checkBox.setChecked(true);
+                    } else if (dataSnapshot.child("status").getValue().equals(false)) {
+                        checkBox.setChecked(false);
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        final Movement finalMovement = movement;
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                firebaseHandler.setMovementofUserStatus(currentUser,movement, b);
+                if (currentUser!= null) {
+                    firebaseHandler.setMovementofUserStatus(currentUser, finalMovement, b);
+                }
             }
         });
 

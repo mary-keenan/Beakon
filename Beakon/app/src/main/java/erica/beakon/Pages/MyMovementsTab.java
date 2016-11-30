@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.MainActivity;
@@ -33,7 +34,6 @@ public class MyMovementsTab extends MovementsTab {
     ListView listView;
     TextView message;
 
-    public MyMovementsTab() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,8 +54,8 @@ public class MyMovementsTab extends MovementsTab {
             }
         });
         setUsersMovementsListener();
-        adapter = new MyMovementAdapter(getContext(), movements);
-        if (!movements.isEmpty()) {
+
+        if (!movements.isEmpty() && movements != null) {
             setUpListView(view);
         }
 
@@ -68,6 +68,8 @@ public class MyMovementsTab extends MovementsTab {
     }
 
     private void setUpListView(View view) {
+        adapter = new MyMovementAdapter(getContext(), movements);
+
         message.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
 
@@ -82,7 +84,9 @@ public class MyMovementsTab extends MovementsTab {
                 if (movements.size() == 1) {
                     setUpListView(view);
                 }
-                adapter.notifyDataSetChanged();
+                if (adapter!=null) {
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -96,7 +100,7 @@ public class MyMovementsTab extends MovementsTab {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                getMovement(dataSnapshot.getValue(String.class));
+                getMovement(dataSnapshot.getValue().toString());
             }
 
             @Override
@@ -106,10 +110,12 @@ public class MyMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
-                if (movements.isEmpty()) {
-                    listView.setVisibility(View.INVISIBLE);
-                    message.setVisibility(View.VISIBLE);
+                if (dataSnapshot.getValue() != null && dataSnapshot.getValue().getClass() != HashMap.class) {
+                    removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
+                    if (movements.isEmpty()) {
+                        listView.setVisibility(View.INVISIBLE);
+                        message.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 

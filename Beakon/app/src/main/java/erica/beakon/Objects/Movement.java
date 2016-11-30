@@ -49,6 +49,14 @@ public class Movement implements Serializable {
         this.hashtagList = new ArrayList<>();
     }
 
+    public Movement initializeLists(Movement movement){
+        if (movement.getFollowers() == null){
+            movement.setFollowers(new ArrayList<String>());}
+        if (movement.getHashtagList() == null){
+            movement.setHashtagList(new ArrayList<String>());}
+        return movement;
+    }
+
     public String getId() {
         return id;
     }

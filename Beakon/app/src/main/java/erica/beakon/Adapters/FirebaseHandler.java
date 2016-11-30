@@ -210,6 +210,10 @@ public class FirebaseHandler {
         user.addMovement(movement);
         movement.addFollower(user);
         updateUser(user);
+        setMovementofUserStatus(user, movement,false);
+        for(String id : user.getMovements()){
+            ref.child("Users").child(user.getId()).child("movements").child(id).child("status").setValue(false);
+        }
         updateMovement(movement);
     }
 
@@ -258,6 +262,7 @@ public class FirebaseHandler {
 
     public void updateMovement(Movement movement) {
         ref.child("Movements").child(movement.getId()).setValue(movement);
+//        ref.child("Movements").child(movement.getId()).child("status").setValue(false);
     }
 
     public void updateHashtag(Hashtag hashtag) {
@@ -286,12 +291,12 @@ public class FirebaseHandler {
     }
 
     public void getMovementofUserStatus(User user, Movement movement, ValueEventListener listener) {
-        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child("status");
+        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movement.getId());
         dataRef.addValueEventListener(listener);
     }
 
     public void setMovementofUserStatus(User user, Movement movement, boolean isComplete) {
-        ref.child("Users").child(user.getId()).child("movements").child("status").setValue(isComplete);
+        ref.child("Users").child(user.getId()).child("movements").child(movement.getId()).child("status").setValue(isComplete);
     }
 
 }

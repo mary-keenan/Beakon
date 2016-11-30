@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
@@ -45,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         Profile currentProfile = Profile.getCurrentProfile();
         String id = currentProfile.getId();
 
-        firebaseHandler.getUser(id, new ValueEventListener() {
+
+
+         firebaseHandler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 setCurrentUserFromData(dataSnapshot);
@@ -88,10 +91,24 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), (ArrayList<String>) snapshot.child("hashtags").getValue(), (ArrayList<String>) snapshot.child("movements").getValue());
+        ArrayList<String> hashtagList = new ArrayList<>();
+        ArrayList<String> movementList = new ArrayList<>();
+
+        if (snapshot.child("hashtagList").getValue() != null && snapshot.child("hashtagList").getValue().getClass() != HashMap.class){
+            hashtagList = (ArrayList<String>) snapshot.child("hashtagList").getValue();
+        }
+
+        if (snapshot.child("movements").getValue() != null && snapshot.child("movements").getValue().getClass() != HashMap.class){
+            movementList = (ArrayList<String>) snapshot.child("movements").getValue();
+        }
+
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), hashtagList, movementList);
+
+//        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), (ArrayList<String>) snapshot.child("hashtagList").getValue(), (ArrayList<String>) snapshot.child("movements").getValue());
+        this.currentUser.initializeLists(this.currentUser);
 
         if (snapshot.hasChild("movements")) {
-            for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
+            for (String movementId : ((HashMap<String,String>) snapshot.child("movements").getValue()).keySet()) {
                 this.currentUser.addMovement(movementId);
             }
         }
