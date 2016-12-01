@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import erica.beakon.location.LocationHandler;
@@ -19,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
         Profile currentProfile = Profile.getCurrentProfile();
         String id = currentProfile.getId();
+        //LoginManager.getInstance().logOut();
 
 
 
@@ -148,6 +151,15 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         if (dataSnapshot.child("hashtagList").getValue() != null && dataSnapshot.child("hashtagList").getValue().getClass() != HashMap.class){
             hashtagList = (ArrayList<String>) dataSnapshot.child("hashtagList").getValue();
         }
+//        else {
+//            if (dataSnapshot.child("hashtagList").getValue().getClass() == HashMap.class) {
+//                HashMap hashMap = dataSnapshot.child("hashtagList").getValue(HashMap.class);
+//                for (Object key: hashMap.keySet()) {
+//                    Object val = hashMap.get(key);
+//                    Log.d("&&&", String.valueOf(val));
+//                }
+//            }
+//        }
 
         if (dataSnapshot.child("movements").getValue() != null && dataSnapshot.child("movements").getValue().getClass() != HashMap.class){
             movementList = (ArrayList<String>) dataSnapshot.child("movements").getValue();

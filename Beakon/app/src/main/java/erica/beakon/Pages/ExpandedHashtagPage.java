@@ -99,7 +99,9 @@ public class ExpandedHashtagPage extends Fragment {
                         firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
                         @Override
                         public void onDataChange(DataSnapshot userSnapshot) {
-                            User follower = userSnapshot.getValue(User.class); //store user info in user object
+                            ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkUserLists(userSnapshot);
+//                            User follower = userSnapshot.getValue(User.class); //store user info in user object
+                            User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
                             followerAdapter.add(follower); //add user to follower adapter, updates list view
                         } //updates gradually (each iteration) so you don't end up with a blank screen for a while
 
