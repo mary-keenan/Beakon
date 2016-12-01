@@ -62,11 +62,14 @@ abstract public class MovementsTab extends Fragment {
 
     protected Movement getMovementById(String id) {
         for (Movement m: movements) {
-            if (m.getId().equals(id)) {
-                return m;
+            if (m != null){
+                if (m.getId().equals(id)) {
+                    return m;
+                }
             }
         }
-        throw new NullPointerException("No movement exists with that id in nearby movements");
+        return null;
+//        throw new NullPointerException("No movement exists with that id in nearby movements");
     }
 
 }

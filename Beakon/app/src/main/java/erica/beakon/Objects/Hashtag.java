@@ -7,10 +7,12 @@ import java.util.ArrayList;
  */
 public class Hashtag {
     private String name;
-    private ArrayList<Movement> movementList;
-    private ArrayList<User> userList;
+    private ArrayList<String> movementList;
+    private ArrayList<String> userList;
 
-    public Hashtag(String name, ArrayList<Movement> movementList, ArrayList<User> userList) {
+    public Hashtag(){}
+
+    public Hashtag(String name, ArrayList<String> movementList, ArrayList<String> userList) {
         this.name = name;
         this.movementList = movementList;
         this.userList = userList;
@@ -24,19 +26,27 @@ public class Hashtag {
         this.name = name;
     }
 
-    public ArrayList<Movement> getMovementList() {
+    public ArrayList<String> getMovementList() {
         return movementList;
     }
 
-    public void setMovementList(ArrayList<Movement> movementList) {
-        this.movementList = movementList;
+    public void addMovement(String movementID) {
+        this.movementList.add(movementID);
     }
 
-    public ArrayList<User> getUserList() {
+    public void removeMovement(String movementID) {
+        this.movementList.remove(movementID);
+    }
+
+    public ArrayList<String> getUserList() {
         return userList;
     }
 
-    public void setUserList(ArrayList<User> userList) {
-        this.userList = userList;
+    public void addUser(String userID) {
+        this.userList.add(userID);
+    }
+
+    public void removeUser(String userID) {
+        this.userList.remove(userID);
     }
 }
