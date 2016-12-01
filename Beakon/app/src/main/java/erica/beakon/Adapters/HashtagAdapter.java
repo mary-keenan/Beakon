@@ -1,6 +1,8 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,12 @@ public class HashtagAdapter extends ArrayAdapter<String> {
                 @Override
                 public void onClick(View v) {
                     ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
-                    hashtagFragment.setHashtag((String) hashtagName.getText()); //give it the hashtag it's expanding
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", (String) hashtagName.getText());
+                    hashtagFragment.setArguments(bundle);
+                    Log.d(">>>", bundle.toString());
+                    Log.d("<<<", (String) hashtagName.getText());
+//                    hashtagFragment.setHashtag((String) hashtagName.getText()); //give it the hashtag it's expanding
                     ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
                 }
             });

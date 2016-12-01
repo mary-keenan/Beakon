@@ -91,15 +91,15 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
-        ArrayList<ArrayList<String>> lists = checkLists(snapshot);
+        ArrayList<ArrayList<String>> lists = checkUserLists(snapshot);
 
         this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
 
 //        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), (ArrayList<String>) snapshot.child("hashtagList").getValue(), (ArrayList<String>) snapshot.child("movements").getValue());
         this.currentUser.initializeLists(this.currentUser);
 
-        if (snapshot.hasChild("movements")) {
-            for (String movementId : ((HashMap<String,String>) snapshot.child("movements").getValue()).keySet()) {
+        if (snapshot.hasChild("movements") && snapshot.child("movements").getValue().getClass() != HashMap.class) {
+            for (String movementId : ((ArrayList<String>) snapshot.child("movements").getValue())) {
                 this.currentUser.addMovement(movementId);
             }
         }
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         this.firebaseHandler = handler;
     }
 
-    public ArrayList<ArrayList<String>> checkLists(DataSnapshot dataSnapshot) {
+    public ArrayList<ArrayList<String>> checkUserLists(DataSnapshot dataSnapshot) {
         ArrayList<ArrayList<String>> lists = new ArrayList<>();
         ArrayList<String> hashtagList = new ArrayList<>();
         ArrayList<String> movementList = new ArrayList<>();

@@ -111,10 +111,12 @@ public class MyMovementsTab extends MovementsTab {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null && dataSnapshot.getValue().getClass() != HashMap.class) {
-                    removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
-                    if (movements.isEmpty()) {
-                        listView.setVisibility(View.INVISIBLE);
-                        message.setVisibility(View.VISIBLE);
+                    if (getMovementById(dataSnapshot.getValue(String.class)) != null){
+                        removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
+                        if (movements.isEmpty()) {
+                            listView.setVisibility(View.INVISIBLE);
+                            message.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }

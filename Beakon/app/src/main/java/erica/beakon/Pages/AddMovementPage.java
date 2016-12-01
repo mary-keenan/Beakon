@@ -1,16 +1,13 @@
 package erica.beakon.Pages;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,7 +15,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.MainActivity;
@@ -82,7 +78,7 @@ public class AddMovementPage extends Fragment {
                             firebaseHandler.getUser(userID, new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkLists(dataSnapshot);
+                                    ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkUserLists(dataSnapshot);
                                     User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
                                     Log.d("~~~", user.getName());
                                     firebaseHandler.addUsertoHashtag(user, hashtag);

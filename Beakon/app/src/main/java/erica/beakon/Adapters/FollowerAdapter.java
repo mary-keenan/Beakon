@@ -30,11 +30,11 @@ public class FollowerAdapter extends ArrayAdapter<User> {
         final User follower = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.hashtag_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.follower_item, parent, false);
         }
 
         //set movement name
-        TextView movementNameView = (TextView) convertView.findViewById(R.id.hashtag_name);
+        TextView movementNameView = (TextView) convertView.findViewById(R.id.follower_name);
         movementNameView.setText(follower.getName());
 
         return convertView;

@@ -202,6 +202,7 @@ public class FirebaseHandler {
     }
 
     public void getHashtag(String name, ValueEventListener listener){
+        Log.d("___", name);
         DatabaseReference dataRef = ref.child("Hashtags").child(name);
         dataRef.addValueEventListener(listener);
     }

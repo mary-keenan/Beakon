@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Adapters.FollowerAdapter;
+import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.MainActivity;
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.Objects.Hashtag;
@@ -34,24 +35,27 @@ public class ExpandedHashtagPage extends Fragment {
     ArrayList<Movement> movementList = new ArrayList<>(); //list of movements fetched using movement IDs
     ArrayList<User> followerList = new ArrayList<>(); //list of followers fetched using user IDs
     Hashtag hashtag;
+    String name = "na";
 
     public ExpandedHashtagPage(){}
-
-    public void setHashtag(String hashtagName) {
-        //lets you set the hashtag right after you create page, before you change fragments
-        this.hashtagName = hashtagName;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_expanded_hashtag_page, container, false);
+        Bundle bundle = this.getArguments();
+
+        if (bundle != null){
+            name = bundle.getString("name");
+            Log.d("!!!", name);
+        }
+
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
 
         //create hashtag TV and set it to the hashtag set in setHashtag by previous fragment
-        TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
-        hashtagView.setText(this.hashtagName);
+        final TextView hashtagView = (TextView) view.findViewById(R.id.hashtag_title);
+        hashtagView.setText("#" + name);
 
         //create buttons
         final ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonHashtag);
@@ -59,20 +63,24 @@ public class ExpandedHashtagPage extends Fragment {
 
         //create movement list view and its adapter
         ListView movementsLV = (ListView) view.findViewById(R.id.hashtag_movements_list);
-        final MyMovementAdapter movementsAdapter = new MyMovementAdapter(getActivity(), movementList);
+        final RecommendedMovementsAdapter movementsAdapter = new RecommendedMovementsAdapter(getActivity(), movementList);
         movementsLV.setAdapter(movementsAdapter); //starts empty
 
         //create follower list view and its adapter
         ListView followerLV = (ListView) view.findViewById(R.id.hashtag_followers_list);
         final FollowerAdapter followerAdapter = new FollowerAdapter(getActivity(), followerList);
         followerLV.setAdapter(followerAdapter); //starts empty
-        String h = "renegade";
+
+        String nameH = "renegade";
+
         //search firebase for hashtag information (movement and user ID lists) using hashtag name
-        firebaseHandler.getHashtag(h, new ValueEventListener() {
+        firebaseHandler.getHashtag(nameH, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(":::", String.valueOf(dataSnapshot.getValue()));
                 if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
                     hashtag = dataSnapshot.getValue(Hashtag.class); // store hashtag info in hashtag object
+                    Log.d("[[[", hashtag.getName());
                     movementIDList = hashtag.getMovementList(); // get movement id list from hashtag
                     userIDList = hashtag.getUserList(); // get user id list from hashtag
                     if (movementIDList != null){ // if the movement list isn't empty
@@ -93,7 +101,6 @@ public class ExpandedHashtagPage extends Fragment {
                         public void onDataChange(DataSnapshot userSnapshot) {
                             User follower = userSnapshot.getValue(User.class); //store user info in user object
                             followerAdapter.add(follower); //add user to follower adapter, updates list view
-                            Log.d("+++", follower.getName());
                         } //updates gradually (each iteration) so you don't end up with a blank screen for a while
 
                         @Override
@@ -116,12 +123,12 @@ public class ExpandedHashtagPage extends Fragment {
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //follow the hashtag (see movements with this hashtag in suggested movements?)
-                // Todo: add hashtag to list of hashtags the User follows (need userId)
-                firebaseHandler.getUser("-KXgJqjMVKw4eLlWhmSz", new ValueEventListener() {
+                User currentUser = ((MainActivity) getActivity()).getCurrentUser();
+                firebaseHandler.getUser(currentUser.getId(), new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        User user = dataSnapshot.getValue(User.class);
+                        ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkUserLists(dataSnapshot);
+                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
                         Log.d("~~~", user.getName());
                         firebaseHandler.addUsertoHashtag(user, hashtag);
                         followButton.setBackgroundResource(R.drawable.check);

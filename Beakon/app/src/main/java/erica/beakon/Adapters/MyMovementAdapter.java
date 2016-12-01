@@ -1,6 +1,7 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,7 +141,9 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             public void onClick(View v) {
             String hashtagName = (String) tv.getText();
             ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
-            hashtagFragment.setHashtag(hashtagName); //give it the hashtag it's expanding
+            Bundle bundle = new Bundle();
+            bundle.putString("name", hashtagName); //give new fragment the hashtag it's expanding
+            hashtagFragment.setArguments(bundle);
             ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
             }
         });
