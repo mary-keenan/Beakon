@@ -37,13 +37,15 @@
             android:text="LOGOUT"/>
     </LinearLayout>
 
-    <Button
+    <ImageButton
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/check"
         android:id="@+id/add_movement_button"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorBackground"
         android:layout_gravity="right|bottom" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -143,4 +145,13 @@
 
 
     </LinearLayout>
+
+    <ImageButton
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
+        android:id="@+id/back_add_movement_btn"
+        android:background="@null"
+        android:src="@drawable/back_accent"
+        android:layout_gravity="left|top" />
+
 </FrameLayout>

@@ -1,12 +1,14 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -32,6 +34,7 @@ import erica.beakon.R;
 public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
     String hashtagName;
+    ArrayList<Movement> movements;
     static final String TAG = "FIREBASE_HANDLER";
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
@@ -41,13 +44,14 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, 0, movements);
+        this.movements = movements;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final Movement movement = getItem(position);
+        Movement movement = getItem(position);
 
-        Log.d(TAG,movement.getId());
+//        Log.d(TAG,movement.getId());
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
@@ -59,6 +63,10 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
 //        firebaseHandler.setMovementofUserStatus(currentUser,movement, true);
 
+        if (movement == null){
+            movement = new Movement("KXgdDeEWsCExk5yZMYZ", "Houston, we have a problem", "The movement here doesn't exist", "So we made a fake one", "but it's fake so watch out");
+        }
+
         //set movement name
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
@@ -67,10 +75,12 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("status").getValue().equals(true)) {
-                    checkBox.setChecked(true);
-                } else if (dataSnapshot.child("status").getValue().equals(false)) {
-                    checkBox.setChecked(false);
+                if (dataSnapshot.getValue() != null){
+                    if (dataSnapshot.child("status").getValue().equals(true)) {
+                        checkBox.setChecked(true);
+                    } else if (dataSnapshot.child("status").getValue().equals(false)) {
+                        checkBox.setChecked(false);
+                    }
                 }
             }
 
@@ -80,13 +90,15 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             }
         });
 
+        final Movement finalMovement = movement;
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebaseHandler.setMovementofUserStatus(currentUser, movement, checkBox.isChecked());
+                if (currentUser!= null) {
+                    firebaseHandler.setMovementofUserStatus(currentUser, finalMovement, checkBox.isChecked());
+                }
             }
         });
-
 
         //create the hashtag table and first row
         TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT,1.0f);
@@ -120,6 +132,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             }
         }
         hashtagTable.addView(hashtagRow, tableParams); //add last row to table so we don't leave a row behind
+
         return convertView;
     }
 
@@ -128,11 +141,21 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String hashtagName = (String) tv.getText();
-                ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
-                hashtagFragment.setHashtag(hashtagName); //give it the hashtag it's expanding
-                ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
+            String hashtagName = (String) tv.getText();
+            ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
+            Bundle bundle = new Bundle();
+            bundle.putString("name", hashtagName); //give new fragment the hashtag it's expanding
+            hashtagFragment.setArguments(bundle);
+            ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
             }
         });
     }
+
+    public void add(Movement movement) {
+        movements.add(movement);
+        notifyDataSetChanged();
+    }
+
+//    public MainActivity
+
 }

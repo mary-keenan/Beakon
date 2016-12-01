@@ -7,4 +7,6 @@
     <dimen name="help_text_margin">16dp</dimen>
     <dimen name="movement_name_text">20sp</dimen>
     <dimen name="movement_margin">10dp</dimen>
+    <dimen name="image_height">40dp</dimen>
+    <dimen name="image_width">40dp</dimen>
 </resources>

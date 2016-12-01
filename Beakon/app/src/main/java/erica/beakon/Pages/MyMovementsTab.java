@@ -7,29 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import erica.beakon.LoginPage;
-import erica.beakon.MainActivity;
-import erica.beakon.Objects.Movement;
-import erica.beakon.Adapters.MyMovementAdapter;
-import erica.beakon.R;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.DeviceLoginManager;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
+
+import java.util.HashMap;
+
+import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.LoginPage;
+import erica.beakon.MainActivity;
+import erica.beakon.Objects.Movement;
+import erica.beakon.R;
 
 public class MyMovementsTab extends MovementsTab {
 
@@ -62,20 +56,18 @@ public class MyMovementsTab extends MovementsTab {
             }
         });
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
+//        setUpChangeFragmentsButton(view, new AddMovementPage(), R.id.goto_add_movement_button);
+        ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
+        addMovementBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).changeFragment(new AddMovementPage());
+            }
+        });
         setUsersMovementsListener();
         if (!movements.isEmpty() && movements != null) {
             setUpListView();
         }
-
-//        ArrayList<Movement> movements = new ArrayList<>();
-//        ArrayList<String> hashtags = new ArrayList<>();
-//        hashtags.add("#stillwithher");
-//        hashtags.add("#feelthebern");
-//        hashtags.add("#yay");
-//        hashtags.add("#bob");
-//        Movement rally = new Movement("2", "Rally", "description", "steps", "resources", hashtags);
-//        movements.add(rally);
-//        movements.add(rally);
 
         return view;
     }
@@ -127,10 +119,14 @@ public class MyMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
-                if (movements.isEmpty()) {
-                    listView.setVisibility(View.INVISIBLE);
-                    message.setVisibility(View.VISIBLE);
+                if (dataSnapshot.getValue() != null && dataSnapshot.getValue().getClass() != HashMap.class) {
+                    if (getMovementById(dataSnapshot.getValue(String.class)) != null){
+                        removeMovement(getMovementById(dataSnapshot.getValue(String.class)));
+                        if (movements.isEmpty()) {
+                            listView.setVisibility(View.INVISIBLE);
+                            message.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
             }
 

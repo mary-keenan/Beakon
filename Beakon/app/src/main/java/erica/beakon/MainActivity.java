@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
@@ -93,11 +94,15 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString()
-                , (ArrayList<String>) snapshot.child("hashtags").getValue());
+        ArrayList<ArrayList<String>> lists = checkUserLists(snapshot);
 
-        if (snapshot.hasChild("movements")) {
-            for (String movementId : ((HashMap<String,String>) snapshot.child("movements").getValue()).keySet()) {
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
+
+//        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), (ArrayList<String>) snapshot.child("hashtagList").getValue(), (ArrayList<String>) snapshot.child("movements").getValue());
+        this.currentUser.initializeLists(this.currentUser);
+
+        if (snapshot.hasChild("movements") && snapshot.child("movements").getValue().getClass() != HashMap.class) {
+            for (String movementId : ((ArrayList<String>) snapshot.child("movements").getValue())) {
                 this.currentUser.addMovement(movementId);
             }
         }
@@ -138,4 +143,31 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         this.firebaseHandler = handler;
     }
 
+    public ArrayList<ArrayList<String>> checkUserLists(DataSnapshot dataSnapshot) {
+        ArrayList<ArrayList<String>> lists = new ArrayList<>();
+        ArrayList<String> hashtagList = new ArrayList<>();
+        ArrayList<String> movementList = new ArrayList<>();
+
+        if (dataSnapshot.child("hashtagList").getValue() != null && dataSnapshot.child("hashtagList").getValue().getClass() != HashMap.class){
+            hashtagList = (ArrayList<String>) dataSnapshot.child("hashtagList").getValue();
+        }
+//        else {
+//            if (dataSnapshot.child("hashtagList").getValue().getClass() == HashMap.class) {
+//                HashMap hashMap = dataSnapshot.child("hashtagList").getValue(HashMap.class);
+//                for (Object key: hashMap.keySet()) {
+//                    Object val = hashMap.get(key);
+//                    Log.d("&&&", String.valueOf(val));
+//                }
+//            }
+//        }
+
+        if (dataSnapshot.child("movements").getValue() != null && dataSnapshot.child("movements").getValue().getClass() != HashMap.class){
+            movementList = (ArrayList<String>) dataSnapshot.child("movements").getValue();
+        }
+
+        lists.add(hashtagList);
+        lists.add(movementList);
+
+        return lists;
+    }
 }

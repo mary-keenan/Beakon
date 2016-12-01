@@ -12,8 +12,20 @@ public class User {
     private ArrayList<String> hashtagList;
     private ArrayList<String> movements;
 
-    public User() {
+    public User() {}
 
+    public User(String id, String name, ArrayList<String> hashtagList, ArrayList<String> movementList){
+        this.id = id;
+        this.name = name;
+        this.hashtagList = hashtagList;
+        this.movements = movementList;
+    }
+
+    public User(String id, String name, ArrayList<String> hashtagList){
+        this.id = id;
+        this.name = name;
+        this.hashtagList = hashtagList;
+        this.movements = new ArrayList<>();
     }
 
     public User(String id, String name) {
@@ -23,11 +35,12 @@ public class User {
         this.movements = new ArrayList<>();
     }
 
-    public User(String id, String name, ArrayList<String> hashtagList){
-        this.id = id;
-        this.name = name;
-        this.hashtagList = hashtagList;
-        this.movements = new ArrayList<>();
+    public User initializeLists(User user){
+        if (user.getMovements() == null){
+            user.setMovements(new ArrayList<String>());}
+        if (user.getHashtagList() == null){
+            user.setHashtagList(new ArrayList<String>());}
+        return user;
     }
 
     public String getId() {
@@ -60,6 +73,14 @@ public class User {
 
     public void setHashtagList(ArrayList<String> hashtagList) {
         this.hashtagList = hashtagList;}
+
+    public void addHashtag(String hashtag){
+        hashtagList.add(hashtag);
+    }
+
+    public void removeHashtag(String hashtag){
+        hashtagList.remove(hashtag);
+    }
 
     public ArrayList<String> getMovements() {
             return this.movements;}
