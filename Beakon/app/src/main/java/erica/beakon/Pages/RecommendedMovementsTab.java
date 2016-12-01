@@ -257,7 +257,7 @@ public class RecommendedMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String movementId = dataSnapshot.getValue(String.class);
+                String movementId = dataSnapshot.getKey();
                 if (movementsAlreadyHas(movementId)) {
                     movements.remove(getMovementById(movementId));
                 }
