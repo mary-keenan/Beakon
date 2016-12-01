@@ -6,22 +6,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
+import erica.beakon.Objects.User;
 import erica.beakon.Pages.ExpandedHashtagPage;
+import erica.beakon.Pages.MyMovementsTab;
 import erica.beakon.R;
 
 
 public class MyMovementAdapter extends ArrayAdapter<Movement> {
 
     String hashtagName;
+    static final String TAG = "FIREBASE_HANDLER";
+    String databaseURL = "https://beakon-5fa96.firebaseio.com/";
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = db.getReferenceFromUrl(databaseURL);
+    FirebaseHandler firebaseHandler = new FirebaseHandler(db,ref);
+    User currentUser;
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, 0, movements);
@@ -31,13 +47,46 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Movement movement = getItem(position);
 
+        Log.d(TAG,movement.getId());
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
         }
 
+        final MainActivity activity = (MainActivity) getContext();
+
+        currentUser = activity.getCurrentUser();
+
+//        firebaseHandler.setMovementofUserStatus(currentUser,movement, true);
+
         //set movement name
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
+        final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
         movementNameView.setText(movement.getName());
+
+        firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("status").getValue().equals(true)) {
+                    checkBox.setChecked(true);
+                } else if (dataSnapshot.child("status").getValue().equals(false)) {
+                    checkBox.setChecked(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, checkBox.isChecked());
+            }
+        });
+
 
         //create the hashtag table and first row
         TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT,1.0f);

@@ -1,11 +1,13 @@
 package erica.beakon.Objects;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by mafaldaborges on 11/7/16.
  */
-public class Movement {
+public class Movement implements Serializable {
 
     String id;
     private String name;
@@ -98,4 +100,8 @@ public class Movement {
     private void setEmptyUsers() { this.setUsers(new ArrayList<String>()); }
 
     public void removeUser(User user) { this.users.remove(user.getId()); }
+
+    public boolean hasUsers() {
+        return !(this.users == null || this.users.isEmpty());
+    }
 }

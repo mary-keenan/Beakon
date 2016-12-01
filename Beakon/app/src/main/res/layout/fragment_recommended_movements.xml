@@ -33,13 +33,60 @@
                 android:text="Suggested"
                 android:id="@+id/movements"
                 android:background="@color/colorBackground"/>
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LOGOUT"
+                android:id="@+id/logout"/>
         </LinearLayout>
 
-        <ListView
+        <TextView
+            android:id="@+id/no_rec_movments_message"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/recommended_movements_list"
-            android:layout_below="@+id/tab_buttons"></ListView>
+            android:text="@string/no_rec_movements"
+            android:layout_below="@+id/tab_buttons"
+            android:textSize="30sp"
+            android:padding="30dp"
+            android:layout_marginTop="30dp"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:id="@+id/nearby_movements_label"
+            android:layout_below="@+id/tab_buttons"
+            android:labelFor="@+id/recommended_nearby_movements_list"
+            android:text="Nearby Movements"/>
+
+        <ListView
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recommended_nearby_movements_list"
+            android:layout_below="@+id/nearby_movements_label"></ListView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:labelFor="@+id/recommended_popular_movements_list"
+            android:layout_below="@+id/recommended_nearby_movements_list"
+            android:id="@+id/popular_movements_label"
+            android:text="Popular Movements"/>
+
+        <ListView
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recommended_popular_movements_list"
+            android:layout_below="@+id/popular_movements_label"></ListView>
 
     </RelativeLayout>
 

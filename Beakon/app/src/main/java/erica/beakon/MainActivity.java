@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import erica.beakon.location.LocationHandler;
@@ -17,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Pages.MyMovementsTab;
@@ -41,10 +44,13 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         setContentView(R.layout.activity_main);
         locationHandler = new LocationHandler(this);
 
-        String id = "1";
-        //String id = loginPage.getCurrentUserId();
+        Profile currentProfile = Profile.getCurrentProfile();
+        String id = currentProfile.getId();
+        //LoginManager.getInstance().logOut();
 
-        firebaseHandler.getUser(id, new ValueEventListener() {
+
+
+         firebaseHandler.getUser(id, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 setCurrentUserFromData(dataSnapshot);
@@ -87,14 +93,18 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(),
-                snapshot.child("email").getValue().toString(), (ArrayList<String>) snapshot.child("hashtags").getValue());
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString()
+                , (ArrayList<String>) snapshot.child("hashtags").getValue());
 
         if (snapshot.hasChild("movements")) {
-            for (String movementId : (ArrayList<String>) snapshot.child("movements").getValue()) {
+            for (String movementId : ((HashMap<String,String>) snapshot.child("movements").getValue()).keySet()) {
                 this.currentUser.addMovement(movementId);
             }
         }
+    }
+
+    public User getCurrentUser() {
+        return this.currentUser;
     }
 
     private LocationListener getLocationListener() {
@@ -117,7 +127,8 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
             }
 
         };
-    };
+    }
+
 
     public FirebaseHandler getHandler() {
         return firebaseHandler;

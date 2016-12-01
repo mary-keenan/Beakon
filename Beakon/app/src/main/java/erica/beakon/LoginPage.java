@@ -13,10 +13,18 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import erica.beakon.Adapters.FirebaseHandler;
 
 
 public class LoginPage extends Activity {
     private CallbackManager callbackManager;
+    String databaseURL = "https://beakon-5fa96.firebaseio.com/";
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = db.getReferenceFromUrl(databaseURL);
+    FirebaseHandler firebaseHandler = new FirebaseHandler(db,ref);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,9 +59,10 @@ public class LoginPage extends Activity {
                             Profile.setCurrentProfile(currentProfile);
                         }
                     };
-                } else {
                     startActivity(intent);
-
+                } else {
+                    firebaseHandler.addUser(Profile.getCurrentProfile().getId(),Profile.getCurrentProfile().getFirstName());
+                    startActivity(intent);
                 }
 
                 Log.d("FacebookLogin", "onSuccess" + loginResult);
