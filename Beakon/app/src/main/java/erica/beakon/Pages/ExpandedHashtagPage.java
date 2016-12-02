@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Adapters.FollowerAdapter;
@@ -99,9 +100,10 @@ public class ExpandedHashtagPage extends Fragment {
                         firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
                         @Override
                         public void onDataChange(DataSnapshot userSnapshot) {
-                            ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkUserLists(userSnapshot);
+                            ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
+                            HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
 //                            User follower = userSnapshot.getValue(User.class); //store user info in user object
-                            User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
+                            User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
                             followerAdapter.add(follower); //add user to follower adapter, updates list view
                         } //updates gradually (each iteration) so you don't end up with a blank screen for a while
 
@@ -129,8 +131,9 @@ public class ExpandedHashtagPage extends Fragment {
                 firebaseHandler.getUser(currentUser.getId(), new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkUserLists(dataSnapshot);
-                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
+                        ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
+                        HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
+                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
                         Log.d("~~~", user.getName());
                         firebaseHandler.addUsertoHashtag(user, hashtag);
                         followButton.setBackgroundResource(R.drawable.check);

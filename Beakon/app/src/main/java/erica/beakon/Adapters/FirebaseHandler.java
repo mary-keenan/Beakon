@@ -22,6 +22,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.LoginPage;
 import erica.beakon.Objects.Hashtag;
@@ -76,7 +77,7 @@ public class FirebaseHandler {
         ref.child("Users").child(fbId).setValue(user);
     }
 
-    public User addUser(String name, ArrayList<String> hashtagList, ArrayList<String> movementList) {
+    public User addUser(String name, ArrayList<String> hashtagList, HashMap<String, HashMap<String,Boolean>> movementList) {
         String userId = loginPage.getCurrentUserID();
         User user = new User(userId, name, hashtagList, movementList);
         ref.child("Users").child(userId).setValue(user);
@@ -137,10 +138,6 @@ public class FirebaseHandler {
         user.addMovement(movement);
         movement.addFollower(user);
         updateUser(user);
-        setMovementofUserStatus(user, movement,false);
-        for(String id : user.getMovements()){
-            ref.child("Users").child(user.getId()).child("movements").child(id).child("status").setValue(false);
-        }
         updateMovement(movement);
     }
 
