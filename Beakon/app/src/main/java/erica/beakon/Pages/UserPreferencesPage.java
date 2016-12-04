@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,15 +47,22 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_user_preferences_page, container, false);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
 
-        hashtagList = new ArrayList<String>();
 
         final MainActivity activity = (MainActivity) getActivity();
         currentUser = activity.currentUser;
+
+        hashtagList = new ArrayList<String>();
+
+
+        final ListView lv = (ListView) view.findViewById(R.id.listView);
+        userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
+        lv.setAdapter(userPreferencesAdapter);
 
         activity.firebaseHandler.getHashtagsfromUser(currentUser, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
+                    hashtagList.clear();
                     ArrayList<Object> list = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Object>>() {
                         @Override
                         public String toString() {
@@ -64,8 +72,7 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                     for(Object hash : list) {
                         hashtagList.add(hash.toString());
                         Log.d("***", hashtagList.toString());
-                        userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
-
+                        userPreferencesAdapter.notifyDataSetChanged();
                     }
                 }
 
@@ -88,12 +95,12 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v){
                 String inputText = newInterest.getText().toString();
+                newInterest.getText().clear();
                 Log.d("UserPref", inputText);
                 hashtagList.add(inputText);
                 currentUser = new User(currentUser.getId(),currentUser.getName(),hashtagList);
                 activity.firebaseHandler.updateUser(currentUser);
-                userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
-
+                userPreferencesAdapter.notifyDataSetChanged();
 //                ((MainActivity) getActivity()).currentUser.addHashtag(inputText);
 //                ((MainActivity) getActivity()).firebaseHandler.updateUser(((MainActivity) getActivity()).currentUser);
 
