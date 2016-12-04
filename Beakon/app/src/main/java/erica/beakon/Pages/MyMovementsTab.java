@@ -1,7 +1,10 @@
 package erica.beakon.Pages;
 
+import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +42,7 @@ public class MyMovementsTab extends MovementsTab {
     ListView listView;
     TextView message;
     Button logoutButton;
+    Button userPrefButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,10 +53,23 @@ public class MyMovementsTab extends MovementsTab {
         listView = (ListView) view.findViewById(R.id.my_movements_list);
         message = (TextView) view.findViewById(R.id.no_movments_message);
         logoutButton = (Button) view.findViewById(R.id.logout);
+        userPrefButton = (Button) view.findViewById(R.id.user_pref_button);
 
 
 
         final Intent intent = new Intent(getActivity(), LoginPage.class);
+
+        userPrefButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                android.support.v4.app.Fragment UserPref = new UserPreferencesPage();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.my_movement_tab, UserPref);
+                transaction.commit();
+
+            }
+        });
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override

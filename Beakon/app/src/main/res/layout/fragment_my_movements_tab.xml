@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Pages.MyMovementsTab">
+    tools:context=".Pages.MyMovementsTab"
+    android:id="@+id/my_movement_tab">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -60,6 +61,15 @@
             android:layout_height="456dp"
             android:id="@+id/my_movements_list"
             android:layout_below="@id/tab_buttons"></ListView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:id="@+id/user_pref_button"
+            android:layout_alignBottom="@+id/my_movements_list"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

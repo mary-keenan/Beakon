@@ -46,7 +46,7 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
             @Override
             public void onClick(View v) {
                 activity.currentUser.removeHashtag(hashtag);
-                activity.handler.updateUser(activity.currentUser);
+                activity.firebaseHandler.updateUser(activity.currentUser);
             }
         });
 

@@ -22,7 +22,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add a New Interest ex:NoDAPL"
+            android:hint="Add a New Interest ex:NoDAPL"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/add_user_preference"
             android:layout_toLeftOf="@+id/add_user_preference"
