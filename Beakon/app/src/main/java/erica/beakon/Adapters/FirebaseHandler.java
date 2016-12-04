@@ -223,6 +223,17 @@ public class FirebaseHandler {
         ref.child("Users").child(user.getId()).child("movements").child(movement.getId()).child("status").setValue(isComplete);
     }
 
+    public void getHashtagsfromUser(User user, ValueEventListener listener){
+        Query dataRef = ref.child("Users").child(user.getId()).child("hashtagList");
+        dataRef.addValueEventListener(listener);
+    }
+
+
+//    public void setUserHashtags(User user, String hashtag){
+//        ref.child("Users").child(user.getId()).child("hashtagList").setValue(hashtag);
+//    }
+
+
 }
 
 

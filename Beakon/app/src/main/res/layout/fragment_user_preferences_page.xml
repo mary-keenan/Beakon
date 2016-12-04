@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Interests"
+        android:textSize="@dimen/add_movement_title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tell us what you care about so we can recommend movements for you! "
+        android:id="@+id/user_preferences_instructions" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Add a New Interest ex:NoDAPL"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/add_user_preference"
+            android:layout_toLeftOf="@+id/add_user_preference"
+            android:id="@+id/user_preferences_new"/>
+
+        <ImageButton
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:id="@+id/add_user_preference"
+            android:background="@null"
+            android:src = "@drawable/add"
+            android:layout_gravity="right"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
