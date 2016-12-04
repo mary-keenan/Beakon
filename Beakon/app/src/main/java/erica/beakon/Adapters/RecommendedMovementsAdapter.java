@@ -44,7 +44,7 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         final Button join = (Button) convertView.findViewById(R.id.join);
         final Button reject = (Button) convertView.findViewById(R.id.reject);
 
-        if (activity.currentUser.getMovements().contains(movement)) {
+        if (activity.currentUser.getMovements().keySet().contains(movement.getId())) {
             //rejectBtn.setColorFilter(Color.argb(tintColor, tintColor, tintColor, tintColor)); // White Tint) {
             join.setText(R.string.leave);
         }

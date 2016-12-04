@@ -15,6 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.MainActivity;
@@ -78,8 +79,9 @@ public class AddMovementPage extends Fragment {
                             firebaseHandler.getUser(userID, new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    ArrayList<ArrayList<String>> lists = ((MainActivity) getActivity()).checkUserLists(dataSnapshot);
-                                    User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
+                                    ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
+                                    HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
+                                    User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
                                     Log.d("~~~", user.getName());
                                     firebaseHandler.addUsertoHashtag(user, hashtag);
                                     firebaseHandler.addUsertoMovement(user, movement);

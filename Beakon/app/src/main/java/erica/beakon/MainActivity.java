@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {
-        ArrayList<ArrayList<String>> lists = checkUserLists(snapshot);
-
-        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), lists.get(0), lists.get(1));
+        ArrayList<String> hashtagList = getHashtagList(snapshot);
+        HashMap<String, HashMap<String, Boolean>> movementList = getMovements(snapshot);
+        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), hashtagList, movementList);
 
 //        this.currentUser = new User(snapshot.child("id").getValue().toString(), snapshot.child("name").getValue().toString(), (ArrayList<String>) snapshot.child("hashtagList").getValue(), (ArrayList<String>) snapshot.child("movements").getValue());
         this.currentUser.initializeLists(this.currentUser);
@@ -143,31 +143,21 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         this.firebaseHandler = handler;
     }
 
-    public ArrayList<ArrayList<String>> checkUserLists(DataSnapshot dataSnapshot) {
-        ArrayList<ArrayList<String>> lists = new ArrayList<>();
+    public ArrayList<String> getHashtagList(DataSnapshot dataSnapshot) {
         ArrayList<String> hashtagList = new ArrayList<>();
-        ArrayList<String> movementList = new ArrayList<>();
 
-        if (dataSnapshot.child("hashtagList").getValue() != null && dataSnapshot.child("hashtagList").getValue().getClass() != HashMap.class){
+        if (dataSnapshot.child("hashtagList").getValue() != null && dataSnapshot.child("hashtagList").getValue().getClass() != HashMap.class) {
             hashtagList = (ArrayList<String>) dataSnapshot.child("hashtagList").getValue();
         }
-//        else {
-//            if (dataSnapshot.child("hashtagList").getValue().getClass() == HashMap.class) {
-//                HashMap hashMap = dataSnapshot.child("hashtagList").getValue(HashMap.class);
-//                for (Object key: hashMap.keySet()) {
-//                    Object val = hashMap.get(key);
-//                    Log.d("&&&", String.valueOf(val));
-//                }
-//            }
-//        }
 
-        if (dataSnapshot.child("movements").getValue() != null && dataSnapshot.child("movements").getValue().getClass() != HashMap.class){
-            movementList = (ArrayList<String>) dataSnapshot.child("movements").getValue();
+        return hashtagList;
+    }
+
+    public HashMap<String, HashMap<String, Boolean>> getMovements(DataSnapshot dataSnapshot) {
+        HashMap<String, HashMap<String, Boolean>> movementList = new HashMap<>();
+        if (dataSnapshot.child("movements").getValue() != null){
+            movementList = (HashMap<String, HashMap<String, Boolean>>) dataSnapshot.child("movements").getValue();
         }
-
-        lists.add(hashtagList);
-        lists.add(movementList);
-
-        return lists;
+        return movementList;
     }
 }

@@ -75,10 +75,10 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null){
-                    if (dataSnapshot.child("status").getValue().equals(true)) {
+                if (dataSnapshot.getValue() != null) {
+                    if (dataSnapshot.getValue().equals(true)) {
                         checkBox.setChecked(true);
-                    } else if (dataSnapshot.child("status").getValue().equals(false)) {
+                    } else if (dataSnapshot.getValue().equals(false)) {
                         checkBox.setChecked(false);
                     }
                 }

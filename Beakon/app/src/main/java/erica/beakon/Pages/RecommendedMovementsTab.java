@@ -249,8 +249,8 @@ public class RecommendedMovementsTab extends MovementsTab {
        return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                updateNearbyMovementRanks(dataSnapshot.getValue(String.class));
-                getMovement(dataSnapshot.getValue(String.class));
+                updateNearbyMovementRanks(dataSnapshot.getKey());
+                getMovement(dataSnapshot.getKey());
             }
 
             @Override
@@ -260,7 +260,7 @@ public class RecommendedMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String movementId = dataSnapshot.getValue(String.class);
+                String movementId = dataSnapshot.getKey();
                 if (movementsAlreadyHas(movementId)) {
                     movements.remove(getMovementById(movementId));
                 }
