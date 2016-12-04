@@ -1,80 +1,10 @@
-//package erica.beakon.Adapters;
-//
-//
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
-//import com.google.firebase.database.Query;
-//import com.google.firebase.database.ValueEventListener;
-//
-//import erica.beakon.Objects.Movement;
-//import erica.beakon.Objects.User;
-//import erica.beakon.Objects.UserMovement;
-//
-//
-//public class FirebaseHandler {
-//    FirebaseDatabase db;
-//    DatabaseReference ref;
-//
-//
-//    public FirebaseHandler(FirebaseDatabase db, DatabaseReference ref) {
-//        this.ref = ref;
-//        this.db = db;
-//    }
-//
-//    public void addUser(String name, String email) {
-//        DatabaseReference userRef = ref.child("Users").push();
-//        String userId = userRef.getKey();
-//        User user = new User(userId, name, email);
-//        ref.child("Users").child(userId).setValue(user);
-//
-//    }
-//
-//    public void getMovement(String name, String description, String steps, String resources) {
-//        DatabaseReference movementRef = ref.child("Movements").push();
-//        String movementId = movementRef.getKey();
-//        Movement movement = new Movement(movementId, name, description, steps, resources);
-//        ref.child("Movements").child(movementId).setValue(movement);
-//    }
-//
-//    public void getById(final long id, ValueEventListener listener) {
-////        final User[] user = new User[1];
-//        Query dataRef = ref.orderByChild("id").equalTo(id).getRef();
-//        dataRef.addListenerForSingleValueEvent(listener);
-////                @Override
-////                public void onDataChange(DataSnapshot dataSnapshot) {
-////                    user[0] = dataSnapshot.child("Users").child(String.valueOf(id)).getValue(User.class);
-////                    Log.d("*****", user[0].getName());
-////                }
-////
-////                @Override
-////                public void onCancelled(DatabaseError databaseError) {
-////
-////                }
-//    }
-//
-//    public void addUsertoMovement(User user, Movement movement) {
-//        DatabaseReference umRef = ref.child("UserMovements").push();
-//        String umId = umRef.getKey();
-//        UserMovement userMovement = new UserMovement(umId, false, user, movement);
-//        ref.child("UserMovements").child(umId).setValue(userMovement);
-//    }
-//
-//    public void completeUserMovement(String umId) {
-//        ref.child("UserMovements").child(umId).child("completed").setValue(true);
-//    }
-//
-//    public void removeUserfromMovement(String umId) {
-//        ref.child("UserMovements").child(umId).removeValue();
-//    }
-//
-//}
-//
-//
-//
-
 package erica.beakon.Adapters;
 
 
+import android.util.Log;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import android.location.Location;
 import android.renderscript.Sampler;
 import android.util.Log;
@@ -92,6 +22,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.LoginPage;
 import erica.beakon.Objects.Hashtag;
@@ -112,24 +43,9 @@ public class FirebaseHandler {
         this.ref = ref;
         this.db = db;
     }
-
     private GeoFire getGeoFire() {
         DatabaseReference geoRef = ref.child("GeoFire");
         return new GeoFire(geoRef);
-    }
-
-    public void addUser(String fbId, String name) {
-//        String userId = loginPage.getCurrentUserID();
-        User user = new User(fbId, name);
-        ref.child("Users").child(fbId).setValue(user);
-    }
-
-    public void addUser(String name, ArrayList<String> hashtagList) {
-//        DatabaseReference userRef = ref.child("Users").push();
-//        String userId = userRef.getKey();
-        String userId = loginPage.getCurrentUserID();
-        User user = new User(userId, name, hashtagList);
-        ref.child("Users").child(userId).setValue(user);
     }
 
     public void setUserGeoLocation(User user, Location location) {
@@ -154,28 +70,33 @@ public class FirebaseHandler {
         geoQuery.addGeoQueryEventListener(listener);
     }
 
-    public void addMovement(String name, String description, String steps, String resources) {
-        DatabaseReference movementRef = ref.child("Movements").push();
-        String movementId = movementRef.getKey();
-        Movement movement = new Movement(movementId, name, description, steps, resources);
-        ref.child("Movements").child(movementId).setValue(movement);
+
+    public void addUser(String fbId, String name) {
+//        String userId = loginPage.getCurrentUserID();
+        User user = new User(fbId, name);
+        ref.child("Users").child(fbId).setValue(user);
     }
 
-    public void addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList) {
-        DatabaseReference movementRef = ref.child("Movements").push();
-        String movementId = movementRef.getKey();
-        Movement movement = new Movement(movementId, name, description, steps, resources, hashtagList);
-        ref.child("Movements").child(movementId).setValue(movement);
+    public User addUser(String name, ArrayList<String> hashtagList, HashMap<String, HashMap<String,Boolean>> movementList) {
+        String userId = loginPage.getCurrentUserID();
+        User user = new User(userId, name, hashtagList, movementList);
+        ref.child("Users").child(userId).setValue(user);
+        return user;
     }
 
-//    public void addMovementtoHashtag(String name, ArrayList<Movement> movementList, ArrayList<User> userList) {
-//        Hashtag hashtag = new Hashtag(name, movementList, userList);
-//        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
-//    }
+    public Movement addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList, ArrayList<String> followerList) {
+        DatabaseReference movementRef = ref.child("Movements").push();
+        String movementId = movementRef.getKey();
+        Movement movement = new Movement(movementId, name, description, steps, resources, hashtagList, followerList);
+        ref.child("Movements").child(movementId).setValue(movement);
+        return movement;
+    }
 
-//    public void getData(final long id, ValueEventListener listener) {
-////        final User[] user = new User[1];
-//        Query dataRef = ref.orderByChild("id").equalTo(id).getRef();
+    public Hashtag addHashtag(String name, ArrayList<String> movementList, ArrayList<String> userList) {
+        Hashtag hashtag = new Hashtag(name, movementList, userList);
+        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+        return hashtag;
+    }
 
     public void getById(String id, ValueEventListener listener) {
         Query dataRef;
@@ -199,7 +120,7 @@ public class FirebaseHandler {
 
     public void getUser(String id, ValueEventListener listener) {
         Query dataRef = ref.child("Users").child(id);
-        dataRef.addValueEventListener(listener);
+        dataRef.addListenerForSingleValueEvent(listener);
     }
 
     public void getMovement(String id, ValueEventListener listener) {
@@ -207,15 +128,16 @@ public class FirebaseHandler {
         dataRef.addValueEventListener(listener);
     }
 
+    public void getHashtag(String name, ValueEventListener listener){
+        Log.d("___", name);
+        DatabaseReference dataRef = ref.child("Hashtags").child(name);
+        dataRef.addValueEventListener(listener);
+    }
 
     public void addUsertoMovement(User user, Movement movement) {
         user.addMovement(movement);
-        setMovementofUserStatus(user, movement,false);
-        movement.addUser(user);
-//        updateUser(user);
-        for(String id : user.getMovements()){
-            ref.child("Users").child(user.getId()).child("movements").child(id).child("status").setValue(false);
-        }
+        movement.addFollower(user);
+        updateUser(user);
         updateMovement(movement);
     }
 
@@ -226,8 +148,40 @@ public class FirebaseHandler {
         updateUser(user);
     }
 
+    public void addUsertoHashtag(User user, Hashtag hashtag) {
+        user.addHashtag(hashtag.getName());
+        hashtag.addUser(user.getId());
+        updateUser(user);
+        updateHashtag(hashtag);
+    }
+
+    public void addMovementtoHashtag(Movement movement, Hashtag hashtag) {
+        movement.addHashtag(hashtag.getName());
+        hashtag.addMovement(movement.getId());
+        updateMovement(movement);
+        updateHashtag(hashtag);
+    }
+
+    public void removeUserfromHashtag(User user, Hashtag hashtag) {
+        user.removeHashtag(hashtag.getName());
+        hashtag.removeUser(user.getId());
+        updateHashtag(hashtag);
+        updateUser(user);
+    }
+
+    public void removeMovementfromHashtag(Movement movement, Hashtag hashtag) {
+        movement.removeHashtag(hashtag.getName());
+        hashtag.removeMovement(movement.getId());
+        updateHashtag(hashtag);
+        updateMovement(movement);
+    }
+
     public void updateUser(User user) {
         ref.child("Users").child(user.getId()).setValue(user);
+    }
+
+    public void updateUser(String userID, String field, String value) {
+        ref.child("Users").child(userID).child(field).setValue(value);
     }
 
     public void updateMovement(Movement movement) {
@@ -235,8 +189,33 @@ public class FirebaseHandler {
 //        ref.child("Movements").child(movement.getId()).child("status").setValue(false);
     }
 
+    public void updateHashtag(Hashtag hashtag) {
+        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+    }
+
+    public void getBatchHashtags(ArrayList<String> hashtagBatch, ValueEventListener listener){ // for adding new movements
+        for (int i = 0; i < hashtagBatch.size(); i++) {
+            DatabaseReference dataRef = ref.child("Hashtags").child(hashtagBatch.get(i));
+            dataRef.addListenerForSingleValueEvent(listener);
+        }
+    }
+
+    public void getBatchMovements(ArrayList<String> movementBatch, ValueEventListener listener){ // for expanded hashtag page
+        for (int i = 0; i < movementBatch.size(); i++) {
+            DatabaseReference dataRef = ref.child("Movements").child(movementBatch.get(i));
+            dataRef.addListenerForSingleValueEvent(listener);
+        }
+    }
+
+    public void getBatchUsers(ArrayList<String> userBatch, ValueEventListener listener){ // for expanded hashtag and users page
+        for (int i = 0; i < userBatch.size(); i++) {
+            DatabaseReference dataRef = ref.child("Users").child(userBatch.get(i));
+            dataRef.addListenerForSingleValueEvent(listener);
+        }
+    }
+
     public void getMovementofUserStatus(User user, Movement movement, ValueEventListener listener) {
-        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movement.getId());
+        Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movement.getId()).child("status");
         dataRef.addValueEventListener(listener);
     }
 

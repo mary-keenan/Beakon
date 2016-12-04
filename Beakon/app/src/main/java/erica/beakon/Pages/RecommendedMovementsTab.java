@@ -138,12 +138,14 @@ public class RecommendedMovementsTab extends MovementsTab {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Movement movement = dataSnapshot.getValue(Movement.class);
+                movement.initializeLists(movement);
                 addPopularMovementIfRanking(movement);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Movement movement = dataSnapshot.getValue(Movement.class);
+                movement.initializeLists(movement);
                 if (popularMovementsAlreadyHas(movement)) {
                     updatePopularMovement(movement);
                 }
@@ -152,6 +154,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Movement movement = dataSnapshot.getValue(Movement.class);
+                movement.initializeLists(movement);
                 removePopularMovement(movement);
             }
 
@@ -178,7 +181,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             if (popularMovements.size() > POPULAR_MOVEMENTS_LIMIT) {
                 //if the list already has too many items
                 Movement minimumMovement = getMinimumRankPopularMovement();
-                if (movement.hasUsers() && movement.getUsers().size() >= minimumMovement.getUsers().size()) {
+                if (movement.hasUsers() && movement.getFollowers().size() >= minimumMovement.getFollowers().size()) {
                     removePopularMovement(minimumMovement);
                     addPopularMovement(movement);
                 }
@@ -199,7 +202,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     }
 
     private void addPopularMovement(Movement movement) {
-        movementPopularRanks.put(movement.getId(), movement.getUsers().size());
+        movementPopularRanks.put(movement.getId(), movement.getFollowers().size());
         popularMovements.add(movement);
 
         // if the dataset was just populated for the first time, need to set up the list view.
@@ -246,8 +249,8 @@ public class RecommendedMovementsTab extends MovementsTab {
        return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                updateNearbyMovementRanks(dataSnapshot.getValue(String.class));
-                getMovement(dataSnapshot.getValue(String.class));
+                updateNearbyMovementRanks(dataSnapshot.getKey());
+                getMovement(dataSnapshot.getKey());
             }
 
             @Override
@@ -257,7 +260,7 @@ public class RecommendedMovementsTab extends MovementsTab {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String movementId = dataSnapshot.getValue(String.class);
+                String movementId = dataSnapshot.getKey();
                 if (movementsAlreadyHas(movementId)) {
                     movements.remove(getMovementById(movementId));
                 }
@@ -321,7 +324,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     private HashMap<String, Integer> getMovementRanksFromPopularMovements() {
         HashMap<String, Integer> ranks = new HashMap<>();
         for (Movement m: popularMovements) {
-            ranks.put(m.getId(), m.getUsers().size());
+            ranks.put(m.getId(), m.getFollowers().size());
         }
         return ranks;
     }

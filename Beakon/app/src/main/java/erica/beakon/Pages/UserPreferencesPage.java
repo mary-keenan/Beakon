@@ -14,8 +14,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.GenericSignatureFormatError;
 import java.util.ArrayList;
 
 import erica.beakon.Adapters.FirebaseHandler;
@@ -52,9 +54,17 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
         activity.firebaseHandler.getHashtagsfromUser(currentUser, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue(ArrayList.class) != null){
-                    for(String hash : dataSnapshot.getValue(ArrayList.class)) {
-                        hashtagList.add(hash);
+                if (dataSnapshot.getValue() != null){
+                    ArrayList<Object> list = dataSnapshot.getValue(new GenericTypeIndicator<ArrayList<Object>>() {
+                        @Override
+                        public String toString() {
+                            return super.toString();
+                        }
+                    });
+                    for(Object hash : list) {
+                        hashtagList.add(hash.toString());
+                        Log.d("***", hashtagList.toString());
+                        userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
 
                     }
                 }
@@ -67,7 +77,6 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
             }
         });
 
-        userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
 
 
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_user_preference);
@@ -83,6 +92,8 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                 hashtagList.add(inputText);
                 currentUser = new User(currentUser.getId(),currentUser.getName(),hashtagList);
                 activity.firebaseHandler.updateUser(currentUser);
+                userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
+
 //                ((MainActivity) getActivity()).currentUser.addHashtag(inputText);
 //                ((MainActivity) getActivity()).firebaseHandler.updateUser(((MainActivity) getActivity()).currentUser);
 

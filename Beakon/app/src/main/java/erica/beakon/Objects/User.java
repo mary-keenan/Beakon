@@ -1,6 +1,7 @@
 package erica.beakon.Objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mafaldaborges on 11/7/16.
@@ -10,24 +11,37 @@ public class User {
     private String name;
     private String email;
     private ArrayList<String> hashtagList;
-    private ArrayList<String> movements;
+    private HashMap<String, HashMap<String,Boolean>> movements;
 
-    public User() {
+    public User() {}
 
-    }
-
-    public User(String id, String name) {
+    public User(String id, String name, ArrayList<String> hashtagList, HashMap<String, HashMap<String,Boolean>> movementList){
         this.id = id;
         this.name = name;
-        this.hashtagList = new ArrayList<>();
-        this.movements = new ArrayList<>();
+        this.hashtagList = hashtagList;
+        this.movements = movementList;
     }
 
     public User(String id, String name, ArrayList<String> hashtagList){
         this.id = id;
         this.name = name;
         this.hashtagList = hashtagList;
-        this.movements = new ArrayList<>();
+        this.movements = new HashMap<String, HashMap<String,Boolean>>();
+    }
+
+    public User(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.hashtagList = new ArrayList<>();
+        this.movements = new HashMap<String, HashMap<String,Boolean>>();
+    }
+
+    public User initializeLists(User user){
+        if (user.getMovements() == null){
+            user.setMovements(new HashMap<String, HashMap<String,Boolean>>());}
+        if (user.getHashtagList() == null){
+            user.setHashtagList(new ArrayList<String>());}
+        return user;
     }
 
     public String getId() {
@@ -61,23 +75,36 @@ public class User {
     public void setHashtagList(ArrayList<String> hashtagList) {
         this.hashtagList = hashtagList;}
 
-    public void addHashtag(String hashtag){this.hashtagList.add(hashtag);}
+    public void addHashtag(String hashtag){
+        hashtagList.add(hashtag);
+    }
 
-    public void removeHashtag(String hashtag){this.hashtagList.remove(hashtag);}
+    public void removeHashtag(String hashtag){
+        hashtagList.remove(hashtag);
+    }
 
-    public ArrayList<String> getMovements() {return this.movements;}
+    public HashMap<String, HashMap<String,Boolean>> getMovements() {
+            return this.movements;}
 
-    public void setMovements(ArrayList<String> movements){ this.movements = movements; }
+    public void setMovements(HashMap<String, HashMap<String,Boolean>> movements){ this.movements = movements; }
 
-    public void setEmptyMovements() {setMovements(new ArrayList<String>());}
+    public void setEmptyMovements() {setMovements(new HashMap<String, HashMap<String,Boolean>>());}
 
-    public void addMovement(Movement movement) { this.movements.add(movement.getId()); }
+    public void addMovement(Movement movement) {
+        this.movements.put(movement.getId(), getEmptyStatusMap());
+    }
 
-    public void addMovement(String movementId) { this.movements.add(movementId); }
+    public void addMovement(String movementId) { this.movements.put(movementId, getEmptyStatusMap());  }
 
     public void removeMovement(Movement movement) { this.movements.remove(movement.getId()); }
 
     public boolean isInMovement(Movement movement) {
-        return this.getMovements().contains(movement.getId());
+        return this.getMovements().keySet().contains(movement.getId());
+    }
+
+    private HashMap<String, Boolean> getEmptyStatusMap() {
+        HashMap<String, Boolean> empty = new HashMap<>();
+        empty.put("status", false);
+        return empty;
     }
 }

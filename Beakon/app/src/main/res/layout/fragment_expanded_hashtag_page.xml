@@ -7,7 +7,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal|top"
         android:weightSum="1">
 
@@ -20,41 +20,48 @@
             android:layout_gravity="center_horizontal"
             android:textSize="35dp"/>
 
-        <ListView
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/hashtag_movements_list"></ListView>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="243dp"
-        android:layout_gravity="center_horizontal|bottom">
+            android:text="Movements"
+            android:id="@+id/hashtag_movements_title"
+            android:textSize="23dp"
+            android:layout_gravity="center_horizontal" />
 
         <ListView
             android:layout_width="match_parent"
+            android:layout_height="252dp"
+            android:id="@+id/hashtag_movements_list"
+            android:layout_gravity="center_horizontal|top"></ListView>
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Followers"
+            android:id="@+id/hashtag_followers_title"
+            android:textSize="23dp"
+            android:layout_gravity="center_horizontal" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/hashtag_followers_list"></ListView>
-
 
     </LinearLayout>
 
     <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_width"
         android:id="@+id/backButtonHashtag"
-        android:background="@null"
+        android:background="@color/colorBackground"
         android:src = "@drawable/back_accent"
         android:layout_gravity="left|top" />
 
     <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
         android:id="@+id/followButtonHashtag"
-        android:background="@null"
+        android:background="@color/colorBackground"
         android:src = "@drawable/add"
         android:layout_gravity="right|top" />
 
