@@ -2,12 +2,14 @@ package erica.beakon.Adapters;
 
 import erica.beakon.Objects.Movement;
 import erica.beakon.MainActivity;
+import erica.beakon.Pages.ExpandedMovementPage;
 import erica.beakon.R;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,7 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
 
         TextView movementNameView = (TextView) convertView.findViewById(R.id.card_movement_name);
         movementNameView.setText(movement.getName());
+//        setOnClickMovement(movementNameView);
         final Button join = (Button) convertView.findViewById(R.id.join);
         final Button reject = (Button) convertView.findViewById(R.id.reject);
 
@@ -81,7 +84,18 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         return convertView;
     }
 
-
-
+    private void setOnClickMovement(final TextView tv){
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String movementName = (String) tv.getText();
+                ExpandedMovementPage movementFragment = new ExpandedMovementPage();
+                Bundle bundle = new Bundle();
+                bundle.putString("name", movementName); //give new fragment the hashtag it's expanding
+                movementFragment.setArguments(bundle);
+                ((MainActivity) getContext()).changeFragment(movementFragment); //changes fragments
+            }
+        });
+    }
 
 }

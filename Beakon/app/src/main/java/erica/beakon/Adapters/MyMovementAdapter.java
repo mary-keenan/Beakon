@@ -27,6 +27,7 @@ import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
 import erica.beakon.Pages.ExpandedHashtagPage;
+import erica.beakon.Pages.ExpandedMovementPage;
 import erica.beakon.Pages.MyMovementsTab;
 import erica.beakon.R;
 
@@ -67,10 +68,11 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             movement = new Movement("KXgdDeEWsCExk5yZMYZ", "Houston, we have a problem", "The movement here doesn't exist", "So we made a fake one", "but it's fake so watch out");
         }
 
-        //set movement name
+        //set movement name, onclicklistener
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
         movementNameView.setText(movement.getName());
+        setOnClickMovement(movementNameView);
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
@@ -147,6 +149,20 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             bundle.putString("name", hashtagName); //give new fragment the hashtag it's expanding
             hashtagFragment.setArguments(bundle);
             ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
+            }
+        });
+    }
+
+    private void setOnClickMovement(final TextView tv){
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String movementName = (String) tv.getText();
+                ExpandedMovementPage movementFragment = new ExpandedMovementPage();
+                Bundle bundle = new Bundle();
+                bundle.putString("name", movementName); //give new fragment the hashtag it's expanding
+                movementFragment.setArguments(bundle);
+                ((MainActivity) getContext()).changeFragment(movementFragment); //changes fragments
             }
         });
     }

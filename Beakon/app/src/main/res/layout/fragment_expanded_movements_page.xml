@@ -1,90 +1,67 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin">
-
+    tools:context=".Pages.ExpandedMovementPage">
 
     <LinearLayout
-        android:layout_width="342dp"
-        android:layout_height="44dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="358dp"
-            android:layout_height="wrap_content"
-            android:text="Expanded Movement Name"
-            android:textSize="@dimen/add_movement_title"
-            android:id="@+id/expanded_movement_name"
-            android:layout_alignParentTop="true" />
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal|top"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="#hello #world #welcome #home"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:text="MOVEMENT"
+            android:id="@+id/movement_name"
+            android:layout_gravity="center_horizontal"
+            android:textSize="35dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hashtags"
+            android:id="@+id/movement_hashtag_title"
+            android:textSize="23dp"
+            android:layout_gravity="center_horizontal" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="252dp"
+            android:id="@+id/movement_hashtags_list"
+            android:layout_gravity="center_horizontal|top"></ListView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Followers"
+            android:id="@+id/movement_followers_title"
+            android:textSize="23dp"
+            android:layout_gravity="center_horizontal" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/movement_followers_list"></ListView>
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Number of Supporters"
-        android:id="@+id/expanded_number_supporters"
-        android:layout_gravity="right" />
+    <ImageButton
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_width"
+        android:id="@+id/backButtonMovement"
+        android:background="@color/colorBackground"
+        android:src = "@drawable/back_accent"
+        android:layout_gravity="left|top" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description:"
-        android:labelFor="@+id/expanded_movement_description"
-        android:textSize="@dimen/add_movement_text"/>
+    <ImageButton
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_height"
+        android:id="@+id/followButtonMovement"
+        android:background="@color/colorBackground"
+        android:src = "@drawable/add"
+        android:layout_gravity="right|top" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:id="@+id/expanded_movement_description" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Steps:"
-        android:labelFor="@+id/expanded_movement_steps"
-        android:textSize="@dimen/add_movement_text"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/expanded_movement_steps"
-        android:layout_weight="0.23" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Resources:"
-        android:labelFor="@+id/expanded_movement_res"
-        android:textSize="@dimen/add_movement_text"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:id="@+id/expanded_movement_res" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Join"
-        android:id="@+id/expanded_join_button"
-        android:layout_gravity="center_horizontal"
-        android:background="#3F51B5"
-        android:textColor="@color/abc_background_cache_hint_selector_material_light" />
-
-
-</LinearLayout>
+</FrameLayout>

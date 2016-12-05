@@ -44,8 +44,6 @@ public class HashtagAdapter extends ArrayAdapter<String> {
                     Bundle bundle = new Bundle();
                     bundle.putString("name", (String) hashtagName.getText());
                     hashtagFragment.setArguments(bundle);
-                    Log.d(">>>", bundle.toString());
-                    Log.d("<<<", (String) hashtagName.getText());
 //                    hashtagFragment.setHashtag((String) hashtagName.getText()); //give it the hashtag it's expanding
                     ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
                 }

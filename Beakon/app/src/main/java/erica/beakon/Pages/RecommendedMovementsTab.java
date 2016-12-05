@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +26,7 @@ import java.util.concurrent.Callable;
 
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.Adapters.StorageHandler;
+import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
