@@ -72,7 +72,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
         movementNameView.setText(movement.getName());
-        setOnClickMovement(movementNameView);
+        setOnClickMovement(movementNameView, movement);
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
@@ -153,14 +153,14 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         });
     }
 
-    private void setOnClickMovement(final TextView tv){
+    private void setOnClickMovement(final TextView tv, final Movement movement){
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String movementName = (String) tv.getText();
                 ExpandedMovementPage movementFragment = new ExpandedMovementPage();
                 Bundle bundle = new Bundle();
-                bundle.putString("name", movementName); //give new fragment the hashtag it's expanding
+                bundle.putString("ID", movement.getId()); //give new fragment the movementID to populate page
+                bundle.putString("name", movement.getName()); //give new fragment the movementName to display at top
                 movementFragment.setArguments(bundle);
                 ((MainActivity) getContext()).changeFragment(movementFragment); //changes fragments
             }

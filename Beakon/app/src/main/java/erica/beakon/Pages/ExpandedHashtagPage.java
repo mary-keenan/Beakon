@@ -30,7 +30,6 @@ import erica.beakon.R;
 
 public class ExpandedHashtagPage extends Fragment {
 
-    String hashtagName;
     ArrayList<String> movementIDList = new ArrayList<>(); //list of movement IDs (stored in hashtag)
     ArrayList<String> userIDList = new ArrayList<>(); //list of user IDs (stored in hashtag)
     ArrayList<Movement> movementList = new ArrayList<>(); //list of movements fetched using movement IDs
@@ -49,7 +48,7 @@ public class ExpandedHashtagPage extends Fragment {
 
         if (bundle != null){
             String name_before = bundle.getString("name");
-            name = name_before.substring(0,name_before.length()-1);
+            name = name_before.replace(" ","");
             Log.d("!!!", name);
         }
 
@@ -73,7 +72,7 @@ public class ExpandedHashtagPage extends Fragment {
         final FollowerAdapter followerAdapter = new FollowerAdapter(getActivity(), followerList);
         followerLV.setAdapter(followerAdapter); //starts empty
 
-        //search firebase for hashtag information (movement and user ID lists) using hashtag name
+        //search firebase for hashtag information (movement and user ID lists) using hashtag ID
         firebaseHandler.getHashtag(name, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -102,7 +101,7 @@ public class ExpandedHashtagPage extends Fragment {
                             ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
                             HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
 //                            User follower = userSnapshot.getValue(User.class); //store user info in user object
-                            User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
+                            User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("ID").getValue().toString(), hashtagList, movementList);
                             followerAdapter.add(follower); //add user to follower adapter, updates list view
                         } //updates gradually (each iteration) so you don't end up with a blank screen for a while
 
@@ -132,7 +131,7 @@ public class ExpandedHashtagPage extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                         HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
-                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
+                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("ID").getValue().toString(), hashtagList, movementList);
                         Log.d("~~~", user.getName());
                         firebaseHandler.addUsertoHashtag(user, hashtag);
                         followButton.setBackgroundResource(R.drawable.check);

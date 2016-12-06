@@ -1,7 +1,5 @@
 package erica.beakon.Pages;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +19,7 @@ import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Adapters.FollowerAdapter;
+import erica.beakon.Adapters.HashtagAdapter;
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Hashtag;
@@ -32,10 +31,11 @@ public class ExpandedMovementPage extends Fragment {
 
     ArrayList<String> hashtagNameList = new ArrayList<>(); //list of movement IDs (stored in hashtag)
     ArrayList<String> userIDList = new ArrayList<>(); //list of user IDs (stored in hashtag)
-    ArrayList<Movement> hashtagList = new ArrayList<>(); //list of movements fetched using movement IDs
+    ArrayList<Hashtag> hashtagList = new ArrayList<>(); //list of movements fetched using movement IDs
     ArrayList<User> followerList = new ArrayList<>(); //list of followers fetched using user IDs
     Movement movement;
-    String name = "na";
+    String ID = "no ID";
+    String name = "no name";
 
     public ExpandedMovementPage() {}
 
@@ -47,15 +47,16 @@ public class ExpandedMovementPage extends Fragment {
         Bundle bundle = this.getArguments();
 
         if (bundle != null){
+            ID = bundle.getString("ID");
             name = bundle.getString("name");
-            Log.d("!!!", name);
+            Log.d("!!!", ID);
         }
 
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
 
         //create hashtag TV and set it to the hashtag set in setHashtag by previous fragment
-        final TextView hashtagView = (TextView) view.findViewById(R.id.movement_name);
-        hashtagView.setText("#" + name);
+        final TextView movementView = (TextView) view.findViewById(R.id.movement_name);
+        movementView.setText(name);
 
         //create buttons
         final ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonMovement);
@@ -63,7 +64,7 @@ public class ExpandedMovementPage extends Fragment {
 
         //create hashtag list view and its adapter
         ListView hashtagLV = (ListView) view.findViewById(R.id.movement_hashtags_list);
-        final RecommendedMovementsAdapter hashtagAdapter = new RecommendedMovementsAdapter(getActivity(), hashtagList);
+        final HashtagAdapter hashtagAdapter = new HashtagAdapter(getActivity(), hashtagList);
         hashtagLV.setAdapter(hashtagAdapter); //starts empty
 
         //create follower list view and its adapter
@@ -72,7 +73,49 @@ public class ExpandedMovementPage extends Fragment {
         followerLV.setAdapter(followerAdapter); //starts empty
 
 
+        //search firebase for movement information (hashtag and user ID lists) using movement ID
+        firebaseHandler.getMovement(ID, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("&&&", String.valueOf(dataSnapshot));
+                if (dataSnapshot.getValue() != null) { // if the movement exists in database
+                    movement = dataSnapshot.getValue(Movement.class); // store movement info in movement object
+                    if (movement.getHashtagList() != null){
+                        hashtagNameList = movement.getHashtagList();}; // get hashtag name list from movement}
+                    if(movement.getFollowers() != null) {
+                        userIDList = movement.getFollowers();} // get user id list from movement
+                    if (hashtagNameList != null){ // if the hashtag list isn't empty
+                        firebaseHandler.getBatchHashtags(hashtagNameList, new ValueEventListener() { //get all the movements
+                            @Override
+                            public void onDataChange(DataSnapshot hashtagSnapshot) {
+                                Hashtag hashtag = hashtagSnapshot.getValue(Hashtag.class); //store hashtag info in hashtag object
+                                hashtagAdapter.add(hashtag); //add hashtag to adapter/list view (updates each loop, rather than all at once)
+                            } //updates gradually so you don't end up with a blank screen for a while
 
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });}
+                    if (userIDList != null){ // if the user list isn't empty
+                        firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
+                            @Override
+                            public void onDataChange(DataSnapshot userSnapshot) {
+                                ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
+                                HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
+//                            User follower = userSnapshot.getValue(User.class); //store user info in user object
+                                User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
+                                followerAdapter.add(follower); //add user to follower adapter, updates list view
+                            } //updates gradually (each iteration) so you don't end up with a blank screen for a while
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });}
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
 
 
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +134,7 @@ public class ExpandedMovementPage extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                         HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
-                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
+                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("ID").getValue().toString(), hashtagList, movementList);
                         firebaseHandler.addUsertoMovement(user, movement);
                         followButton.setBackgroundResource(R.drawable.check);
                     }

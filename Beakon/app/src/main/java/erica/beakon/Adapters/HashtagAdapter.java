@@ -13,28 +13,29 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
+import erica.beakon.Objects.Hashtag;
 import erica.beakon.Pages.ExpandedHashtagPage;
 import erica.beakon.R;
 
 /**
  * Created by mary on 11/16/16.
  */
-public class HashtagAdapter extends ArrayAdapter<String> {
+public class HashtagAdapter extends ArrayAdapter<Hashtag> {
 
-    public HashtagAdapter(Context context, ArrayList<String> hashtags) {
+    public HashtagAdapter(Context context, ArrayList<Hashtag> hashtags) {
         super(context, 0, hashtags);
     }
 
         @Override
         public View getView(final int position, View view, ViewGroup parent) {
-            final String hashtag = getItem(position);
+            final Hashtag hashtag = getItem(position);
 
             if (view == null) {
                 view = LayoutInflater.from(getContext()).inflate(R.layout.hashtag_item, parent, false);
             }
 
             final TextView hashtagName = (TextView) view.findViewById(R.id.hashtag_name);
-            hashtagName.setText(hashtag);
+            hashtagName.setText(hashtag.getName());
 
             //if hashtag is clicked, go to ExpandedHashtagsPage fragment
             hashtagName.setOnClickListener(new View.OnClickListener() {
