@@ -1,12 +1,14 @@
 package erica.beakon.Pages;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -101,6 +103,12 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                 currentUser = new User(currentUser.getId(),currentUser.getName(),hashtagList);
                 activity.firebaseHandler.updateUser(currentUser);
                 userPreferencesAdapter.notifyDataSetChanged();
+
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
 //                ((MainActivity) getActivity()).currentUser.addHashtag(inputText);
 //                ((MainActivity) getActivity()).firebaseHandler.updateUser(((MainActivity) getActivity()).currentUser);
 
