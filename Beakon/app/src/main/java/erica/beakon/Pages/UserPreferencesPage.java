@@ -82,6 +82,15 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
             }
         });
 
+        ImageButton backButton = (ImageButton) view.findViewById(R.id.back_user_preferences);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed(); //might not work if multiple backs pressed in a row?
+            }
+        });
+
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_user_preference);
         final EditText newInterest = (EditText) view.findViewById(R.id.user_preferences_new);
 

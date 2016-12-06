@@ -3,21 +3,47 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Interests"
-        android:textSize="@dimen/add_movement_title" />
+        android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tell us what you care about so we can recommend movements for you! "
-        android:id="@+id/user_preferences_instructions" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Interests"
+            android:textSize="@dimen/add_movement_title"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/user_preference_title"
+            android:layout_toRightOf="@+id/back_user_preferences"
+            android:layout_marginBottom="5dp"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back_primary"
+            android:background="@null"
+            android:id="@+id/back_user_preferences" />
+
+        <TextView
+            android:layout_width="314dp"
+            android:layout_height="wrap_content"
+            android:text="Tell us what you care about so we can recommend movements for you! "
+            android:id="@+id/user_preferences_instructions"
+            android:layout_toRightOf="@+id/back_user_preferences"
+            android:layout_below="@+id/user_preference_title"
+           />
+
+
+    </RelativeLayout>
+
+
+
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
 
         <EditText
             android:layout_width="match_parent"
@@ -40,7 +66,6 @@
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
-
 
 
     <ListView
