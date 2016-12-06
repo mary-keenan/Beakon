@@ -1,21 +1,33 @@
 package erica.beakon.Pages;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import erica.beakon.LoginPage;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
+import erica.beakon.R;
 
 
 abstract public class MovementsTab extends Fragment {
 
+    static final int USER_PREF_PAGE = 0;
     ArrayList<Movement> movements;
+    ImageButton menuButton;
+    View view;
 
     public MovementsTab() {
         movements = new ArrayList<>();
@@ -70,6 +82,45 @@ abstract public class MovementsTab extends Fragment {
         }
         return null;
 //        throw new NullPointerException("No movement exists with that id in nearby movements");
+    }
+
+    protected void setUpAddButton() {
+        ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
+        addMovementBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).changeFragment(new AddMovementPage());
+            }
+        });
+    }
+    protected void setMenuButtonOnClickListener() {
+        menuButton = (ImageButton) view.findViewById(R.id.menu_button);
+        final Intent intent = new Intent(getActivity(), LoginPage.class);
+        menuButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                PopupMenu popup = new PopupMenu(getActivity(), menuButton);
+                popup.getMenuInflater().inflate(R.menu.popupmenu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(getActivity(),"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
+                        if (item.getGroupId() == MovementsTab.USER_PREF_PAGE) {
+                            android.support.v4.app.Fragment UserPref = new UserPreferencesPage();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.recommended_movements_tab, UserPref);
+                            transaction.commit();
+                        } else {
+                            LoginManager.getInstance().logOut();
+                            startActivity(intent);
+                        }
+                        return true;
+                    }
+                });
+
+                popup.show();//showing popup menu
+            }
+        });
     }
 
 }

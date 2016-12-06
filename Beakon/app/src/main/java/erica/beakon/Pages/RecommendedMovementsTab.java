@@ -5,20 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -36,7 +30,6 @@ public class RecommendedMovementsTab extends MovementsTab {
 
     final int POPULAR_MOVEMENTS_LIMIT = 2;
     StorageHandler storageHandler;
-    View view;
     ListView nearbyListView;
     ListView popularListView;
     ArrayList<Movement> popularMovements;
@@ -44,6 +37,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     RecommendedMovementsAdapter popularAdapter;
     HashMap<String, Integer> movementNearbyRanks;
     HashMap<String, Integer> movementPopularRanks;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +85,8 @@ public class RecommendedMovementsTab extends MovementsTab {
 
 
     private void initializeView() {
+        setMenuButtonOnClickListener();
+        setUpAddButton();
         setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements);
         initializeListViews();
     }
