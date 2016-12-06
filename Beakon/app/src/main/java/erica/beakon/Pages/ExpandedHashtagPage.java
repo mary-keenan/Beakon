@@ -48,7 +48,8 @@ public class ExpandedHashtagPage extends Fragment {
         Bundle bundle = this.getArguments();
 
         if (bundle != null){
-            name = bundle.getString("name");
+            String name_before = bundle.getString("name");
+            name = name_before.substring(0,name_before.length()-1);
             Log.d("!!!", name);
         }
 
@@ -72,10 +73,8 @@ public class ExpandedHashtagPage extends Fragment {
         final FollowerAdapter followerAdapter = new FollowerAdapter(getActivity(), followerList);
         followerLV.setAdapter(followerAdapter); //starts empty
 
-        String nameH = "renegade";
-
         //search firebase for hashtag information (movement and user ID lists) using hashtag name
-        firebaseHandler.getHashtag(nameH, new ValueEventListener() {
+        firebaseHandler.getHashtag(name, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(":::", String.valueOf(dataSnapshot.getValue()));
