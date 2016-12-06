@@ -1,6 +1,7 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,8 @@ import erica.beakon.R;
  */
 public class UserPreferencesAdapter extends ArrayAdapter<String> {
 
-    public UserPreferencesAdapter(Context context, ArrayList<String> hashtag) {
-        super(context, 0, hashtag);
+    public UserPreferencesAdapter(Context context, ArrayList<String> hashtagList) {
+        super(context, 0, hashtagList);
     }
 
 
@@ -36,7 +37,6 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
 
         final MainActivity activity = (MainActivity)getContext();
 
-
         final TextView userPreferenceString = (TextView) view.findViewById(R.id.user_preferences_string);
         userPreferenceString.setText(hashtag);
 
@@ -47,10 +47,9 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
             public void onClick(View v) {
                 activity.currentUser.removeHashtag(hashtag);
                 activity.firebaseHandler.updateUser(activity.currentUser);
+
             }
         });
-
-
 
         return view;
     }
