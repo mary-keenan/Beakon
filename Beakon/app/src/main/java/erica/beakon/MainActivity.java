@@ -155,8 +155,10 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
     public HashMap<String, HashMap<String, Boolean>> getMovements(DataSnapshot dataSnapshot) {
         HashMap<String, HashMap<String, Boolean>> movementList = new HashMap<>();
-        if (dataSnapshot.child("movements").getValue() != null){
+        if (dataSnapshot.child("movements").getValue() != null) {
+            if (dataSnapshot.child("movements").getValue().getClass() == HashMap.class){
             movementList = (HashMap<String, HashMap<String, Boolean>>) dataSnapshot.child("movements").getValue();
+            }
         }
         return movementList;
     }

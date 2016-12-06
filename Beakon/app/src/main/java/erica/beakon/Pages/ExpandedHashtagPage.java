@@ -76,10 +76,8 @@ public class ExpandedHashtagPage extends Fragment {
         firebaseHandler.getHashtag(name, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(":::", String.valueOf(dataSnapshot.getValue()));
                 if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
                     hashtag = dataSnapshot.getValue(Hashtag.class); // store hashtag info in hashtag object
-                    Log.d("[[[", hashtag.getName());
                     movementIDList = hashtag.getMovementList(); // get movement id list from hashtag
                     userIDList = hashtag.getUserList(); // get user id list from hashtag
                     if (movementIDList != null){ // if the movement list isn't empty
@@ -98,13 +96,14 @@ public class ExpandedHashtagPage extends Fragment {
                         firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
                         @Override
                         public void onDataChange(DataSnapshot userSnapshot) {
-                            ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
-                            HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
+                            if (userSnapshot != null) {
+                                ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
+                                HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
 //                            User follower = userSnapshot.getValue(User.class); //store user info in user object
-                            User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("ID").getValue().toString(), hashtagList, movementList);
-                            followerAdapter.add(follower); //add user to follower adapter, updates list view
-                        } //updates gradually (each iteration) so you don't end up with a blank screen for a while
-
+                                User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
+                                followerAdapter.add(follower); //add user to follower adapter, updates list view
+                            } //updates gradually (each iteration) so you don't end up with a blank screen for a while
+                        }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                         }
