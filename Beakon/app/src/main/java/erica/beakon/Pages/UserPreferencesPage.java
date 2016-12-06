@@ -71,45 +71,31 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                     });
                     for(Object hash : list) {
                         hashtagList.add(hash.toString());
-                        Log.d("***", hashtagList.toString());
                         userPreferencesAdapter.notifyDataSetChanged();
                     }
+                    currentUser.setHashtagList(hashtagList);
                 }
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
-
-
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_user_preference);
         final EditText newInterest = (EditText) view.findViewById(R.id.user_preferences_new);
-
-
 
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 String inputText = newInterest.getText().toString();
                 newInterest.getText().clear();
-                Log.d("UserPref", inputText);
-                hashtagList.add(inputText);
-                currentUser = new User(currentUser.getId(),currentUser.getName(),hashtagList);
+                currentUser.addHashtag(inputText);
                 activity.firebaseHandler.updateUser(currentUser);
                 userPreferencesAdapter.notifyDataSetChanged();
-//                ((MainActivity) getActivity()).currentUser.addHashtag(inputText);
-//                ((MainActivity) getActivity()).firebaseHandler.updateUser(((MainActivity) getActivity()).currentUser);
 
             }
         });
-
-
-
-
 
         return view;
     }
