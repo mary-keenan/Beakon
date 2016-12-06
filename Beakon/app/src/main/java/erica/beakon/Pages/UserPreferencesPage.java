@@ -1,12 +1,14 @@
 package erica.beakon.Pages;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -47,12 +49,10 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_user_preferences_page, container, false);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
 
-
         final MainActivity activity = (MainActivity) getActivity();
         currentUser = activity.currentUser;
 
         hashtagList = new ArrayList<String>();
-
 
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
@@ -93,6 +93,12 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                 currentUser.addHashtag(inputText);
                 activity.firebaseHandler.updateUser(currentUser);
                 userPreferencesAdapter.notifyDataSetChanged();
+
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
 
             }
         });
