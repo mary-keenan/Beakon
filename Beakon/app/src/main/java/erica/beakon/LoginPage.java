@@ -13,8 +13,11 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import erica.beakon.Adapters.FirebaseHandler;
 
@@ -57,12 +60,27 @@ public class LoginPage extends Activity {
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
                             profileTracker.stopTracking();
                             Profile.setCurrentProfile(currentProfile);
+
                         }
                     };
                     startActivity(intent);
                 } else {
-                    firebaseHandler.addUser(Profile.getCurrentProfile().getId(),Profile.getCurrentProfile().getFirstName());
-                    startActivity(intent);
+                    firebaseHandler.getUser(Profile.getCurrentProfile().getId(), new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                startActivity(intent);
+                            } else {
+                                firebaseHandler.addUser(Profile.getCurrentProfile().getId(),Profile.getCurrentProfile().getFirstName());
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
                 Log.d("FacebookLogin", "onSuccess" + loginResult);
