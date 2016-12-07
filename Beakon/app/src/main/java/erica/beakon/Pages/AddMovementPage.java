@@ -95,7 +95,7 @@ public class AddMovementPage extends Fragment {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
                 });
-                ((MainActivity) getActivity()).changeFragment(new MyMovementsTab());
+                ((MainActivity) getActivity()).changeFragment(new MyMovementsTab(), "MyMovementsTab");
             }
         });
 

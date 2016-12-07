@@ -9,6 +9,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="HASHTAG"
         android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"
         android:id="@+id/hashtag_name" />
 
 </RelativeLayout>

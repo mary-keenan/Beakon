@@ -24,20 +24,6 @@
             android:id="@+id/hashtag_table">
         </TableLayout>
 
-        <!--<ListView-->
-            <!--android:layout_width="366dp"-->
-            <!--android:layout_height="51dp"-->
-            <!--android:text="#hello #world #welcome #home"-->
-            <!--android:textColor="@color/colorPrimaryDark"-->
-            <!--android:id="@+id/hashtag_list"/>-->
-
-        <!--<TextView-->
-        <!--android:layout_width="366dp"-->
-        <!--android:layout_height="51dp"-->
-        <!--android:text="#hello #world"-->
-        <!--android:textColor="@color/colorPrimaryDark"-->
-        <!--android:id="@+id/hashtag_list"/>-->
-
     </LinearLayout>
 
 

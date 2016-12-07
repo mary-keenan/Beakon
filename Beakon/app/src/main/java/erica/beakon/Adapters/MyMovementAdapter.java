@@ -116,8 +116,9 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             for (int i = 0; i < hashtagList.size(); i++) {
                 hashtagName = "#" + hashtagList.get(i) + " "; //add space at end to shows diff between hashtags
                 TextView hashtagTV = new TextView(getContext()); //create hashtag TV
+                hashtagTV.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
                 hashtagTV.setText(hashtagName); //set text of hashtag TV
-                setOnClick(hashtagTV); //set on click listener
+                setOnClickHashtag(hashtagTV); //set on click listener
                 hashtagTV.measure(0, 0); //measure hashtag TV dimensions
                 int hashtagWidth = hashtagTV.getMeasuredWidth(); //save measured width in variable
                 //add to existing row or make a new one based on length of string
@@ -143,7 +144,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
     }
 
     //basically the HashtagAdapter, but since I'm using a Table Layout I did it differently (i.e. this instead)
-    private void setOnClick(final TextView tv){
+    private void setOnClickHashtag(final TextView tv){
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +153,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             Bundle bundle = new Bundle();
             bundle.putString("name", hashtagName); //give new fragment the hashtag it's expanding
             hashtagFragment.setArguments(bundle);
-            ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
+            ((MainActivity) getContext()).changeFragment(hashtagFragment, "expandedHashtagPage"); //changes fragments
             }
         });
     }
@@ -161,12 +162,12 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExpandedMovementPage movementFragment = new ExpandedMovementPage();
-                Bundle bundle = new Bundle();
-                bundle.putString("ID", movement.getId()); //give new fragment the movementID to populate page
-                bundle.putString("name", movement.getName()); //give new fragment the movementName to display at top
-                movementFragment.setArguments(bundle);
-                ((MainActivity) getContext()).changeFragment(movementFragment); //changes fragments
+            ExpandedMovementPage movementFragment = new ExpandedMovementPage();
+            Bundle bundle = new Bundle();
+            bundle.putString("ID", movement.getId()); //give new fragment the movementID to populate page
+            bundle.putString("name", movement.getName()); //give new fragment the movementName to display at top
+            movementFragment.setArguments(bundle);
+            ((MainActivity) getContext()).changeFragment(movementFragment, "expandedMovementPage"); //changes fragments
             }
         });
     }

@@ -20,7 +20,6 @@ import java.util.HashMap;
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Adapters.FollowerAdapter;
 import erica.beakon.Adapters.HashtagAdapter;
-import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
@@ -43,13 +42,12 @@ public class ExpandedMovementPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_expanded_movements_page, container, false);
+        final View view = inflater.inflate(R.layout.fragment_expanded_movement_page, container, false);
         Bundle bundle = this.getArguments();
 
         if (bundle != null){
             ID = bundle.getString("ID");
             name = bundle.getString("name");
-            Log.d("!!!", ID);
         }
 
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
@@ -71,7 +69,6 @@ public class ExpandedMovementPage extends Fragment {
         ListView followerLV = (ListView) view.findViewById(R.id.movement_followers_list);
         final FollowerAdapter followerAdapter = new FollowerAdapter(getActivity(), followerList);
         followerLV.setAdapter(followerAdapter); //starts empty
-
 
         //search firebase for movement information (hashtag and user ID lists) using movement ID
         firebaseHandler.getMovement(ID, new ValueEventListener() {

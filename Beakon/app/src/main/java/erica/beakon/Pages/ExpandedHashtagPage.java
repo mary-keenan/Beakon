@@ -2,6 +2,7 @@ package erica.beakon.Pages;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,7 +118,7 @@ public class ExpandedHashtagPage extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed(); //might not work if multiple backs pressed in a row?
+                getActivity().onBackPressed();
             }
         });
 

@@ -46,7 +46,7 @@ public class HashtagAdapter extends ArrayAdapter<Hashtag> {
                     String hashtagNameTrimmed = ((String) hashtagName.getText()).replace("#","").replace(" ","");
                     bundle.putString("name", hashtagNameTrimmed);
                     hashtagFragment.setArguments(bundle);
-                    ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
+                    ((MainActivity) getContext()).changeFragment(hashtagFragment, "expandedHashtagPage"); //changes fragments
                 }
             });
 

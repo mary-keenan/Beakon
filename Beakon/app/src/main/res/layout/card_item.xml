@@ -58,27 +58,18 @@
 
             </LinearLayout>
 
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="0dp"-->
-                    <!--android:layout_weight="0.3"-->
-                    <!--android:paddingLeft="20dp"-->
-                    <!--android:paddingBottom="5dp"-->
-                    <!--android:text="#hello #world #welcome #home"-->
-                    <!--android:layout_below="@id/card_movement_name"-->
-                    <!--android:textColor="@color/colorPrimaryDark"-->
-                    <!--android:id="@+id/hashes" />-->
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:shrinkColumns="*"
+                android:id="@+id/hashtag_table">
 
-            </LinearLayout>
+            </TableLayout>
+
+
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.11">
-
-    </TableLayout>
-
 
 </LinearLayout>

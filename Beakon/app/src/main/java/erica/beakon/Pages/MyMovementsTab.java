@@ -75,7 +75,7 @@ public class MyMovementsTab extends MovementsTab {
         addMovementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).changeFragment(new AddMovementPage());
+                ((MainActivity) getActivity()).changeFragment(new AddMovementPage(), "AddMovementPage");
             }
         });
         setUsersMovementsListener();
