@@ -35,7 +35,7 @@ public class HashtagAdapter extends ArrayAdapter<Hashtag> {
             }
 
             final TextView hashtagName = (TextView) view.findViewById(R.id.hashtag_name);
-            hashtagName.setText(hashtag.getName());
+            hashtagName.setText("#" + hashtag.getName());
 
             //if hashtag is clicked, go to ExpandedHashtagsPage fragment
             hashtagName.setOnClickListener(new View.OnClickListener() {
@@ -43,9 +43,9 @@ public class HashtagAdapter extends ArrayAdapter<Hashtag> {
                 public void onClick(View v) {
                     ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
                     Bundle bundle = new Bundle();
-                    bundle.putString("name", (String) hashtagName.getText());
+                    String hashtagNameTrimmed = ((String) hashtagName.getText()).replace("#","").replace(" ","");
+                    bundle.putString("name", hashtagNameTrimmed);
                     hashtagFragment.setArguments(bundle);
-//                    hashtagFragment.setHashtag((String) hashtagName.getText()); //give it the hashtag it's expanding
                     ((MainActivity) getContext()).changeFragment(hashtagFragment); //changes fragments
                 }
             });

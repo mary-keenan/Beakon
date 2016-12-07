@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -130,10 +131,10 @@ public class ExpandedHashtagPage extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                         HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
-                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("ID").getValue().toString(), hashtagList, movementList);
-                        Log.d("~~~", user.getName());
+                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
                         firebaseHandler.addUsertoHashtag(user, hashtag);
-                        followButton.setBackgroundResource(R.drawable.check);
+                        followButton.setImageResource(R.drawable.check);
+                        followButton.setScaleType(ImageView.ScaleType.CENTER);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}

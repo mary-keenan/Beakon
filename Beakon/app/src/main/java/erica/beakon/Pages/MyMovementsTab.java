@@ -49,8 +49,6 @@ public class MyMovementsTab extends MovementsTab {
         logoutButton = (Button) view.findViewById(R.id.logout);
         userPrefButton = (Button) view.findViewById(R.id.user_pref_button);
 
-
-
         final Intent intent = new Intent(getActivity(), LoginPage.class);
 
         userPrefButton.setOnClickListener(new View.OnClickListener(){
@@ -61,7 +59,6 @@ public class MyMovementsTab extends MovementsTab {
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.my_movement_tab, UserPref);
                 transaction.commit();
-
             }
         });
 

@@ -134,9 +134,9 @@ public class ExpandedMovementPage extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                         HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
-                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("ID").getValue().toString(), hashtagList, movementList);
+                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
                         firebaseHandler.addUsertoMovement(user, movement);
-                        followButton.setBackgroundResource(R.drawable.check);
+                        followButton.setImageResource(R.drawable.check);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}

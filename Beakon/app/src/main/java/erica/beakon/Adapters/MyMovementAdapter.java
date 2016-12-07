@@ -109,10 +109,10 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         //get list of hashtags from movement
         ArrayList<String> hashtagList = movement.getHashtagList();
         //initialize some variables here
-        int rowWidth = 800; //placeholder value -- ideally, we'd programatically find out view width since it's dynamic
+        int rowWidth = 600; //placeholder value -- ideally, we'd programatically find out view width since it's dynamic
         int counter = 0; //keep track of number of characters in row
 
-        //loop through hashtag list, put them in rows, set onClickListeners, etc
+        //loop through hashtag list, put them in one row, set onClickListeners, etc
         if (hashtagList != null) {
             for (int i = 0; i < hashtagList.size(); i++) {
                 hashtagName = hashtagList.get(i) + " "; //add space at end to shows diff between hashtags
@@ -126,10 +126,11 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
                     hashtagRow.addView(hashtagTV); //add the TV to the row
                     counter += hashtagWidth; //update the counter
                 } else { //if row would be too long with hashtag, put it in new row
-                    hashtagTable.addView(hashtagRow, tableParams); //add row to table without adding new hashtag to row
-                    counter = hashtagWidth; //start new counter with next hashtagWidth
-                    hashtagRow = new TableRow(getContext()); //make new hashtag row
-                    hashtagRow.addView(hashtagTV); //add hashtag TV to new row
+                    break;
+//                    hashtagTable.addView(hashtagRow, tableParams); //add row to table without adding new hashtag to row
+//                    counter = hashtagWidth; //start new counter with next hashtagWidth
+//                    hashtagRow = new TableRow(getContext()); //make new hashtag row
+//                    hashtagRow.addView(hashtagTV); //add hashtag TV to new row
                 }
             }
         }
