@@ -49,8 +49,7 @@ public class ExpandedHashtagPage extends Fragment {
 
         if (bundle != null){
             String name_before = bundle.getString("name");
-            name = name_before.replace(" ","");
-            Log.d("!!!", name);
+            name = name_before.replace(" ","").replace("#","");
         }
 
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
