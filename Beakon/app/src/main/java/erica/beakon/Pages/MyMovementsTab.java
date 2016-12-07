@@ -1,8 +1,7 @@
 package erica.beakon.Pages;
 
-import android.app.Fragment;
+
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -20,8 +19,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.LoginPage;
 import erica.beakon.MainActivity;
@@ -32,7 +29,6 @@ public class MyMovementsTab extends MovementsTab {
 
     public static final String TAG = "MY MOVEMENTS TAB";
     MyMovementAdapter adapter;
-    View view;
     ListView listView;
     TextView message;
     Button logoutButton;
@@ -78,6 +74,11 @@ public class MyMovementsTab extends MovementsTab {
                 ((MainActivity) getActivity()).changeFragment(new AddMovementPage(), "AddMovementPage");
             }
         });
+
+        //MERGE CONFLICT -- THESE TWO LINES SEEM UNNECESSARY BUT NOT SURE
+//        setMenuButtonOnClickListener();
+//        setUpAddButton();
+
         setUsersMovementsListener();
         if (!movements.isEmpty() && movements != null) {
             setUpListView();

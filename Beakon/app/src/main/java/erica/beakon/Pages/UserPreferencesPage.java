@@ -49,12 +49,10 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_user_preferences_page, container, false);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
 
-
         final MainActivity activity = (MainActivity) getActivity();
         currentUser = activity.currentUser;
 
         hashtagList = new ArrayList<String>();
-
 
         final ListView lv = (ListView) view.findViewById(R.id.listView);
         userPreferencesAdapter = new UserPreferencesAdapter(getActivity(),hashtagList);
@@ -73,34 +71,26 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                     });
                     for(Object hash : list) {
                         hashtagList.add(hash.toString());
-                        Log.d("***", hashtagList.toString());
                         userPreferencesAdapter.notifyDataSetChanged();
                     }
+                    currentUser.setHashtagList(hashtagList);
                 }
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
-
-
         ImageButton addButton = (ImageButton) view.findViewById(R.id.add_user_preference);
         final EditText newInterest = (EditText) view.findViewById(R.id.user_preferences_new);
-
-
 
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 String inputText = newInterest.getText().toString();
                 newInterest.getText().clear();
-                Log.d("UserPref", inputText);
-                hashtagList.add(inputText);
-                currentUser = new User(currentUser.getId(),currentUser.getName(),hashtagList);
+                currentUser.addHashtag(inputText);
                 activity.firebaseHandler.updateUser(currentUser);
                 userPreferencesAdapter.notifyDataSetChanged();
 
@@ -109,15 +99,9 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                     InputMethodManager imm = (InputMethodManager)(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
-//                ((MainActivity) getActivity()).currentUser.addHashtag(inputText);
-//                ((MainActivity) getActivity()).firebaseHandler.updateUser(((MainActivity) getActivity()).currentUser);
 
             }
         });
-
-
-
-
 
         return view;
     }
