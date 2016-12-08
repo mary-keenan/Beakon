@@ -1,20 +1,27 @@
 package erica.beakon.Pages;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import erica.beakon.Adapters.MyMovementAdapter;
+import erica.beakon.LoginPage;
+import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -24,6 +31,8 @@ public class MyMovementsTab extends MovementsTab {
     MyMovementAdapter adapter;
     ListView listView;
     TextView message;
+    Button logoutButton;
+    Button userPrefButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,13 +42,42 @@ public class MyMovementsTab extends MovementsTab {
 
         listView = (ListView) view.findViewById(R.id.my_movements_list);
         message = (TextView) view.findViewById(R.id.no_movments_message);
+        logoutButton = (Button) view.findViewById(R.id.logout);
+        userPrefButton = (Button) view.findViewById(R.id.user_pref_button);
 
-        setMenuButtonOnClickListener();
-        setUpAddButton();
+        final Intent intent = new Intent(getActivity(), LoginPage.class);
 
+        userPrefButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                android.support.v4.app.Fragment UserPref = new UserPreferencesPage();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.my_movement_tab, UserPref);
+                transaction.commit();
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LoginManager.getInstance().logOut();
+                startActivity(intent);
+            }
+        });
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
 //        setUpChangeFragmentsButton(view, new AddMovementPage(), R.id.goto_add_movement_button);
+        ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
+        addMovementBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).changeFragment(new AddMovementPage(), "AddMovementPage");
+            }
+        });
 
+        //MERGE CONFLICT -- THESE TWO LINES SEEM UNNECESSARY BUT NOT SURE
+//        setMenuButtonOnClickListener();
+//        setUpAddButton();
 
         setUsersMovementsListener();
         if (!movements.isEmpty() && movements != null) {

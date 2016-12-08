@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +20,7 @@ import java.util.concurrent.Callable;
 
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.Adapters.StorageHandler;
+import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 

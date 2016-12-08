@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
                 setCurrentUserFromData(dataSnapshot);
                 locationHandler.setLocationListener(getLocationListener());
                 locationHandler.getCurrentLocation();
-                changeFragment(new MyMovementsTab());
+                changeFragment(new MyMovementsTab(), "MyMovementsTab");
             }
 
             @Override
@@ -86,9 +86,9 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     }
 
     //switches fragments, new fragment is input
-    public void changeFragment(android.support.v4.app.Fragment fragment) {
+    public void changeFragment(android.support.v4.app.Fragment fragment, String tag) {
         FragmentManager manager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction().add(fragment, "tag").addToBackStack("another_tag");
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction().add(fragment, "tag").addToBackStack(tag);
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commitAllowingStateLoss();
     }
@@ -155,8 +155,10 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
     public HashMap<String, HashMap<String, Boolean>> getMovements(DataSnapshot dataSnapshot) {
         HashMap<String, HashMap<String, Boolean>> movementList = new HashMap<>();
-        if (dataSnapshot.child("movements").getValue() != null){
+        if (dataSnapshot.child("movements").getValue() != null) {
+            if (dataSnapshot.child("movements").getValue().getClass() == HashMap.class){
             movementList = (HashMap<String, HashMap<String, Boolean>>) dataSnapshot.child("movements").getValue();
+            }
         }
         return movementList;
     }

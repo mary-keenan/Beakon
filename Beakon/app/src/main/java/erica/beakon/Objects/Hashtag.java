@@ -1,5 +1,7 @@
 package erica.beakon.Objects;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -7,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Hashtag {
     private String name;
-    private ArrayList<String> movementList;
-    private ArrayList<String> userList;
+    private ArrayList<String> movementList = new ArrayList<>();
+    private ArrayList<String> userList = new ArrayList<>();
 
     public Hashtag(){}
 
