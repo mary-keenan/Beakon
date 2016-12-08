@@ -1,5 +1,6 @@
 package erica.beakon;
 
+import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +14,9 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import erica.beakon.Pages.ExpandedHashtagPage;
+import erica.beakon.Pages.ExpandedMovementPage;
 import erica.beakon.location.LocationHandler;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
                 }
                 return;
             }
-        };
+        }
     }
 
     //switches fragments, new fragment is input
@@ -91,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction().add(fragment, "tag").addToBackStack(tag);
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
     }
 
     private void setCurrentUserFromData(DataSnapshot snapshot) {

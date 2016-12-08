@@ -33,6 +33,7 @@ public class MyMovementsTab extends MovementsTab {
     TextView message;
     Button logoutButton;
     Button userPrefButton;
+    Boolean alreadyLoaded = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,7 +111,7 @@ public class MyMovementsTab extends MovementsTab {
                 }
                 if (adapter!=null) {
                     adapter.notifyDataSetChanged();
-                }
+               }
             }
 
             @Override
