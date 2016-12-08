@@ -24,7 +24,7 @@ import erica.beakon.R;
 
 abstract public class MovementsTab extends Fragment {
 
-    static final int USER_PREF_PAGE = 0;
+    static final String SETTINGS_TITLE = "Settings";
     ArrayList<Movement> movements;
     ImageButton menuButton;
     View view;
@@ -93,7 +93,7 @@ abstract public class MovementsTab extends Fragment {
             }
         });
     }
-    protected void setMenuButtonOnClickListener() {
+    protected void setMenuButtonOnClickListener(final int currentTab) {
         menuButton = (ImageButton) view.findViewById(R.id.menu_button);
         final Intent intent = new Intent(getActivity(), LoginPage.class);
         menuButton.setOnClickListener(new View.OnClickListener(){
@@ -105,10 +105,10 @@ abstract public class MovementsTab extends Fragment {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         Toast.makeText(getActivity(),"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
-                        if (item.getGroupId() == MovementsTab.USER_PREF_PAGE) {
+                        if (item.getTitle().equals(MovementsTab.SETTINGS_TITLE)) {
                             android.support.v4.app.Fragment UserPref = new UserPreferencesPage();
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.recommended_movements_tab, UserPref);
+                            transaction.replace(currentTab, UserPref);
                             transaction.commit();
                         } else {
                             LoginManager.getInstance().logOut();
