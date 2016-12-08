@@ -45,7 +45,7 @@ abstract public class MovementsTab extends Fragment {
 
         tabChangeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((MainActivity) getActivity()).changeFragment(fragment); //should change to SuggestedMovements page
+                ((MainActivity) getActivity()).changeFragment(fragment, "TabSwitch"); //should change to SuggestedMovements page
             }
         });
     }
@@ -89,7 +89,7 @@ abstract public class MovementsTab extends Fragment {
         addMovementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).changeFragment(new AddMovementPage());
+                ((MainActivity) getActivity()).changeFragment(new AddMovementPage(), "AddMovementPage");
             }
         });
     }

@@ -59,6 +59,8 @@
     <ImageButton
         android:layout_width="@dimen/image_width"
         android:layout_height="@dimen/image_height"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:id="@+id/followButtonMovement"
         android:background="@color/colorBackground"
         android:src = "@drawable/add"

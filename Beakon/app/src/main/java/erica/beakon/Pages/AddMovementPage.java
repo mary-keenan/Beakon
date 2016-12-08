@@ -54,11 +54,11 @@ public class AddMovementPage extends Fragment {
         addMovementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String movementName = nameInput.getText().toString(); // get movement name
+                String movementName = nameInput.getText().toString(); // get movement ID
                 String movementDescription = descriptionInput.getText().toString(); // get movement description
                 String movementSteps = stepsInput.getText().toString(); // get movement steps
                 String movementResources = resourcesInput.getText().toString(); // get movement resources
-                final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().split(" "))); // get movement hashtags (list)
+                final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().replace("#","").split(" "))); // get movement hashtags (list)
 
                 final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
                 final String userID = ((MainActivity) getActivity()).currentUser.getId();
@@ -74,7 +74,6 @@ public class AddMovementPage extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
                             final Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);// get hashtag info from database
-                            Log.d("----------", hashtag.getName());
                             firebaseHandler.addMovementtoHashtag(movement, hashtag); // add new movement id to hashtag
                             firebaseHandler.getUser(userID, new ValueEventListener() {
                                 @Override
@@ -82,7 +81,6 @@ public class AddMovementPage extends Fragment {
                                     ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                                     HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
                                     User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                                    Log.d("~~~", user.getName());
                                     firebaseHandler.addUsertoHashtag(user, hashtag);
                                     firebaseHandler.addUsertoMovement(user, movement);
                                 }
@@ -97,7 +95,7 @@ public class AddMovementPage extends Fragment {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
                 });
-                ((MainActivity) getActivity()).changeFragment(new MyMovementsTab());
+                ((MainActivity) getActivity()).changeFragment(new MyMovementsTab(), "MyMovementsTab");
             }
         });
 

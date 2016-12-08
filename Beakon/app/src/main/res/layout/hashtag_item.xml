@@ -7,7 +7,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
+        android:text="HASHTAG"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimaryDark"
         android:id="@+id/hashtag_name" />
 
 </RelativeLayout>
