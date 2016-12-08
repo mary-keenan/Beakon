@@ -87,7 +87,7 @@ public class RecommendedMovementsTab extends MovementsTab {
 
 
     private void initializeView() {
-        setMenuButtonOnClickListener();
+        setMenuButtonOnClickListener(R.id.recommended_movements_tab);
         setUpAddButton();
         setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements);
         initializeListViews();

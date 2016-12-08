@@ -42,29 +42,6 @@ public class MyMovementsTab extends MovementsTab {
 
         listView = (ListView) view.findViewById(R.id.my_movements_list);
         message = (TextView) view.findViewById(R.id.no_movments_message);
-        logoutButton = (Button) view.findViewById(R.id.logout);
-        userPrefButton = (Button) view.findViewById(R.id.user_pref_button);
-
-        final Intent intent = new Intent(getActivity(), LoginPage.class);
-
-        userPrefButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                android.support.v4.app.Fragment UserPref = new UserPreferencesPage();
-
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.my_movement_tab, UserPref);
-                transaction.commit();
-            }
-        });
-
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginManager.getInstance().logOut();
-                startActivity(intent);
-            }
-        });
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
 //        setUpChangeFragmentsButton(view, new AddMovementPage(), R.id.goto_add_movement_button);
         ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
@@ -75,9 +52,8 @@ public class MyMovementsTab extends MovementsTab {
             }
         });
 
-        //MERGE CONFLICT -- THESE TWO LINES SEEM UNNECESSARY BUT NOT SURE
-//        setMenuButtonOnClickListener();
-//        setUpAddButton();
+        setMenuButtonOnClickListener(R.id.my_movement_tab);
+        setUpAddButton();
 
         setUsersMovementsListener();
         if (!movements.isEmpty() && movements != null) {
