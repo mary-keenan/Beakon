@@ -122,28 +122,8 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
             int totalWidth = 0;
             if (hashtagList != null) {
                 for (String hashtag: hashtagList) {
-                    Log.d("BLAH", movement.getName() + " : " + hashtag);
-                    TextView tv = new TextView(getContext());
-                    tv.setText(getFormattedHashtag(hashtag));
-                    tv.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-                    setOnClickHashtag(tv);
-
-                    tv.measure(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    int hashtagWidth = tv.getMeasuredWidth();
-
-                    if (totalWidth + hashtagWidth < rowWidth) { //if adding new hashtag won't go over the limit
-                        hashtagLayout.addView(tv); //add the TV to the row
-                    } else {
-                        if (hashtagLayout.getId() == R.id.hashtag_layout0) {
-                            hashtagLayout = (LinearLayout) convertView.findViewById(R.id.hashtag_layout1);
-                        } else {
-                            hashtagLayout = (LinearLayout) convertView.findViewById(R.id.hashtag_layout2);
-                        }
-                        totalWidth = 0;
-                        hashtagLayout.addView(tv);
-                    }
-                    totalWidth += hashtagWidth; //update the counter
-                    Log.d("BLHA", String.valueOf(totalWidth));
+                    //add the hashtag to the view and update totalWidth with the new value
+                    totalWidth = addHashtagtoView(hashtag, convertView, hashtagLayout, totalWidth, rowWidth);
                 }
             }
         }
@@ -185,4 +165,36 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         return "#" + hashtag + " ";
     }
 
+    private TextView createHashtagTextView(String hashtag) {
+        TextView tv = new TextView(getContext());
+        tv.setText(getFormattedHashtag(hashtag));
+        tv.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        setOnClickHashtag(tv);
+        return  tv;
+    }
+
+    private int getHashtagTextViewWidth(TextView tv) {
+        tv.measure(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        return tv.getMeasuredWidth();
+    }
+
+    private LinearLayout nextHashtagLayout(View view, LinearLayout currentLayout) {
+        if (currentLayout.getId() == R.id.hashtag_layout0) {
+            return (LinearLayout) view.findViewById(R.id.hashtag_layout1);
+        } else {
+            return(LinearLayout) view.findViewById(R.id.hashtag_layout2);
+        }
+    }
+
+    private int addHashtagtoView(String hashtag, View view, LinearLayout hashtagLayout, int totalWidth, int rowWidth) {
+        TextView tv = createHashtagTextView(hashtag);
+        int hashtagWidth = getHashtagTextViewWidth(tv);
+        if (totalWidth + hashtagWidth >= rowWidth) { //if adding new hashtag won't go over the limit
+            hashtagLayout = nextHashtagLayout(view, hashtagLayout); //make hashtagLayout the linearlayout below it
+            totalWidth = 0;
+        }
+        hashtagLayout.addView(tv);
+        totalWidth += hashtagWidth;
+        return totalWidth;
+    }
 }
