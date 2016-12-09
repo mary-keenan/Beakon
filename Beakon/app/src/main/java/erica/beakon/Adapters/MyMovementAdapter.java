@@ -134,7 +134,9 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                firebaseHandler.removeUserfromMovement(currentUser, finalMovement2);
                 movements.remove(finalMovement2);
+//                currentUser.removeMovement(finalMovement2);
 //                hashtagTable.removeAllViews(); //doesn't seem necessary now that we're limiting to one row, but keeping in case there's a bug I can't see yet
                 notifyDataSetChanged();
             }

@@ -68,9 +68,12 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
                 if(join.getText().equals(getContext().getString(R.string.join))) {
                     join.setText(R.string.leave);
                     activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
+                    notifyDataSetChanged();
                 } else if (join.getText().equals(getContext().getString(R.string.leave))) {
                     join.setText(R.string.join);
+                    movement.removeUser(activity.currentUser);
                     activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
+                    notifyDataSetChanged();
                 }
             }
         });
