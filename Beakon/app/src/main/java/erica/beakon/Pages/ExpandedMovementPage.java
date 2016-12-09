@@ -52,9 +52,12 @@ public class ExpandedMovementPage extends Fragment {
 
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
 
-        //create hashtag TV and set it to the hashtag set in setHashtag by previous fragment
-        final TextView movementView = (TextView) view.findViewById(R.id.movement_name);
-        movementView.setText(name);
+        //create TVs
+        final TextView movementNameTV = (TextView) view.findViewById(R.id.movement_name);
+        movementNameTV.setText(name);
+        final TextView description = (TextView) view.findViewById(R.id.movement_description);
+        final TextView steps = (TextView) view.findViewById(R.id.movement_steps);
+        final TextView resources = (TextView) view.findViewById(R.id.movement_resources);
 
         //create buttons
         final ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonMovement);
@@ -74,9 +77,11 @@ public class ExpandedMovementPage extends Fragment {
         firebaseHandler.getMovement(ID, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("&&&", String.valueOf(dataSnapshot));
                 if (dataSnapshot.getValue() != null) { // if the movement exists in database
                     movement = dataSnapshot.getValue(Movement.class); // store movement info in movement object
+                    description.setText(movement.getDescription());
+                    steps.setText(movement.getSteps());
+                    resources.setText(movement.getResources());
                     if (movement.getHashtagList() != null){
                         hashtagNameList = movement.getHashtagList();}; // get hashtag name list from movement}
                     if(movement.getFollowers() != null) {
