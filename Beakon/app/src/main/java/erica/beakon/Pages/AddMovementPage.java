@@ -62,11 +62,15 @@ public class AddMovementPage extends Fragment {
 
                 final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
                 final String userID = ((MainActivity) getActivity()).currentUser.getId();
-                userList.add(userID); // hardcoding user ID for now
+//                userList.add(userID); // hardcoding user ID for now
 
                 final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
                 final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
                 movementList.add(movement.getId());
+
+                User currentUser = ((MainActivity) getActivity()).currentUser;
+
+                firebaseHandler.addUsertoMovement(currentUser, movement);
 
                 //loop through hashtags in handler, check if they already exist here --> update, or if they don't --> add
                 firebaseHandler.getBatchHashtags(movementHashtags, new ValueEventListener() { // called for each hashtag in list; handler loops through them
@@ -82,7 +86,7 @@ public class AddMovementPage extends Fragment {
                                     HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
                                     User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
                                     firebaseHandler.addUsertoHashtag(user, hashtag);
-                                    firebaseHandler.addUsertoMovement(user, movement);
+//                                    firebaseHandler.addUsertoMovement(user, movement);
                                 }
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {}
