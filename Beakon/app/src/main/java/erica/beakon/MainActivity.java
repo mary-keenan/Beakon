@@ -97,11 +97,6 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
         transaction.commitAllowingStateLoss();
     }
 
-    @Override
-    public void onBackPressed(){
-        super.onBackPressed();
-    }
-
     private void setCurrentUserFromData(DataSnapshot snapshot) {
         ArrayList<String> hashtagList = getHashtagList(snapshot);
         HashMap<String, HashMap<String, Boolean>> movementList = getMovements(snapshot);
