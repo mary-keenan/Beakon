@@ -19,6 +19,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import erica.beakon.Adapters.MyMovementAdapter;
 import erica.beakon.LoginPage;
 import erica.beakon.MainActivity;
@@ -33,6 +37,8 @@ public class MyMovementsTab extends MovementsTab {
     TextView message;
     Button logoutButton;
     Button userPrefButton;
+    ArrayList<String> movementsShown = new ArrayList<>();
+    Boolean alreadyLoaded = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,11 +61,10 @@ public class MyMovementsTab extends MovementsTab {
         setMenuButtonOnClickListener(R.id.my_movement_tab);
         setUpAddButton();
 
-        setUsersMovementsListener();
+        setUsersMovementsListener();  //this is where the problems start
         if (!movements.isEmpty() && movements != null) {
             setUpListView();
         }
-
         return view;
     }
 
@@ -72,17 +77,22 @@ public class MyMovementsTab extends MovementsTab {
         adapter = new MyMovementAdapter(getContext(), movements);
         message.setVisibility(View.INVISIBLE);
         listView.setVisibility(View.VISIBLE);
-
         listView.setAdapter(adapter);
     }
 
-    protected ValueEventListener getMovementAddedValueEventListener() {
+    protected ValueEventListener getMovementAddedValueEventListener() { //set in getMovement()
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                movements.add(dataSnapshot.getValue(Movement.class));
+                Movement newMovement = dataSnapshot.getValue(Movement.class);
+
+                if (!movementsShown.contains(newMovement.getId())){ //make sure we're not already showing movement -- onBackPressed will duplicate movements otherwise
+                    movements.add(newMovement);
+                    movementsShown.add(newMovement.getId());
+                }
                 if (movements.size() == 1) {
                     setUpListView();
+                    alreadyLoaded = true;
                 }
                 if (adapter!=null) {
                     adapter.notifyDataSetChanged();
@@ -96,36 +106,17 @@ public class MyMovementsTab extends MovementsTab {
         };
     }
 
-    protected ChildEventListener populateMovementsEventListener() {
-        return new ChildEventListener() {
+    protected ValueEventListener populateMovementsEventListener() {
+        return new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                getMovement(dataSnapshot.getKey().toString());
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap movementMap = (HashMap) dataSnapshot.getValue();
+                ArrayList movementIdList = new ArrayList(movementMap.keySet());
+                getMovement(movementIdList);
             }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if (movements.isEmpty()) {
-                    listView.setVisibility(View.INVISIBLE);
-                    message.setVisibility(View.VISIBLE);
-                } else {
-                    removeMovement(getMovementById(dataSnapshot.getKey()));
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d("MyMovementsTab", databaseError.getMessage());
+
             }
         };
     }

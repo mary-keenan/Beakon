@@ -3,6 +3,7 @@ package erica.beakon.Pages;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -58,15 +59,15 @@ abstract public class MovementsTab extends Fragment {
         this.movements.remove(movement);
     }
 
-    protected void getMovement(String id) {
+    protected void getMovement(ArrayList<String> id) {
         if (isAdded()) {
-            getMainActivity().firebaseHandler.getMovement(id, getMovementAddedValueEventListener());
+            getMainActivity().firebaseHandler.getBatchMovements(id, getMovementAddedValueEventListener());
         }
     }
 
     abstract ValueEventListener getMovementAddedValueEventListener();
 
-    abstract ChildEventListener populateMovementsEventListener();
+    abstract ValueEventListener populateMovementsEventListener();
 
     protected MainActivity getMainActivity() {
         return ((MainActivity)getActivity());

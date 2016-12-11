@@ -276,6 +276,11 @@ public class RecommendedMovementsTab extends MovementsTab {
         };
     }
 
+    @Override
+    ValueEventListener populateMovementsEventListener2() {
+        return null;
+    }
+
     protected ValueEventListener getMovementAddedValueEventListener() {
         return new ValueEventListener() {
             @Override
