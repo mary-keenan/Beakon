@@ -40,7 +40,7 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
         final TextView userPreferenceString = (TextView) view.findViewById(R.id.user_preferences_string);
         userPreferenceString.setText(hashtag);
 
-        Button deleteHashtag = (Button) view.findViewById(R.id.delete_user_preference);
+        ImageButton deleteHashtag = (ImageButton) view.findViewById(R.id.delete_user_preference);
 
         deleteHashtag.setOnClickListener(new View.OnClickListener() {
             @Override

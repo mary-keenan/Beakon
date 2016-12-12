@@ -4,49 +4,103 @@
     android:layout_height="match_parent"
     tools:context=".Pages.ExpandedMovementPage">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal|top"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MOVEMENT"
-            android:id="@+id/movement_name"
-            android:layout_gravity="center_horizontal"
-            android:textSize="35dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hashtags"
-            android:id="@+id/movement_hashtag_title"
-            android:textSize="23dp"
-            android:layout_gravity="center_horizontal" />
-
-        <ListView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="252dp"
-            android:id="@+id/movement_hashtags_list"
-            android:layout_gravity="center_horizontal|top"></ListView>
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Followers"
-            android:id="@+id/movement_followers_title"
-            android:textSize="23dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal|top"
+            android:weightSum="1">
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/movement_followers_list"></ListView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MOVEMENT"
+                android:id="@+id/movement_name"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:layout_gravity="center_horizontal"
+                android:textSize="35dp"/>
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:id="@+id/movement_description_title"
+                android:textSize="23dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movement_description"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Steps"
+                android:id="@+id/movement_steps_title"
+                android:textSize="23dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movement_steps"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resources"
+                android:id="@+id/movement_resources_title"
+                android:textSize="23dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movement_resources"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hashtags"
+                android:id="@+id/movement_hashtag_title"
+                android:textSize="23dp"
+                android:layout_gravity="center_horizontal" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:id="@+id/movement_hashtags_list"></ListView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Followers"
+                android:id="@+id/movement_followers_title"
+                android:textSize="23dp"
+                android:layout_gravity="center_horizontal" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:id="@+id/movement_followers_list"></ListView>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <ImageButton
         android:layout_width="@dimen/image_width"
@@ -66,4 +120,4 @@
         android:src = "@drawable/add"
         android:layout_gravity="right|top" />
 
-</FrameLayout>
+    </FrameLayout>
