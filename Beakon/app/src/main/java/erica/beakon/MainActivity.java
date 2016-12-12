@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
     public LocationHandler locationHandler;
     public User currentUser;
     public FirebaseHandler firebaseHandler = new FirebaseHandler(database, ref);
+    public int screenSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements  ActivityCompat.O
 
         Profile currentProfile = Profile.getCurrentProfile();
         String id = currentProfile.getId();
+        screenSize = getResources().getConfiguration().screenWidthDp;
         //LoginManager.getInstance().logOut();
 
 
