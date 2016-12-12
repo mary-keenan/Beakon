@@ -242,44 +242,55 @@ public class RecommendedMovementsTab extends MovementsTab {
     }
 
     //NEARBY MOVEMENTS LIST
-
-    public ChildEventListener populateMovementsEventListener() {
-       return new ChildEventListener() {
+    protected ValueEventListener populateMovementsEventListener() {
+        return new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("GET KEY", dataSnapshot.getKey());
+                Log.d("GET VALUE", (String) dataSnapshot.getValue());
                 updateNearbyMovementRanks(dataSnapshot.getKey());
-                getMovement(dataSnapshot.getKey());
+                HashMap movementMap = (HashMap) dataSnapshot.getValue();
+                ArrayList movementIdList = new ArrayList(movementMap.keySet());
+                getMovement(movementIdList);
             }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // do something with the changed data
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String movementId = dataSnapshot.getKey();
-                if (movementsAlreadyHas(movementId)) {
-                    movements.remove(getMovementById(movementId));
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                // i dont think we need to do anything here
-            }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, databaseError.getMessage());
             }
         };
     }
 
-    @Override
-    ValueEventListener populateMovementsEventListener2() {
-        return null;
-    }
+//    public ChildEventListener populateMovementsEventListener() {
+//       return new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                updateNearbyMovementRanks(dataSnapshot.getKey());
+//                getMovement(dataSnapshot.getKey());
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                // do something with the changed data
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                String movementId = dataSnapshot.getKey();
+//                if (movementsAlreadyHas(movementId)) {
+//                    movements.remove(getMovementById(movementId));
+//                }
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//                // i dont think we need to do anything here
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.d(TAG, databaseError.getMessage());
+//            }
+//        };
+//    }
 
     protected ValueEventListener getMovementAddedValueEventListener() {
         return new ValueEventListener() {
