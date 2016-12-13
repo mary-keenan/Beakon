@@ -113,9 +113,9 @@ public class FirebaseHandler {
         ref.child("Movements").addChildEventListener(listener);
     }
 
-    public void getUserChild(String id, String child, ChildEventListener listener) {
+    public void getUserChild(String id, String child, ValueEventListener listener) {
         Query dataRef = ref.child("Users").child(id).child(child);
-        dataRef.addChildEventListener(listener);
+        dataRef.addListenerForSingleValueEvent(listener);
     }
 
     public void getUser(String id, ValueEventListener listener) {
@@ -124,8 +124,8 @@ public class FirebaseHandler {
     }
 
     public void getMovement(String id, ValueEventListener listener) {
-        Query dataRef = ref.child("Movements").child(id);
-        dataRef.addValueEventListener(listener);
+        DatabaseReference dataRef = ref.child("Movements").child(id);
+        dataRef.addListenerForSingleValueEvent(listener);
     }
 
     public void getHashtag(String name, ValueEventListener listener){
