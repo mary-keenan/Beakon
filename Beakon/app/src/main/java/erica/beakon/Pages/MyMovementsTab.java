@@ -79,20 +79,22 @@ public class MyMovementsTab extends MovementsTab {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Movement newMovement = dataSnapshot.getValue(Movement.class);
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    Movement newMovement = dataSnapshot.getValue(Movement.class);
 
-                if (!movementsShown.contains(newMovement.getId())){ //make sure we're not already showing movement -- onBackPressed will duplicate movements otherwise
-                    movements.add(newMovement);
-                    movementsShown.add(newMovement.getId());
+                    if (!movementsShown.contains(newMovement.getId())) { //make sure we're not already showing movement -- onBackPressed will duplicate movements otherwise
+                        movements.add(newMovement);
+                        movementsShown.add(newMovement.getId());
                     }
 
-                if (movements.size() == 1) {
-                    setUpListView();
-                    alreadyLoaded = true;
+                    if (movements.size() == 1) {
+                        setUpListView();
+                        alreadyLoaded = true;
+                    }
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-                if (adapter!=null) {
-                    adapter.notifyDataSetChanged();
-               }
             }
 
             @Override
