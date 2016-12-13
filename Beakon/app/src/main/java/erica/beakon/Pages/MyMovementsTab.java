@@ -110,9 +110,12 @@ public class MyMovementsTab extends MovementsTab {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                HashMap movementMap = (HashMap) dataSnapshot.getValue();
-                ArrayList movementIdList = new ArrayList(movementMap.keySet());
-                getMovement(movementIdList);
+                if (dataSnapshot != null && dataSnapshot.getValue() != null){
+                    HashMap movementMap = (HashMap) dataSnapshot.getValue();
+                    Log.d("SNAPSHOT", String.valueOf(dataSnapshot));
+                    Log.d("MOVEMENT MAP", String.valueOf(movementMap));
+                    ArrayList movementIdList = new ArrayList(movementMap.keySet());
+                    getMovement(movementIdList);}
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

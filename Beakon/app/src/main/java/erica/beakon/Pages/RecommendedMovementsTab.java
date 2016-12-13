@@ -241,56 +241,25 @@ public class RecommendedMovementsTab extends MovementsTab {
         throw new NullPointerException("No movement exists with that id in popularMovements");
     }
 
-    //NEARBY MOVEMENTS LIST
+    //NEARBY MOVEMENTS LIST -- IF THIS IS CAUSING PROBS, MAY BE BECAUSE IT USED TO BE CHILDEVENTLISTENER INSTEAD OF VALUEEVENTLISTENER
     protected ValueEventListener populateMovementsEventListener() {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("GET KEY", dataSnapshot.getKey());
-                Log.d("GET VALUE", (String) dataSnapshot.getValue());
-                updateNearbyMovementRanks(dataSnapshot.getKey());
-                HashMap movementMap = (HashMap) dataSnapshot.getValue();
-                ArrayList movementIdList = new ArrayList(movementMap.keySet());
-                getMovement(movementIdList);
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    Log.d("GET KEY", dataSnapshot.getKey());
+                    Log.d("GET VALUE", (String) dataSnapshot.getValue());
+                    updateNearbyMovementRanks(dataSnapshot.getKey());
+                    HashMap movementMap = (HashMap) dataSnapshot.getValue();
+                    ArrayList movementIdList = new ArrayList(movementMap.keySet());
+                    getMovement(movementIdList);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         };
     }
-
-//    public ChildEventListener populateMovementsEventListener() {
-//       return new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                updateNearbyMovementRanks(dataSnapshot.getKey());
-//                getMovement(dataSnapshot.getKey());
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                // do something with the changed data
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                String movementId = dataSnapshot.getKey();
-//                if (movementsAlreadyHas(movementId)) {
-//                    movements.remove(getMovementById(movementId));
-//                }
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                // i dont think we need to do anything here
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.d(TAG, databaseError.getMessage());
-//            }
-//        };
-//    }
 
     protected ValueEventListener getMovementAddedValueEventListener() {
         return new ValueEventListener() {
