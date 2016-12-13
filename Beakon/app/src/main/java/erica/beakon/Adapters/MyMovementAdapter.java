@@ -97,6 +97,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             public void onClick(View view) {
                 if (currentUser!= null) {
                     firebaseHandler.setMovementofUserStatus(currentUser, finalMovement, checkBox.isChecked());
+                    notifyDataSetChanged();
                 }
             }
         });
