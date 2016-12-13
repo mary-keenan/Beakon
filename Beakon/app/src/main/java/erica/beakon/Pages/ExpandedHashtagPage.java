@@ -141,9 +141,6 @@ public class ExpandedHashtagPage extends Fragment {
                 });
             }
         });
-
-
-
         return view;
     }
 

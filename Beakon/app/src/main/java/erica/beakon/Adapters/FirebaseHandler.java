@@ -194,7 +194,6 @@ public class FirebaseHandler {
 
     public void getBatchHashtags(ArrayList<String> hashtagBatch, ValueEventListener listener){ // for adding new movements
         for (int i = 0; i < hashtagBatch.size(); i++) {
-            Log.d("hashtag_batch", hashtagBatch.get(i));
             DatabaseReference dataRef = ref.child("Hashtags").child(hashtagBatch.get(i));
             dataRef.addListenerForSingleValueEvent(listener);
         }

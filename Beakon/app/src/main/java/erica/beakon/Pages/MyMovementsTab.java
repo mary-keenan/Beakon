@@ -1,9 +1,7 @@
 package erica.beakon.Pages;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +11,14 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.facebook.login.LoginManager;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import erica.beakon.Adapters.MyMovementAdapter;
-import erica.beakon.LoginPage;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
@@ -37,8 +31,9 @@ public class MyMovementsTab extends MovementsTab {
     TextView message;
     Button logoutButton;
     Button userPrefButton;
-    ArrayList<String> movementsShown = new ArrayList<>();
     Boolean alreadyLoaded = false;
+    ArrayList<String> movementsShown = new ArrayList<>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,14 +84,15 @@ public class MyMovementsTab extends MovementsTab {
                 if (!movementsShown.contains(newMovement.getId())){ //make sure we're not already showing movement -- onBackPressed will duplicate movements otherwise
                     movements.add(newMovement);
                     movementsShown.add(newMovement.getId());
-                }
+                    }
+
                 if (movements.size() == 1) {
                     setUpListView();
                     alreadyLoaded = true;
                 }
                 if (adapter!=null) {
                     adapter.notifyDataSetChanged();
-                }
+               }
             }
 
             @Override
