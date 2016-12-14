@@ -3,6 +3,7 @@ package erica.beakon.Pages;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,14 +36,14 @@ abstract public class MovementsTab extends Fragment {
         // Required empty public constructor
     }
 
-    protected void setUpChangeFragmentsButton(View view, final Fragment fragment, int nextFragmentButtonId) {
+    protected void setUpChangeFragmentsButton(View view, final Fragment fragment, int nextFragmentButtonId, int currentFragmentButtonId) {
         //create buttons
-//        final Button myMovementsButton = (Button) view.findViewById(R.id.my_movements);
+        final Button currentButton = (Button) view.findViewById(currentFragmentButtonId);
         final Button tabChangeButton = (Button) view.findViewById(nextFragmentButtonId);
 
         //set background colors of buttons -- can just hardcode color now
-//        myMovementsButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorBackground));
-//        suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+        currentButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorBackground));
+        tabChangeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
 
         tabChangeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

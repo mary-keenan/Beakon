@@ -16,6 +16,7 @@ public class Movement implements Serializable {
     private String resources;
     private ArrayList<String> hashtagList;
     private ArrayList<String> followerList;
+    public boolean joined; //purely for the adapters of the listviews
 
     public Movement() {}
 
@@ -27,6 +28,7 @@ public class Movement implements Serializable {
         this.resources = resources;
         this.hashtagList = hashtagList;
         this.followerList = followerList;
+        this.joined = false;
     }
 
     public Movement(String id, String name, String description, String steps, String resources, ArrayList<String> hashtagList){

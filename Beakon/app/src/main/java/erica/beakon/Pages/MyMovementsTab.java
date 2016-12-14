@@ -43,7 +43,7 @@ public class MyMovementsTab extends MovementsTab {
 
         listView = (ListView) view.findViewById(R.id.my_movements_list);
         message = (TextView) view.findViewById(R.id.no_movments_message);
-        setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements);
+        setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements, R.id.my_movements);
 //        setUpChangeFragmentsButton(view, new AddMovementPage(), R.id.goto_add_movement_button);
         ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
         addMovementBtn.setOnClickListener(new View.OnClickListener() {
