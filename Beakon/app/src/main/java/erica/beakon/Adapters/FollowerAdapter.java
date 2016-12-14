@@ -39,16 +39,4 @@ public class FollowerAdapter extends ArrayAdapter<User> {
 
         return convertView;
     }
-
-    @Override
-    public void add(User follower) {
-        followerList.add(follower);
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void remove(User follower) {
-        followerList.remove(follower);
-        notifyDataSetChanged();
-    }
 }

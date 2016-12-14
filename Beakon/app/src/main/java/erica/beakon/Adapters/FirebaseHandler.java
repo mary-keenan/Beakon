@@ -125,7 +125,7 @@ public class FirebaseHandler {
 
     public void getMovement(String id, ValueEventListener listener) {
         DatabaseReference dataRef = ref.child("Movements").child(id);
-        dataRef.addListenerForSingleValueEvent(listener);
+        dataRef.addValueEventListener(listener);
     }
 
     public void getHashtag(String name, ValueEventListener listener){

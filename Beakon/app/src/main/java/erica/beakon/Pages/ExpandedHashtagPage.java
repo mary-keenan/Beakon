@@ -85,7 +85,6 @@ public class ExpandedHashtagPage extends Fragment {
                     hashtag = dataSnapshot.getValue(Hashtag.class); // store hashtag info in hashtag object
                     movementIDList = hashtag.getMovementList(); // get movement id list from hashtag
                     userIDList = hashtag.getUserList(); // get user id list from hashtag
-                    Log.d("USER LIST", String.valueOf(userIDList));
                     if (movementIDList != null){ // if the movement list isn't empty
                         movementsAdapter.clear();
                         movementsShown = new ArrayList<>();

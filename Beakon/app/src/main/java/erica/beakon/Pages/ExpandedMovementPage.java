@@ -37,6 +37,7 @@ public class ExpandedMovementPage extends Fragment {
     String name = "no name";
     ArrayList<String> hashtagsShown = new ArrayList<>(); //prevents duplication
     ArrayList<String> followersShown = new ArrayList<>(); //prevents duplication
+    Boolean isFollowed = false;
 
     public ExpandedMovementPage() {}
 
@@ -89,6 +90,8 @@ public class ExpandedMovementPage extends Fragment {
                     if(movement.getFollowers() != null) {
                         userIDList = movement.getFollowers();} // get user id list from movement
                     if (hashtagNameList != null){ // if the hashtag list isn't empty
+                        hashtagAdapter.clear();
+                        hashtagsShown = new ArrayList<>();
                         firebaseHandler.getBatchHashtags(hashtagNameList, new ValueEventListener() { //get all the movements
                             @Override
                             public void onDataChange(DataSnapshot hashtagSnapshot) {
@@ -98,14 +101,17 @@ public class ExpandedMovementPage extends Fragment {
                                     hashtagsShown.add(hashtag.getName());
                                 }
                             } //updates gradually so you don't end up with a blank screen for a while
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                             }
-                        });}
+                        });
+                    }
                     if (userIDList != null){ // if the user list isn't empty
+                        followerAdapter.clear();
+                        followersShown = new ArrayList<>();
                         if (userIDList.contains(((MainActivity) getActivity()).getCurrentUser().getId())){
                             followButton.setImageResource(R.drawable.check);
+                            isFollowed = true;
                         }
                         firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
                             @Override
@@ -148,8 +154,15 @@ public class ExpandedMovementPage extends Fragment {
                         ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                         HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
                         User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                        firebaseHandler.addUsertoMovement(user, movement);
-                        followButton.setImageResource(R.drawable.check);
+                        if (!isFollowed) { //if not already followed, then follow (plus to check)
+                            firebaseHandler.addUsertoMovement(user, movement); //on data change --> will change to check in code above
+                            isFollowed = true;
+                        }
+                        else { //if already followed, then unfollow (check to plus)
+                            firebaseHandler.removeUserfromMovement(user, movement);
+                            followButton.setImageResource(R.drawable.add);
+                            isFollowed = false;
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
