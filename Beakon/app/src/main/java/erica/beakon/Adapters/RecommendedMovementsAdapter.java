@@ -50,11 +50,13 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         movementNameView.setText(movement.getName());
         setOnClickMovement(movementNameView, movement);
         final Button join = (Button) convertView.findViewById(R.id.join);
-        final Button reject = (Button) convertView.findViewById(R.id.reject);
+        final Button leave = (Button) convertView.findViewById(R.id.leave);
+        //final Button reject = (Button) convertView.findViewById(R.id.reject);
 
         if (activity.currentUser.getMovements().keySet().contains(movement.getId())) {
             //rejectBtn.setColorFilter(Color.argb(tintColor, tintColor, tintColor, tintColor)); // White Tint) {
-            join.setText(R.string.leave);
+            join.setVisibility(View.GONE);
+            leave.setVisibility(View.VISIBLE);
         }
 
         join.setOnClickListener(new View.OnClickListener() {
@@ -67,24 +69,29 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
 //                else { //reject button is already tinted, undoing addition
 //                    activity.handler.removeUserfromMovement(activity.currentUser, movement);
 //                    rejectBtn.setColorFilter(null); //undo tinted reject button
-                if(join.getText().equals(getContext().getString(R.string.join))) {
-                    join.setText(R.string.leave);
-                    activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
-                } else if (join.getText().equals(getContext().getString(R.string.leave))) {
-                    join.setText(R.string.join);
-                    activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
-                }
+                leave.setVisibility(View.VISIBLE);
+                join.setVisibility(View.GONE);
+                activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
+            }
+        });
+
+        leave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                join.setVisibility(View.VISIBLE);
+                leave.setVisibility(View.GONE);
+                activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
             }
         });
 
         //Todo: Make it so it will permanently stop suggesting a deleted item -- DONE?
-        reject.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                movements.remove(movement);
-                notifyDataSetChanged();
-            }
-        });
+//        reject.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v) {
+//                movements.remove(movement);
+//                notifyDataSetChanged();
+//            }
+//        });
 
         //create the hashtag table
 //        TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT,1.0f);
