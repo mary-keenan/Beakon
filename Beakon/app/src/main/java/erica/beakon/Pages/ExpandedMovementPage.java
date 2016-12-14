@@ -104,6 +104,9 @@ public class ExpandedMovementPage extends Fragment {
                             }
                         });}
                     if (userIDList != null){ // if the user list isn't empty
+                        if (userIDList.contains(((MainActivity) getActivity()).getCurrentUser().getId())){
+                            followButton.setImageResource(R.drawable.check);
+                        }
                         firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
                             @Override
                             public void onDataChange(DataSnapshot userSnapshot) {

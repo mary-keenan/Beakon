@@ -43,7 +43,7 @@ abstract public class MovementsTab extends Fragment {
 
         //set background colors of buttons -- can just hardcode color now
         currentButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorBackground));
-        tabChangeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+        tabChangeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
 
         tabChangeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
