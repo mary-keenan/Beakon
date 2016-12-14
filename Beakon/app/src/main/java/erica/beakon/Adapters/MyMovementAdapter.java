@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
@@ -97,6 +98,7 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             public void onClick(View view) {
                 if (currentUser!= null) {
                     firebaseHandler.setMovementofUserStatus(currentUser, finalMovement, checkBox.isChecked());
+                    currentUser.updateMovements(finalMovement.getId(), checkBox.isChecked());
                     notifyDataSetChanged();
                 }
             }
