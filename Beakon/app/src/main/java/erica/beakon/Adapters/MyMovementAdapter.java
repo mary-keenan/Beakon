@@ -1,6 +1,7 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +31,7 @@ import java.util.HashMap;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
+import erica.beakon.OnSwipeTouchListener;
 import erica.beakon.Pages.ExpandedHashtagPage;
 import erica.beakon.Pages.ExpandedMovementPage;
 import erica.beakon.Pages.MyMovementsTab;
@@ -45,20 +48,41 @@ public class MyMovementAdapter extends MovementAdapter {
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, movements, R.layout.my_movement_item);
+
     }
 
-    protected void setUpView(final MainActivity activity, final Movement movement, View convertView, int position) {
+    protected void setUpView(final MainActivity activity, final Movement movement, final View convertView, int position) {
         currentUser = activity.getCurrentUser();
 
         Button deleteBtn = (Button) convertView.findViewById(R.id.deleteButton);
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
+        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
+
+            public void onSwipeRight() {
+                convertView.findViewById(R.id.card_view_layout).setVisibility(View.GONE);
+                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+
+
+            }
+            public void onSwipeLeft() {
+                convertView.findViewById(R.id.card_view_layout).setVisibility(View.GONE);
+                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
+
+            }
+
+
+        });
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     if (dataSnapshot.getValue().equals(true)) {
-                        checkBox.setChecked(true);
+                        convertView.findViewById(R.id.card_view_layout).setBackgroundColor(Color.parseColor("#cccccc"));
+                        convertView.findViewById(R.id.deleteButton).setBackgroundColor(Color.parseColor("#aaaaaa"));
+
                     } else if (dataSnapshot.getValue().equals(false)) {
                         checkBox.setChecked(false);
                     }
