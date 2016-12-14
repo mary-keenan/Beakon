@@ -22,11 +22,10 @@ import java.util.ArrayList;
 
 public abstract class MovementAdapter extends ArrayAdapter<Movement> {
 
-    private int tintColor = 220; //color we're tinting the X when the check mark is selected
     protected ArrayList<Movement> movements;
-    private View previousView;
-    private int previousPosition;
-    int layout;
+    protected View previousView;
+    protected int previousPosition;
+    protected int layout;
 
     public MovementAdapter(Context context, ArrayList<Movement> mvs, int layout) {
         super(context, 0, mvs);

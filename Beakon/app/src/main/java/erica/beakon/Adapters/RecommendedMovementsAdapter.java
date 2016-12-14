@@ -24,11 +24,6 @@ import java.util.ArrayList;
 
 public class RecommendedMovementsAdapter extends MovementAdapter {
 
-    private int tintColor = 220; //color we're tinting the X when the check mark is selected
-    private ArrayList<Movement> movements;
-    private View previousView;
-    private int previousPosition;
-
     public RecommendedMovementsAdapter(Context context, ArrayList<Movement> movements) {
         super(context, movements, R.layout.recommended_movement_item);
     }
