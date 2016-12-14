@@ -32,14 +32,15 @@ import erica.beakon.R;
 
 public class ExpandedHashtagPage extends Fragment {
 
-    ArrayList<String> movementIDList = new ArrayList<>(); //list of movement IDs (stored in hashtag)
-    ArrayList<String> userIDList = new ArrayList<>(); //list of user IDs (stored in hashtag)
+    ArrayList<String> movementIDList; //list of movement IDs (stored in hashtag)
+    ArrayList<String> userIDList; //list of user IDs (stored in hashtag)
     ArrayList<Movement> movementList = new ArrayList<>(); //list of movements fetched using movement IDs
     ArrayList<User> followerList = new ArrayList<>(); //list of followers fetched using user IDs
     Hashtag hashtag;
     String name = "na";
-    ArrayList<String> movementsShown = new ArrayList<>(); //prevents duplication
-    ArrayList<String> followersShown = new ArrayList<>(); //prevents duplication
+    ArrayList<String> movementsShown; //prevents duplication
+    ArrayList<String> followersShown; //prevents duplication
+    Boolean isFollowed = false;
 
 
     public ExpandedHashtagPage(){}
@@ -84,7 +85,10 @@ public class ExpandedHashtagPage extends Fragment {
                     hashtag = dataSnapshot.getValue(Hashtag.class); // store hashtag info in hashtag object
                     movementIDList = hashtag.getMovementList(); // get movement id list from hashtag
                     userIDList = hashtag.getUserList(); // get user id list from hashtag
+                    Log.d("USER LIST", String.valueOf(userIDList));
                     if (movementIDList != null){ // if the movement list isn't empty
+                        movementsAdapter.clear();
+                        movementsShown = new ArrayList<>();
                         firebaseHandler.getBatchMovements(movementIDList, new ValueEventListener() { //get all the movements
                             @Override
                             public void onDataChange(DataSnapshot movementSnapshot) {
@@ -100,27 +104,31 @@ public class ExpandedHashtagPage extends Fragment {
                             }
                         });}
                     if (userIDList != null){ // if the user list isn't empty
+                        followerAdapter.clear();
+                        followersShown = new ArrayList<>();
                         if (userIDList.contains(((MainActivity) getActivity()).getCurrentUser().getId())){
                             followButton.setImageResource(R.drawable.check);
+                            isFollowed = true;
                         }
                         firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
-                        @Override
-                        public void onDataChange(DataSnapshot userSnapshot) {
-                            if (userSnapshot != null) {
-                                ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
-                                HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
-//                            User follower = userSnapshot.getValue(User.class); //store user info in user object
-                                User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                                if (!followersShown.contains(follower.getId())){
-                                    followerAdapter.add(follower); //add user to follower adapter, updates list view
-                                    followersShown.add(follower.getId());
-                                }
-                            } //updates gradually (each iteration) so you don't end up with a blank screen for a while
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    });}
+                            @Override
+                            public void onDataChange(DataSnapshot userSnapshot) {
+                                if (userSnapshot != null) {
+                                    ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
+                                    HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
+    //                            User follower = userSnapshot.getValue(User.class); //store user info in user object
+                                    User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
+                                    if (!followersShown.contains(follower.getId())){
+                                        followerAdapter.add(follower); //add user to follower adapter, updates list view
+                                        followersShown.add(follower.getId());
+                                    }
+                                } //updates gradually (each iteration) so you don't end up with a blank screen for a while
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+                    }
                 }
             }
             @Override
@@ -137,16 +145,22 @@ public class ExpandedHashtagPage extends Fragment {
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User currentUser = ((MainActivity) getActivity()).getCurrentUser();
+                final User currentUser = ((MainActivity) getActivity()).getCurrentUser();
                 firebaseHandler.getUser(currentUser.getId(), new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                         HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
                         User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                        firebaseHandler.addUsertoHashtag(user, hashtag);
-                        followButton.setImageResource(R.drawable.check);
-                        followButton.setScaleType(ImageView.ScaleType.CENTER);
+                        if (!isFollowed) { //if not already followed, then follow (plus to check)
+                            firebaseHandler.addUsertoHashtag(user, hashtag); //on data change --> will change to check in code above
+                            isFollowed = true;
+                        }
+                        else { //if already followed, then unfollow (check to plus)
+                            firebaseHandler.removeUserfromHashtag(user, hashtag);
+                            followButton.setImageResource(R.drawable.add);
+                            isFollowed = false;
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
