@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -30,10 +31,14 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
 
     private int tintColor = 220; //color we're tinting the X when the check mark is selected
     private ArrayList<Movement> movements;
+    private View previousView;
+    private int previousPosition;
 
     public RecommendedMovementsAdapter(Context context, ArrayList<Movement> movements) {
         super(context, 0, movements);
         this.movements = movements;
+        previousView = null;
+        previousPosition = -1;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -50,39 +55,38 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         movementNameView.setText(movement.getName());
         setOnClickMovement(movementNameView, movement);
         final Button join = (Button) convertView.findViewById(R.id.join);
-        final Button leave = (Button) convertView.findViewById(R.id.leave);
         //final Button reject = (Button) convertView.findViewById(R.id.reject);
 
         if (activity.currentUser.getMovements().keySet().contains(movement.getId())) {
             //rejectBtn.setColorFilter(Color.argb(tintColor, tintColor, tintColor, tintColor)); // White Tint) {
-            join.setVisibility(View.GONE);
-            leave.setVisibility(View.VISIBLE);
+            movement.joined = true;
         }
 
-        join.setOnClickListener(new View.OnClickListener() {
+        join.setOnClickListener(new View.OnClickListener(){
+
             @Override
-            public void onClick(View view) {
-//                if (rejectBtn.getColorFilter() == null){ //reject button hasn't been shaded yet (i.e. join isn't already selected)
-//                    activity.handler.addUsertoMovement(activity.currentUser, movement); //Todo: changes fragments rn for some reason
-//                    rejectBtn.setColorFilter(Color.argb(tintColor,tintColor,tintColor,tintColor)); //tint reject button
-//                }
-//                else { //reject button is already tinted, undoing addition
-//                    activity.handler.removeUserfromMovement(activity.currentUser, movement);
-//                    rejectBtn.setColorFilter(null); //undo tinted reject button
-                leave.setVisibility(View.VISIBLE);
-                join.setVisibility(View.GONE);
+            public void onClick(View currentView) {
                 activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
+
+                //make sure that only the add button on the current element disappears
+                if(previousView!=null){
+                    Movement previousMovement = movements.get(previousPosition);
+                    previousMovement.joined = false;
+                }
+
+                movement.joined = true;
+                previousView = currentView;
+                previousPosition = position;
+                notifyDataSetChanged();
             }
+
         });
 
-        leave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                join.setVisibility(View.VISIBLE);
-                leave.setVisibility(View.GONE);
-                activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
-            }
-        });
+        if(movement.joined){
+            join.setVisibility(View.GONE);
+        } else {
+            join.setVisibility(View.VISIBLE);
+        }
 
         //Todo: Make it so it will permanently stop suggesting a deleted item -- DONE?
 //        reject.setOnClickListener(new View.OnClickListener(){
@@ -203,5 +207,17 @@ public class RecommendedMovementsAdapter extends ArrayAdapter<Movement> {
         hashtagLayout.addView(tv);
         totalWidth += hashtagWidth;
         return totalWidth;
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 }
