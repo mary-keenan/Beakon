@@ -3,6 +3,7 @@ package erica.beakon.Adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,11 +81,9 @@ public class MyMovementAdapter extends MovementAdapter {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     if (dataSnapshot.getValue().equals(true)) {
-                        convertView.findViewById(R.id.card_view_layout).setBackgroundColor(Color.parseColor("#cccccc"));
-                        convertView.findViewById(R.id.deleteButton).setBackgroundColor(Color.parseColor("#aaaaaa"));
-
+                        setViewtoCheckedStyle(convertView, checkBox);
                     } else if (dataSnapshot.getValue().equals(false)) {
-                        checkBox.setChecked(false);
+                        setViewtoUncheckedStyle(convertView, checkBox);
                     }
                 }
             }
@@ -101,6 +100,11 @@ public class MyMovementAdapter extends MovementAdapter {
                     firebaseHandler.setMovementofUserStatus(currentUser, movement, checkBox.isChecked());
                     currentUser.updateMovements(movement.getId(), checkBox.isChecked());
                     notifyDataSetChanged();
+                    if (checkBox.isChecked()) {
+                        setViewtoCheckedStyle(convertView, checkBox);
+                    } else {
+                        setViewtoUncheckedStyle(convertView, checkBox);
+                    }
                 }
             }
         });
@@ -117,6 +121,19 @@ public class MyMovementAdapter extends MovementAdapter {
             }
         });
 
+
+    }
+
+    private void setViewtoCheckedStyle(View view, CheckBox checkBox) {
+        view.findViewById(R.id.card_view_layout).setBackgroundColor(Color.parseColor("#cccccc"));
+        view.findViewById(R.id.deleteButton).setBackgroundColor(Color.parseColor("#aaaaaa"));
+        checkBox.setChecked(true);
+    }
+
+    private void setViewtoUncheckedStyle(View view, CheckBox checkBox) {
+        view.findViewById(R.id.card_view_layout).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+        view.findViewById(R.id.deleteButton).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        checkBox.setChecked(false);
     }
 
     public void add(Movement movement) {
@@ -124,3 +141,14 @@ public class MyMovementAdapter extends MovementAdapter {
         notifyDataSetChanged();
     }
 }
+
+
+//if(previousView!=null){
+//        Movement previousMovement = movements.get(previousPosition);
+//        previousMovement.joined = false;
+//        }
+//
+//        movement.joined = true;
+//        previousView = currentView;
+//        previousPosition = position;
+//        notifyDataSetChanged();
