@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
@@ -97,6 +98,8 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             public void onClick(View view) {
                 if (currentUser!= null) {
                     firebaseHandler.setMovementofUserStatus(currentUser, finalMovement, checkBox.isChecked());
+                    currentUser.updateMovements(finalMovement.getId(), checkBox.isChecked());
+                    notifyDataSetChanged();
                 }
             }
         });
@@ -134,9 +137,9 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                firebaseHandler.removeUserfromMovement(currentUser, finalMovement2);
                 movements.remove(finalMovement2);
                 activity.firebaseHandler.removeUserfromMovement(activity.currentUser, finalMovement2);
-//                hashtagTable.removeAllViews(); //doesn't seem necessary now that we're limiting to one row, but keeping in case there's a bug I can't see yet
                 notifyDataSetChanged();
             }
         });

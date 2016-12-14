@@ -102,6 +102,12 @@ public class User {
         return this.getMovements().keySet().contains(movement.getId());
     }
 
+    public void updateMovements(String movementID, boolean status) {
+        HashMap<String,Boolean> statusHash = new HashMap<>();
+        statusHash.put("status", status);
+        movements.put(movementID,statusHash);
+    }
+
     private HashMap<String, Boolean> getEmptyStatusMap() {
         HashMap<String, Boolean> empty = new HashMap<>();
         empty.put("status", false);
