@@ -16,6 +16,7 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import erica.beakon.LoginPage;
@@ -28,6 +29,7 @@ abstract public class MovementsTab extends Fragment {
 
     static final String SETTINGS_TITLE = "Settings";
     ArrayList<Movement> movements;
+
     ImageButton menuButton;
     View view;
 
@@ -60,7 +62,7 @@ abstract public class MovementsTab extends Fragment {
         this.movements.remove(movement);
     }
 
-    protected void getMovement(ArrayList<String> id) {
+    protected void getMovements(ArrayList<String> id) {
         if (isAdded()) {
             getMainActivity().firebaseHandler.getBatchMovements(id, getMovementAddedValueEventListener());
         }
