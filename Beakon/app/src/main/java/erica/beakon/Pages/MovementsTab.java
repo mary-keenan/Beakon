@@ -108,12 +108,8 @@ abstract public class MovementsTab extends Fragment {
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(getActivity(),"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
                         if (item.getTitle().equals(MovementsTab.SETTINGS_TITLE)) {
-                            android.support.v4.app.Fragment UserPref = new UserPreferencesPage();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(currentTab, UserPref);
-                            transaction.commit();
+                            ((MainActivity) getActivity()).changeFragment(new UserPreferencesPage(), "UserPreferencesPage");
                         } else {
                             LoginManager.getInstance().logOut();
                             startActivity(intent);
