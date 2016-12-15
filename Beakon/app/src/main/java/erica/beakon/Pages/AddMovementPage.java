@@ -65,22 +65,13 @@ public class AddMovementPage extends Fragment {
                 final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().replace("#","").split(" "))); // get movement hashtags (list)
 
                 final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
-                final String userID = ((MainActivity) getActivity()).currentUser.getId();
-//                userList.add(userID); // hardcoding user ID for now
 
                 final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
                 final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
                 movementList.add(movement.getId());
+                firebaseHandler.addUsertoMovement(((MainActivity) getActivity()).currentUser, movement);
 
-                User currentUser = ((MainActivity) getActivity()).currentUser;
-
-                firebaseHandler.addUsertoMovement(currentUser, movement);
-
-                if(hashtagsInput.getText().toString() == null){
-                    Log.d("***", "Null");
-                }
-
-                if (hashtagsInput.getText().toString() != "") {
+                if (!hashtagsInput.getText().toString().equals("") && movementHashtags.size() <= 3) {
                     //loop through hashtags in handler, check if they already exist here --> update, or if they don't --> add
                     firebaseHandler.getBatchHashtags(movementHashtags, new ValueEventListener() { // called for each hashtag in list; handler loops through them
                         @Override
@@ -88,21 +79,7 @@ public class AddMovementPage extends Fragment {
                             if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
                                 final Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);// get hashtag info from database
                                 firebaseHandler.addMovementtoHashtag(movement, hashtag); // add new movement id to hashtag
-                                firebaseHandler.getUser(userID, new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
-                                        HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
-                                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                                        firebaseHandler.addUsertoHashtag(user, hashtag);
-//                                    firebaseHandler.addUsertoMovement(user, movement);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                    }
-                                });
-                            } else { // if the hasthag doesn't exist in the database
+                            } else { // if the hashtag doesn't exist in the database
                                 firebaseHandler.addHashtag(dataSnapshot.getKey(), movementList, userList); // add hashtag to database
                             }
                         }
@@ -113,12 +90,15 @@ public class AddMovementPage extends Fragment {
                     });
 
                     ((MainActivity) getActivity()).changeFragment(new MyMovementsTab(), "MyMovementsTab");
-                } else {
-                    CharSequence text = "Please enter hashtags";
+                } else if (movementHashtags.size() > 3){
+                    CharSequence text = "Please enter no more than 3 hashtags.";
                     int duration = Toast.LENGTH_SHORT;
-
                     Toast.makeText(context, text, duration).show();
 
+                } else {
+                    CharSequence text = "Please enter up to 3 hashtags.";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast.makeText(context, text, duration).show();
                 }
             }
         });
