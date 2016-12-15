@@ -30,7 +30,7 @@ public class RecommendedMovementsTab extends MovementsTab {
 
     public static final String TAG = "REC_MOVEMENTS_TAB";
 
-    final int POPULAR_MOVEMENTS_LIMIT = 2;
+    final int POPULAR_MOVEMENTS_LIMIT = 4;
     StorageHandler storageHandler;
     ListView listView;
     ArrayList<Movement> popularMovements;

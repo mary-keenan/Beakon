@@ -73,6 +73,15 @@
                     android:layout_gravity="center_vertical|left"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/hashtag_layout"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -121,20 +130,6 @@
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:layout_gravity="center_horizontal"
                 android:autoLink="all"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hashtags"
-                android:id="@+id/movement_hashtag_title"
-                android:textSize="23dp"
-                android:layout_gravity="center_horizontal" />
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:id="@+id/movement_hashtags_list"></ListView>
 
             <TextView
                 android:layout_width="wrap_content"
