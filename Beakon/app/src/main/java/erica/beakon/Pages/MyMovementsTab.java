@@ -63,11 +63,14 @@ public class MyMovementsTab extends MovementsTab {
 
     private void setUpCompletedMovementsSwitch() {
         final Switch showCompleted = (Switch) view.findViewById(R.id.showCompleted);
-
+        showCompleted.setChecked(true);
         showCompleted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (showCompleted.isChecked()) {
+                    Toast.makeText(getContext(),"Showing completed movements", Toast.LENGTH_LONG).show();
+                    getMovements(completedMovements);
+                } else {
                     ArrayList<Movement> toRemove = new ArrayList<Movement>();
                     for (Movement m: movements) {
                         if (completedMovements.contains(m.getId())) {
@@ -77,10 +80,8 @@ public class MyMovementsTab extends MovementsTab {
                     }
                     for (Movement m: toRemove) { movements.remove(m); }
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(),"Showing completed movements", Toast.LENGTH_LONG).show();
-                } else {
                     Toast.makeText(getContext(),"Hiding completed movements", Toast.LENGTH_LONG).show();
-                    getMovements(completedMovements);
+
                 }
             }
         });
