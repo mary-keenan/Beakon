@@ -1,19 +1,24 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,21 +27,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
+import erica.beakon.OnSwipeTouchListener;
 import erica.beakon.Pages.ExpandedHashtagPage;
 import erica.beakon.Pages.ExpandedMovementPage;
 import erica.beakon.Pages.MyMovementsTab;
 import erica.beakon.R;
 
 
-public class MyMovementAdapter extends ArrayAdapter<Movement> {
+public class MyMovementAdapter extends MovementAdapter {
 
-    String hashtagName;
-    ArrayList<Movement> movements;
-    static final String TAG = "FIREBASE_HANDLER";
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference ref = db.getReferenceFromUrl(databaseURL);
@@ -44,45 +48,40 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
     User currentUser;
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
-        super(context, 0, movements);
-        this.movements = movements;
+        super(context, movements, R.layout.my_movement_item);
+
     }
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        Movement movement = getItem(position);
-
-//        Log.d(TAG,movement.getId());
-
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.my_movement_item, parent, false);
-        }
-
-        final MainActivity activity = (MainActivity) getContext();
-
+    protected void setUpView(final MainActivity activity, final Movement movement, final View convertView,final int position) {
         currentUser = activity.getCurrentUser();
 
-//        firebaseHandler.setMovementofUserStatus(currentUser,movement, true);
-
-        if (movement == null){
-            movement = new Movement("KXgdDeEWsCExk5yZMYZ", "Houston, we have a problem", "The movement here doesn't exist", "So we made a fake one", "but it's fake so watch out");
-        }
-
-        //set movement name, onclicklistener
-        TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
-        ImageButton deleteBtn = (ImageButton) convertView.findViewById(R.id.deleteButton);
+        Button deleteBtn = (Button) convertView.findViewById(R.id.deleteButton);
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
-        movementNameView.setText(movement.getName());
-        setOnClickMovement(movementNameView, movement);
+        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
+
+            public void onSwipeRight() {
+                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+
+
+            }
+            public void onSwipeLeft() {
+                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
+
+            }
+
+
+        });
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     if (dataSnapshot.getValue().equals(true)) {
-                        checkBox.setChecked(true);
+                        setViewtoCheckedStyle(convertView, checkBox);
                     } else if (dataSnapshot.getValue().equals(false)) {
-                        checkBox.setChecked(false);
+                        setViewtoUncheckedStyle(convertView, checkBox);
                     }
                 }
             }
@@ -91,87 +90,47 @@ public class MyMovementAdapter extends ArrayAdapter<Movement> {
             public void onCancelled(DatabaseError databaseError) {}
         });
 
-        final Movement finalMovement = movement;
+        //final Movement finalMovement = movement;
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (currentUser!= null) {
-                    firebaseHandler.setMovementofUserStatus(currentUser, finalMovement, checkBox.isChecked());
+                    firebaseHandler.setMovementofUserStatus(currentUser, movement, checkBox.isChecked());
+                    currentUser.updateMovements(movement.getId(), checkBox.isChecked());
+                    notifyDataSetChanged();
+                    if (checkBox.isChecked()) {
+                        setViewtoCheckedStyle(convertView, checkBox);
+                    } else {
+                        setViewtoUncheckedStyle(convertView, checkBox);
+                    }
                 }
             }
         });
 
-        //create the hashtag table
-        TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT,1.0f);
-        final TableLayout hashtagTable = (TableLayout) convertView.findViewById(R.id.hashtag_table);
-        //get list of hashtags from movement
-        ArrayList<String> hashtagList = movement.getHashtagList();
-        //initialize some variables here
-        int rowWidth = 500; //placeholder value -- ideally, we'd programatically find out view width since it's dynamic
-        int counter = 0; //keep track of number of characters in row
-
-        //loop through hashtag list, put them in one row, set onClickListeners, etc
-        if (hashtagList != null && hashtagTable.getChildCount() != 1) { //make sure no rows already exist -- weird bug there
-            final TableRow hashtagRow = new TableRow(getContext()); //create table row
-            for (int i = 0; i < hashtagList.size(); i++) {
-                hashtagName = "#" + hashtagList.get(i) + " "; //add space at end to shows diff between hashtags
-                TextView hashtagTV = new TextView(getContext()); //create hashtag TV
-                hashtagTV.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-                hashtagTV.setText(hashtagName); //set text of hashtag TV
-                setOnClickHashtag(hashtagTV); //set on click listener
-                hashtagTV.measure(0, 0); //measure hashtag TV dimensions
-                int hashtagWidth = hashtagTV.getMeasuredWidth(); //save measured width in variable
-                //add to existing row or make a new one based on length of string
-                if (counter + hashtagWidth < rowWidth) { //if adding new hashtag won't go over the limit
-                    hashtagRow.addView(hashtagTV); //add the TV to the row
-                    counter += hashtagWidth; //update the counter
-                }
-            }
-            hashtagTable.addView(hashtagRow, tableParams); //adds row to table
-        }
-
-        final Movement finalMovement2 = movement;
+        //final Movement finalMovement2 = movement;
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                firebaseHandler.removeUserfromMovement(currentUser, finalMovement2);
-                movements.remove(finalMovement2);
-//                currentUser.removeMovement(finalMovement2);
-//                hashtagTable.removeAllViews(); //doesn't seem necessary now that we're limiting to one row, but keeping in case there's a bug I can't see yet
+                firebaseHandler.removeUserfromMovement(currentUser, movement);
+                movements.remove(movement);
+                activity.firebaseHandler.removeUserfromMovement(activity.currentUser, movement);
                 notifyDataSetChanged();
             }
         });
 
-        return convertView;
+
     }
 
-    //basically the HashtagAdapter, but since I'm using a Table Layout I did it differently (i.e. this instead)
-    private void setOnClickHashtag(final TextView tv){
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            String hashtagName = (String) tv.getText();
-            ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
-            Bundle bundle = new Bundle();
-            bundle.putString("name", hashtagName); //give new fragment the hashtag it's expanding
-            hashtagFragment.setArguments(bundle);
-            ((MainActivity) getContext()).changeFragment(hashtagFragment, "expandedHashtagPage"); //changes fragments
-            }
-        });
+    private void setViewtoCheckedStyle(View view, CheckBox checkBox) {
+        view.findViewById(R.id.card_view_layout).setBackgroundColor(Color.parseColor("#cccccc"));
+        view.findViewById(R.id.deleteButton).setBackgroundColor(Color.parseColor("#aaaaaa"));
+        checkBox.setChecked(true);
     }
 
-    private void setOnClickMovement(final TextView tv, final Movement movement){
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            ExpandedMovementPage movementFragment = new ExpandedMovementPage();
-            Bundle bundle = new Bundle();
-            bundle.putString("ID", movement.getId()); //give new fragment the movementID to populate page
-            bundle.putString("name", movement.getName()); //give new fragment the movementName to display at top
-            movementFragment.setArguments(bundle);
-            ((MainActivity) getContext()).changeFragment(movementFragment, "expandedMovementPage"); //changes fragments
-            }
-        });
+    private void setViewtoUncheckedStyle(View view, CheckBox checkBox) {
+        view.findViewById(R.id.card_view_layout).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+        view.findViewById(R.id.deleteButton).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        checkBox.setChecked(false);
     }
 
     public void add(Movement movement) {

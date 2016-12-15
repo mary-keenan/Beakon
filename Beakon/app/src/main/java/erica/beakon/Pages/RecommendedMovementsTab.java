@@ -5,9 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -16,11 +14,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
 
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.Adapters.StorageHandler;
-import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -59,37 +55,37 @@ public class RecommendedMovementsTab extends MovementsTab {
         return view;
     }
 
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        storageHandler.savePopularMovements(popularMovements);
+//        storageHandler.savePopularMovementsRanks(movementPopularRanks);
+//    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        storageHandler.savePopularMovements(popularMovements);
-        storageHandler.savePopularMovementsRanks(movementPopularRanks);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        popularMovements = (ArrayList<Movement>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_FILENAME, new Callable<Object>() {
-            public ArrayList<Movement> call() {
-                return new ArrayList<Movement>();
-            }
-        });
-        movementPopularRanks = (HashMap<String, Integer>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_RANKS_FILENAME, new Callable<Object>() {
-            public Object call() {
-                return getMovementRanksFromPopularMovements();
-            }
-        });
-        initializeListViews();
-        popularAdapter.notifyDataSetChanged();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        popularMovements = (ArrayList<Movement>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_FILENAME, new Callable<Object>() {
+//            public ArrayList<Movement> call() {
+//                return new ArrayList<Movement>();
+//            }
+//        });
+//        movementPopularRanks = (HashMap<String, Integer>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_RANKS_FILENAME, new Callable<Object>() {
+//            public Object call() {
+//                return getMovementRanksFromPopularMovements();
+//            }
+//        });
+//        initializeListViews();
+//        popularAdapter.notifyDataSetChanged();
+//    }
 
 
 
     private void initializeView() {
         setMenuButtonOnClickListener(R.id.recommended_movements_tab);
         setUpAddButton();
-        setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements);
+        setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements, R.id.movements);
         initializeListViews();
     }
 
@@ -200,8 +196,10 @@ public class RecommendedMovementsTab extends MovementsTab {
     }
 
     private void addPopularMovement(Movement movement) {
-        movementPopularRanks.put(movement.getId(), movement.getFollowers().size());
-        popularMovements.add(movement);
+        if (!userAlreadyIn(movement.getId())) {
+            movementPopularRanks.put(movement.getId(), movement.getFollowers().size());
+            popularMovements.add(movement);
+        }
 
         // if the dataset was just populated for the first time, need to set up the list view.
         if (popularMovements.size() == 1) {
@@ -252,7 +250,7 @@ public class RecommendedMovementsTab extends MovementsTab {
                     updateNearbyMovementRanks(dataSnapshot.getKey());
                     HashMap movementMap = (HashMap) dataSnapshot.getValue();
                     ArrayList movementIdList = new ArrayList(movementMap.keySet());
-                    getMovement(movementIdList);
+                    getMovements(movementIdList);
                 }
             }
             @Override
@@ -277,7 +275,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     }
 
     private void addMovement(Movement movement) {
-        if (!movementsAlreadyHas(movement.getId())) {
+        if (!movementsAlreadyHas(movement.getId()) && !userAlreadyIn(movement.getId())) {
             movements.add(movement);
         }
         if (movements.size() == 1) {
@@ -298,6 +296,15 @@ public class RecommendedMovementsTab extends MovementsTab {
     private boolean movementsAlreadyHas(String movementId) {
         for (Movement m: movements) {
             if (m.getId().equals(movementId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean userAlreadyIn(String movementId) {
+        for (String m: getMainActivity().currentUser.getMovements().keySet()) {
+            if (m.equals(movementId)) {
                 return true;
             }
         }

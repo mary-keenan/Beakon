@@ -31,11 +31,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_below="@+id/tab_buttons"
             android:id="@+id/nearby_movements_label"
             android:labelFor="@+id/recommended_nearby_movements_list"
-            android:text="Nearby Movements"/>
+            android:text="Movements Joined Near You"/>
 
         <ListView
             android:visibility="visible"
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:labelFor="@+id/recommended_popular_movements_list"
             android:layout_below="@+id/recommended_nearby_movements_list"
             android:id="@+id/popular_movements_label"

@@ -14,54 +14,61 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class RecommendedMovementsAdapter extends MovementAdapter {
+public abstract class MovementAdapter extends ArrayAdapter<Movement> {
 
-    public RecommendedMovementsAdapter(Context context, ArrayList<Movement> movements) {
-        super(context, movements, R.layout.recommended_movement_item);
+    protected ArrayList<Movement> movements;
+    protected View previousView;
+    protected int previousPosition;
+    protected int layout;
+
+    public MovementAdapter(Context context, ArrayList<Movement> mvs, int layout) {
+        super(context, 0, mvs);
+        movements = mvs;
+        previousView = null;
+        previousPosition = -1;
+        this.layout = layout;
     }
 
-    protected void setUpView(final MainActivity activity,final Movement movement, View convertView, final int position) {
-        final Button join = (Button) convertView.findViewById(R.id.join);
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final Movement movement = getItem(position);
+        final MainActivity activity = (MainActivity)getContext();
 
-        if (activity.currentUser.getMovements().keySet().contains(movement.getId())) {
-            //rejectBtn.setColorFilter(Color.argb(tintColor, tintColor, tintColor, tintColor)); // White Tint) {
-            movement.joined = true;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(layout, parent, false);
         }
 
-        join.setOnClickListener(new View.OnClickListener(){
+        TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
+        movementNameView.setText(movement.getName());
+        setOnClickMovement(movementNameView, movement);
+        //final Button reject = (Button) convertView.findViewById(R.id.reject);
 
-            @Override
-            public void onClick(View currentView) {
-                activity.firebaseHandler.addUsertoMovement(activity.currentUser, movement);
-
-                //make sure that only the add button on the current element disappears
-                if(previousView!=null){
-                    Movement previousMovement = movements.get(previousPosition);
-                    previousMovement.joined = false;
+        ArrayList<String> hashtagList = movement.getHashtagList();
+        LinearLayout hashtagLayout = (LinearLayout) convertView.findViewById(R.id.hashtag_layout0);
+        if (hashtagLayout.getChildCount() == 0) {
+            int rowWidth = ((MainActivity)getContext()).screenSize;
+            int totalWidth = 0;
+            if (hashtagList != null) {
+                for (String hashtag: hashtagList) {
+                    //add the hashtag to the view and update totalWidth with the new value
+                    totalWidth = addHashtagtoView(hashtag, convertView, hashtagLayout, totalWidth, rowWidth);
                 }
-
-                movement.joined = true;
-                previousView = currentView;
-                previousPosition = position;
-                notifyDataSetChanged();
             }
-
-        });
-
-        if(movement.joined){
-            join.setVisibility(View.GONE);
-        } else {
-            join.setVisibility(View.VISIBLE);
         }
+
+        setUpView(activity, movement, convertView, position);
+
+        return convertView;
     }
+
+    abstract void setUpView(MainActivity activity, Movement movement, View convertView, int position);
 
     private void setOnClickMovement(final TextView tv, final Movement movement){
         tv.setOnClickListener(new View.OnClickListener() {
@@ -127,17 +134,5 @@ public class RecommendedMovementsAdapter extends MovementAdapter {
         hashtagLayout.addView(tv);
         totalWidth += hashtagWidth;
         return totalWidth;
-    }
-
-    public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
     }
 }
