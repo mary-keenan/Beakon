@@ -20,6 +20,12 @@ public class Hashtag {
         this.userList = userList;
     }
 
+    public Hashtag(String name) {
+        this.name = name;
+        this.movementList = new ArrayList<>();
+        this.userList = new ArrayList<>();
+    }
+
     public String getName() {
         return name;
     }

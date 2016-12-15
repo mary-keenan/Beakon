@@ -98,6 +98,11 @@ public class FirebaseHandler {
         return hashtag;
     }
 
+    public Hashtag addHashtag(Hashtag hashtag) {
+        ref.child("Hashtags").child(hashtag.getName()).setValue(hashtag);
+        return hashtag;
+    }
+
     public void getById(String id, ValueEventListener listener) {
         Query dataRef;
         if (id == null) {
@@ -131,6 +136,11 @@ public class FirebaseHandler {
     public void getHashtag(String name, ValueEventListener listener){
         DatabaseReference dataRef = ref.child("Hashtags").child(name);
         dataRef.addValueEventListener(listener);
+    }
+
+    public void getHashtagOnce(String name, ValueEventListener listener){
+        DatabaseReference dataRef = ref.child("Hashtags").child(name);
+        dataRef.addListenerForSingleValueEvent(listener);
     }
 
     public void addUsertoMovement(User user, Movement movement) {

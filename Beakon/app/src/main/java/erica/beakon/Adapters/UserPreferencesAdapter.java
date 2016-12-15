@@ -11,11 +11,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 import erica.beakon.MainActivity;
+import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.User;
 import erica.beakon.Pages.ExpandedHashtagPage;
 import erica.beakon.R;
@@ -51,14 +56,15 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
 
         View wrapper = view.findViewById(R.id.interest_wrapper);
 
-        wrapper.setOnClickListener(new View.OnClickListener() {
+        userPreferenceString.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String hashtagName = (String) userPreferenceString.getText();
+            public void onClick( View v) {
+                String hashtagName = (String) ((TextView)v).getText();
                 ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
                 Bundle bundle = new Bundle();
                 bundle.putString("name", hashtagName); //give new fragment the hashtag it's expanding
                 hashtagFragment.setArguments(bundle);
+                ((MainActivity) getContext()).changeFragment(hashtagFragment, "expandedHashtagPage"); //changes fragments
             }
         });
 
@@ -67,8 +73,17 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
 
     private void removeInterest(String hashtag) {
         final MainActivity activity = (MainActivity)getContext();
-        activity.currentUser.removeHashtag(hashtag);
-        activity.firebaseHandler.updateUser(activity.currentUser);
+        activity.firebaseHandler.getHashtagOnce(hashtag, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                activity.firebaseHandler.removeUserfromHashtag(activity.currentUser, dataSnapshot.getValue(Hashtag.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         this.remove(hashtag);
         this.notifyDataSetChanged();
     }
