@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -96,19 +97,24 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
 
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 String inputText = newInterest.getText().toString();
-                newInterest.getText().clear();
-                currentUser.addHashtag(inputText);
-                activity.firebaseHandler.updateUser(currentUser);
-                userPreferencesAdapter.notifyDataSetChanged();
+                if (!inputText.equals("")) {
+                    newInterest.getText().clear();
+                    currentUser.addHashtag(inputText);
+                    activity.firebaseHandler.updateUser(currentUser);
+                    userPreferencesAdapter.notifyDataSetChanged();
 
-                View view = getActivity().getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager)(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    View view = getActivity().getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) (getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                } else {
+                    CharSequence text = "Please enter an interest.";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast.makeText(getContext(), text, duration).show();
                 }
-
             }
         });
 
