@@ -1,6 +1,7 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -48,6 +51,19 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
                 activity.currentUser.removeHashtag(hashtag);
                 activity.firebaseHandler.updateUser(activity.currentUser);
 
+            }
+        });
+
+        View wrapper = view.findViewById(R.id.interest_wrapper);
+
+        wrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String hashtagName = (String) userPreferenceString.getText();
+                ExpandedHashtagPage hashtagFragment = new ExpandedHashtagPage();
+                Bundle bundle = new Bundle();
+                bundle.putString("name", hashtagName); //give new fragment the hashtag it's expanding
+                hashtagFragment.setArguments(bundle);
             }
         });
 
