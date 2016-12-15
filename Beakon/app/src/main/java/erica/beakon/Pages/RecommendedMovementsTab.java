@@ -5,9 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -16,11 +14,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
 
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.Adapters.StorageHandler;
-import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -254,7 +250,7 @@ public class RecommendedMovementsTab extends MovementsTab {
                     updateNearbyMovementRanks(dataSnapshot.getKey());
                     HashMap movementMap = (HashMap) dataSnapshot.getValue();
                     ArrayList movementIdList = new ArrayList(movementMap.keySet());
-                    getMovement(movementIdList);
+                    getMovements(movementIdList);
                 }
             }
             @Override
