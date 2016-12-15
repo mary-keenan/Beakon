@@ -246,7 +246,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     Log.d("GET KEY", dataSnapshot.getKey());
-                    Log.d("GET VALUE", (String) dataSnapshot.getValue());
+//                    Log.d("GET VALUE", (String) dataSnapshot.getValue());
                     updateNearbyMovementRanks(dataSnapshot.getKey());
                     HashMap movementMap = (HashMap) dataSnapshot.getValue();
                     ArrayList movementIdList = new ArrayList(movementMap.keySet());
