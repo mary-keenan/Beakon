@@ -104,40 +104,8 @@ public class RecommendedMovementsAdapter extends MovementAdapter {
         return  tv;
     }
 
-    private int getHashtagTextViewWidth(TextView tv) {
-        tv.measure(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        return tv.getMeasuredWidth();
-    }
-
-    public LinearLayout nextHashtagLayout(View view, LinearLayout currentLayout) {
-        if (currentLayout.getId() == R.id.hashtag_layout0) {
-            return (LinearLayout) view.findViewById(R.id.hashtag_layout1);
-        } else {
-            return(LinearLayout) view.findViewById(R.id.hashtag_layout2);
-        }
-    }
-
-    public int addHashtagtoView(String hashtag, View view, LinearLayout hashtagLayout, int totalWidth, int rowWidth) {
+    public void addHashtagtoView(String hashtag, LinearLayout hashtagLayout) {
         TextView tv = createHashtagTextView(hashtag);
-        int hashtagWidth = getHashtagTextViewWidth(tv);
-        if (totalWidth + hashtagWidth >= rowWidth) { //if adding new hashtag won't go over the limit
-            hashtagLayout = nextHashtagLayout(view, hashtagLayout); //make hashtagLayout the linearlayout below it
-            totalWidth = 0;
-        }
         hashtagLayout.addView(tv);
-        totalWidth += hashtagWidth;
-        return totalWidth;
-    }
-
-    public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
     }
 }
