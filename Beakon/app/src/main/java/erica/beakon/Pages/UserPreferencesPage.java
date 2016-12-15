@@ -48,7 +48,6 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                               Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_preferences_page, container, false);
-        view.setBackgroundColor(Color.parseColor("#ffffff"));
 
         final MainActivity activity = (MainActivity) getActivity();
         currentUser = activity.currentUser;
