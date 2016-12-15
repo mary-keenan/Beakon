@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.Adapters.UserPreferencesAdapter;
 import erica.beakon.MainActivity;
+import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.User;
 import erica.beakon.R;
 
@@ -97,11 +98,30 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                String inputText = newInterest.getText().toString();
+                final String inputText = newInterest.getText().toString();
                 if (!inputText.equals("")) {
                     newInterest.getText().clear();
-                    currentUser.addHashtag(inputText);
-                    activity.firebaseHandler.updateUser(currentUser);
+                    activity.firebaseHandler.getHashtagOnce(inputText, new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Hashtag hashtag;
+                            if (dataSnapshot.getValue() == null) {
+                                //if the hashtag does not already exist, create it and add to db
+                                hashtag = new Hashtag(inputText);
+                                activity.firebaseHandler.addHashtag(hashtag);
+                            } else {
+                                //if the hashtag already exists, get from snapshot
+                                hashtag = dataSnapshot.getValue(Hashtag.class);
+                            }
+                            activity.firebaseHandler.addUsertoHashtag(currentUser, hashtag);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                     userPreferencesAdapter.notifyDataSetChanged();
 
                     View view = getActivity().getCurrentFocus();
