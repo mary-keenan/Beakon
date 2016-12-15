@@ -16,14 +16,63 @@
             android:layout_gravity="center_horizontal|top"
             android:weightSum="1">
 
-            <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="@dimen/image_width"
+                    android:id="@+id/backButtonMovement"
+                    android:background="@color/colorBackground"
+                    android:src = "@drawable/back_accent"
+                    android:layout_gravity="left|top" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.6"
+                    android:layout_height="wrap_content"
+                    android:text="MOVEMENT"
+                    android:id="@+id/movement_name"
+                    android:layout_marginBottom="7dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textSize="35dp"/>
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="@dimen/image_height"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/followButtonMovement"
+                    android:background="@color/colorBackground"
+                    android:src = "@drawable/add"
+                    android:layout_gravity="right|top" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
-                android:text="MOVEMENT"
-                android:id="@+id/movement_name"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal"
-                android:textSize="35dp"/>
+                android:paddingBottom="10dp"
+                >
+                <ImageView
+                    android:layout_width="15dip"
+                    android:layout_height="15dip"
+                    android:id="@+id/follower_pic"
+                    android:src="@drawable/user"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/num_followers"
+                    android:textSize="10sp"
+                    android:text="1,500"
+                    android:paddingLeft="7dp"
+                    android:layout_gravity="center_vertical|left"/>
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -38,7 +87,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_description"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:autoLink="all"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -53,7 +103,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_steps"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:autoLink="all"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,14 +112,15 @@
                 android:text="Resources"
                 android:id="@+id/movement_resources_title"
                 android:textSize="23dp"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_resources"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:autoLink="all"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -102,22 +154,4 @@
 
     </ScrollView>
 
-    <ImageButton
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_width"
-        android:id="@+id/backButtonMovement"
-        android:background="@color/colorBackground"
-        android:src = "@drawable/back_accent"
-        android:layout_gravity="left|top" />
-
-    <ImageButton
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_height"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:id="@+id/followButtonMovement"
-        android:background="@color/colorBackground"
-        android:src = "@drawable/add"
-        android:layout_gravity="right|top" />
-
-    </FrameLayout>
+</FrameLayout>
