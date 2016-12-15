@@ -35,6 +35,8 @@ public class ExpandedMovementPage extends Fragment {
     Movement movement;
     String ID = "no ID";
     String name = "no name";
+    ArrayList<String> hashtagsShown = new ArrayList<>(); //prevents duplication
+    ArrayList<String> followersShown = new ArrayList<>(); //prevents duplication
 
     public ExpandedMovementPage() {}
 
@@ -52,9 +54,12 @@ public class ExpandedMovementPage extends Fragment {
 
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
 
-        //create hashtag TV and set it to the hashtag set in setHashtag by previous fragment
-        final TextView movementView = (TextView) view.findViewById(R.id.movement_name);
-        movementView.setText(name);
+        //create TVs
+        final TextView movementNameTV = (TextView) view.findViewById(R.id.movement_name);
+        movementNameTV.setText(name);
+        final TextView description = (TextView) view.findViewById(R.id.movement_description);
+        final TextView steps = (TextView) view.findViewById(R.id.movement_steps);
+        final TextView resources = (TextView) view.findViewById(R.id.movement_resources);
 
         //create buttons
         final ImageButton backButton = (ImageButton) view.findViewById(R.id.backButtonMovement);
@@ -74,9 +79,11 @@ public class ExpandedMovementPage extends Fragment {
         firebaseHandler.getMovement(ID, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("&&&", String.valueOf(dataSnapshot));
                 if (dataSnapshot.getValue() != null) { // if the movement exists in database
                     movement = dataSnapshot.getValue(Movement.class); // store movement info in movement object
+                    description.setText(movement.getDescription());
+                    steps.setText(movement.getSteps());
+                    resources.setText(movement.getResources());
                     if (movement.getHashtagList() != null){
                         hashtagNameList = movement.getHashtagList();}; // get hashtag name list from movement}
                     if(movement.getFollowers() != null) {
@@ -86,7 +93,10 @@ public class ExpandedMovementPage extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot hashtagSnapshot) {
                                 Hashtag hashtag = hashtagSnapshot.getValue(Hashtag.class); //store hashtag info in hashtag object
-                                hashtagAdapter.add(hashtag); //add hashtag to adapter/list view (updates each loop, rather than all at once)
+                                if (!hashtagsShown.contains(hashtag.getName())) { //if already being shown, don't show movement again
+                                    hashtagAdapter.add(hashtag); //add hashtag to adapter/list view (updates each loop, rather than all at once)
+                                    hashtagsShown.add(hashtag.getName());
+                                }
                             } //updates gradually so you don't end up with a blank screen for a while
 
                             @Override
@@ -94,6 +104,9 @@ public class ExpandedMovementPage extends Fragment {
                             }
                         });}
                     if (userIDList != null){ // if the user list isn't empty
+                        if (userIDList.contains(((MainActivity) getActivity()).getCurrentUser().getId())){
+                            followButton.setImageResource(R.drawable.check);
+                        }
                         firebaseHandler.getBatchUsers(userIDList, new ValueEventListener() { //get all the users
                             @Override
                             public void onDataChange(DataSnapshot userSnapshot) {
@@ -101,7 +114,10 @@ public class ExpandedMovementPage extends Fragment {
                                 HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
 //                            User follower = userSnapshot.getValue(User.class); //store user info in user object
                                 User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                                followerAdapter.add(follower); //add user to follower adapter, updates list view
+                                if (!followersShown.contains(follower.getId())) { //if already being shown, don't show movement again
+                                    followerAdapter.add(follower); //add user to follower adapter, updates list view
+                                    followersShown.add(follower.getId());
+                                }
                             } //updates gradually (each iteration) so you don't end up with a blank screen for a while
 
                             @Override

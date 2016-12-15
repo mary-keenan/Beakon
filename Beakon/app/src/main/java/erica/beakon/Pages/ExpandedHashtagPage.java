@@ -38,6 +38,9 @@ public class ExpandedHashtagPage extends Fragment {
     ArrayList<User> followerList = new ArrayList<>(); //list of followers fetched using user IDs
     Hashtag hashtag;
     String name = "na";
+    ArrayList<String> movementsShown = new ArrayList<>(); //prevents duplication
+    ArrayList<String> followersShown = new ArrayList<>(); //prevents duplication
+
 
     public ExpandedHashtagPage(){}
 
@@ -77,7 +80,7 @@ public class ExpandedHashtagPage extends Fragment {
         firebaseHandler.getHashtag(name, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) { // if the hashtag exists in database
                     hashtag = dataSnapshot.getValue(Hashtag.class); // store hashtag info in hashtag object
                     movementIDList = hashtag.getMovementList(); // get movement id list from hashtag
                     userIDList = hashtag.getUserList(); // get user id list from hashtag
@@ -86,7 +89,10 @@ public class ExpandedHashtagPage extends Fragment {
                             @Override
                             public void onDataChange(DataSnapshot movementSnapshot) {
                                 Movement movement = movementSnapshot.getValue(Movement.class); //store movement info in movement object
-                                movementsAdapter.add(movement); //add movement to adapter/list view (updates each loop, rather than all at once)
+                                if (!movementsShown.contains(movement.getId())) { //if already being shown, don't show movement again
+                                    movementsAdapter.add(movement); //add movement to adapter/list view (updates each loop, rather than all at once)
+                                    movementsShown.add(movement.getId());
+                                }
                             } //updates gradually so you don't end up with a blank screen for a while
 
                             @Override
@@ -102,7 +108,10 @@ public class ExpandedHashtagPage extends Fragment {
                                 HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
 //                            User follower = userSnapshot.getValue(User.class); //store user info in user object
                                 User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                                followerAdapter.add(follower); //add user to follower adapter, updates list view
+                                if (!followersShown.contains(follower.getId())){
+                                    followerAdapter.add(follower); //add user to follower adapter, updates list view
+                                    followersShown.add(follower.getId());
+                                }
                             } //updates gradually (each iteration) so you don't end up with a blank screen for a while
                         }
                         @Override
@@ -141,9 +150,6 @@ public class ExpandedHashtagPage extends Fragment {
                 });
             }
         });
-
-
-
         return view;
     }
 

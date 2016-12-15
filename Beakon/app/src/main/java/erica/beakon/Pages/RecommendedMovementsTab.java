@@ -59,37 +59,37 @@ public class RecommendedMovementsTab extends MovementsTab {
         return view;
     }
 
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        storageHandler.savePopularMovements(popularMovements);
+//        storageHandler.savePopularMovementsRanks(movementPopularRanks);
+//    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        storageHandler.savePopularMovements(popularMovements);
-        storageHandler.savePopularMovementsRanks(movementPopularRanks);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        popularMovements = (ArrayList<Movement>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_FILENAME, new Callable<Object>() {
-            public ArrayList<Movement> call() {
-                return new ArrayList<Movement>();
-            }
-        });
-        movementPopularRanks = (HashMap<String, Integer>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_RANKS_FILENAME, new Callable<Object>() {
-            public Object call() {
-                return getMovementRanksFromPopularMovements();
-            }
-        });
-        initializeListViews();
-        popularAdapter.notifyDataSetChanged();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        popularMovements = (ArrayList<Movement>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_FILENAME, new Callable<Object>() {
+//            public ArrayList<Movement> call() {
+//                return new ArrayList<Movement>();
+//            }
+//        });
+//        movementPopularRanks = (HashMap<String, Integer>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_RANKS_FILENAME, new Callable<Object>() {
+//            public Object call() {
+//                return getMovementRanksFromPopularMovements();
+//            }
+//        });
+//        initializeListViews();
+//        popularAdapter.notifyDataSetChanged();
+//    }
 
 
 
     private void initializeView() {
         setMenuButtonOnClickListener(R.id.recommended_movements_tab);
         setUpAddButton();
-        setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements);
+        setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements, R.id.movements);
         initializeListViews();
     }
 
@@ -200,8 +200,10 @@ public class RecommendedMovementsTab extends MovementsTab {
     }
 
     private void addPopularMovement(Movement movement) {
-        movementPopularRanks.put(movement.getId(), movement.getFollowers().size());
-        popularMovements.add(movement);
+        if (!userAlreadyIn(movement.getId())) {
+            movementPopularRanks.put(movement.getId(), movement.getFollowers().size());
+            popularMovements.add(movement);
+        }
 
         // if the dataset was just populated for the first time, need to set up the list view.
         if (popularMovements.size() == 1) {
@@ -241,37 +243,22 @@ public class RecommendedMovementsTab extends MovementsTab {
         throw new NullPointerException("No movement exists with that id in popularMovements");
     }
 
-    //NEARBY MOVEMENTS LIST
-
-    public ChildEventListener populateMovementsEventListener() {
-       return new ChildEventListener() {
+    //NEARBY MOVEMENTS LIST -- IF THIS IS CAUSING PROBS, MAY BE BECAUSE IT USED TO BE CHILDEVENTLISTENER INSTEAD OF VALUEEVENTLISTENER
+    protected ValueEventListener populateMovementsEventListener() {
+        return new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                updateNearbyMovementRanks(dataSnapshot.getKey());
-                getMovement(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                // do something with the changed data
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                String movementId = dataSnapshot.getKey();
-                if (movementsAlreadyHas(movementId)) {
-                    movements.remove(getMovementById(movementId));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    Log.d("GET KEY", dataSnapshot.getKey());
+                    Log.d("GET VALUE", (String) dataSnapshot.getValue());
+                    updateNearbyMovementRanks(dataSnapshot.getKey());
+                    HashMap movementMap = (HashMap) dataSnapshot.getValue();
+                    ArrayList movementIdList = new ArrayList(movementMap.keySet());
+                    getMovement(movementIdList);
                 }
             }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                // i dont think we need to do anything here
-            }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, databaseError.getMessage());
             }
         };
     }
@@ -292,7 +279,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     }
 
     private void addMovement(Movement movement) {
-        if (!movementsAlreadyHas(movement.getId())) {
+        if (!movementsAlreadyHas(movement.getId()) && !userAlreadyIn(movement.getId())) {
             movements.add(movement);
         }
         if (movements.size() == 1) {
@@ -313,6 +300,15 @@ public class RecommendedMovementsTab extends MovementsTab {
     private boolean movementsAlreadyHas(String movementId) {
         for (Movement m: movements) {
             if (m.getId().equals(movementId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean userAlreadyIn(String movementId) {
+        for (String m: getMainActivity().currentUser.getMovements().keySet()) {
+            if (m.equals(movementId)) {
                 return true;
             }
         }

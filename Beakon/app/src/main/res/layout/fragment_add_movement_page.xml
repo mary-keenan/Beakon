@@ -15,10 +15,12 @@
         android:background="@color/colorBackground"
         android:layout_gravity="right|bottom" />
 
+
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="420dp"
+        android:layout_height="match_parent"
         android:weightSum="1"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -26,38 +28,59 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_gravity="center">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="@dimen/image_width"
+            android:layout_height="@dimen/image_height"
+            android:id="@+id/back_add_movement_btn"
+            android:background="@null"
+            android:src="@drawable/back_accent"
+            android:layout_gravity="left|top" />
+
         <TextView
             android:layout_width="match_parent"
+            android:id="@+id/add_movementTitle"
             android:layout_height="wrap_content"
             android:textSize="@dimen/add_movement_title"
+            android:layout_toRightOf="@+id/back_add_movement_btn"
             android:text="Add a Movement"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/add_movement_help_text"
             android:layout_marginTop="@dimen/help_text_margin"
+            android:layout_toRightOf="@+id/back_add_movement_btn"
+            android:layout_below="@+id/add_movementTitle"
             android:layout_marginBottom="@dimen/help_text_margin"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
-                    android:layout_height="wrap_content"
-                    android:text="Name:"
-                    android:labelFor="@+id/movement_name"
-                    android:textSize="@dimen/add_movement_text"/>
+                android:orientation="vertical">
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_weight="0.7"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/movement_name"/>
-            </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
+                android:text="Name:"
+                android:labelFor="@+id/movement_name"
+                android:textSize="@dimen/add_movement_text"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/movement_name"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,61 +89,63 @@
                 android:labelFor="@+id/movement_description"
                 android:textSize="@dimen/add_movement_text"/>
 
-            <EditText
+                <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_description"
                 android:layout_weight="0.24" />
 
-            <TextView
+                <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Steps:"
                 android:labelFor="@+id/movement_steps"
                 android:textSize="@dimen/add_movement_text"/>
 
-            <EditText
+                <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_steps"
                 android:layout_weight="0.39" />
 
-            <TextView
+                <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Resources:"
                 android:labelFor="@+id/movement_res"
                 android:textSize="@dimen/add_movement_text"/>
 
-            <EditText
+                <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_res"
                 android:layout_weight="0.34" />
 
-            <TextView
+                <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hashtags:"
                 android:labelFor="@+id/movement_hashtags"
                 android:textSize="@dimen/add_movement_text" />
 
-            <EditText
+                <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_hashtags"
                 android:layout_weight="0.34" />
 
 
+
+            </LinearLayout>
+
+    </ScrollView>
+
+
     </LinearLayout>
 
 
-    <ImageButton
-        android:layout_width="@dimen/image_width"
-        android:layout_height="@dimen/image_height"
-        android:id="@+id/back_add_movement_btn"
-        android:background="@null"
-        android:src="@drawable/back_accent"
-        android:layout_gravity="left|top" />
+
+
+
 
 </FrameLayout>
