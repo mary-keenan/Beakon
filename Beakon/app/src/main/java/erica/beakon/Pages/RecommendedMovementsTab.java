@@ -1,10 +1,12 @@
 package erica.beakon.Pages;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 
 import erica.beakon.Adapters.RecommendedMovementsAdapter;
 import erica.beakon.Adapters.StorageHandler;
+import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
 import erica.beakon.R;
 
@@ -28,13 +31,16 @@ public class RecommendedMovementsTab extends MovementsTab {
 
     final int POPULAR_MOVEMENTS_LIMIT = 2;
     StorageHandler storageHandler;
-    ListView nearbyListView;
-    ListView popularListView;
+    ListView listView;
     ArrayList<Movement> popularMovements;
+    ArrayList<Movement> interestsMovements;
     RecommendedMovementsAdapter nearbyAdapter;
     RecommendedMovementsAdapter popularAdapter;
+    RecommendedMovementsAdapter interestsAdapter;
     HashMap<String, Integer> movementNearbyRanks;
     HashMap<String, Integer> movementPopularRanks;
+    int[] tabs = {R.id.joined_nearby_button, R.id.interests_button, R.id.popular_button};
+
 
 
     @Override
@@ -42,6 +48,7 @@ public class RecommendedMovementsTab extends MovementsTab {
         super.onCreate(savedInstanceState);
         storageHandler = new StorageHandler(getContext());
         popularMovements = new ArrayList<>();
+        interestsMovements = new ArrayList<>();
         this.movementNearbyRanks = new HashMap<>();
         this.movementPopularRanks = new HashMap<>();
         setMovementsListeners();
@@ -55,63 +62,93 @@ public class RecommendedMovementsTab extends MovementsTab {
         return view;
     }
 
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        storageHandler.savePopularMovements(popularMovements);
-//        storageHandler.savePopularMovementsRanks(movementPopularRanks);
-//    }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        popularMovements = (ArrayList<Movement>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_FILENAME, new Callable<Object>() {
-//            public ArrayList<Movement> call() {
-//                return new ArrayList<Movement>();
-//            }
-//        });
-//        movementPopularRanks = (HashMap<String, Integer>) storageHandler.loadSavedObject(StorageHandler.POPULAR_MOVEMENTS_RANKS_FILENAME, new Callable<Object>() {
-//            public Object call() {
-//                return getMovementRanksFromPopularMovements();
-//            }
-//        });
-//        initializeListViews();
-//        popularAdapter.notifyDataSetChanged();
-//    }
-
 
 
     private void initializeView() {
         setMenuButtonOnClickListener(R.id.recommended_movements_tab);
         setUpAddButton();
         setUpChangeFragmentsButton(view, new MyMovementsTab(), R.id.my_movements, R.id.movements);
+        setUpChangeTabsButtons();
         initializeListViews();
     }
 
     // initializing views
 
+    private void setUpChangeTabsButtons() {
+        Button nearbyTab = (Button) view.findViewById(R.id.joined_nearby_button);
+        Button popularTab = (Button) view.findViewById(R.id.popular_button);
+        Button interestsTab = (Button) view.findViewById(R.id.interests_button);
+
+        nearbyTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setNearbySelected();
+            }
+        });
+
+        popularTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setPopularSelected();
+            }
+        });
+
+        interestsTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setInterestsSelected();
+            }
+        });
+    }
     private void initializeListViews() {
-        nearbyListView = (ListView) view.findViewById(R.id.recommended_nearby_movements_list);
-        popularListView = (ListView) view.findViewById(R.id.recommended_popular_movements_list);
+        listView = (ListView) view.findViewById(R.id.recommended_movements_list);
         nearbyAdapter = new RecommendedMovementsAdapter(getContext(), movements);
         popularAdapter = new RecommendedMovementsAdapter(getContext(), popularMovements);
+        interestsAdapter = new RecommendedMovementsAdapter(getContext(), interestsMovements);
 
+        if (!interestsMovements.isEmpty()) {
+            setInterestsSelected();
+        } else if (!movements.isEmpty()) {
+            setNearbySelected();
+        } else {
+            setPopularSelected();
+        }
+    }
+
+    private void setNearbySelected() {
         if (!movements.isEmpty()) {
-            setUpNearbyListView();
+            listView.setAdapter(nearbyAdapter);
+            listView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.INVISIBLE);
+        } else {
+            listView.setVisibility(View.GONE);
+            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.VISIBLE);
         }
+        setTabColors(R.id.joined_nearby_button);
+    }
 
+    private void setPopularSelected() {
         if (!popularMovements.isEmpty()) {
-            setUpPopularListView();
+            listView.setAdapter(popularAdapter);
+            listView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.INVISIBLE);
+        } else {
+            listView.setVisibility(View.GONE);
+            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.VISIBLE);
         }
+        setTabColors(R.id.popular_button);
     }
 
-    private void setUpNearbyListView() {
-        nearbyListView.setAdapter(nearbyAdapter);
-    }
-
-    private void setUpPopularListView() {
-        popularListView.setAdapter(popularAdapter);
+    private void setInterestsSelected() {
+        if (!interestsMovements.isEmpty()) {
+            listView.setAdapter(interestsAdapter);
+            listView.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.INVISIBLE);
+        } else {
+            listView.setVisibility(View.GONE);
+            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.VISIBLE);
+        }
+        setTabColors(R.id.interests_button);
     }
 
     //getting movements for nearby and popular lists
@@ -123,6 +160,12 @@ public class RecommendedMovementsTab extends MovementsTab {
         //get movements from nearby users
         for (String userId: getMainActivity().locationHandler.getNearbyUsers()) {
             getMainActivity().firebaseHandler.getUserChild(userId, "movements", populateMovementsEventListener());
+        }
+
+        //get movements based on interests
+        ArrayList<String> userInterests = getMainActivity().currentUser.getHashtagList();
+        for (String interest: userInterests) {
+            getMainActivity().firebaseHandler.getHashtag(interest, getInterestValueEventListener());
         }
     }
 
@@ -160,6 +203,43 @@ public class RecommendedMovementsTab extends MovementsTab {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG,databaseError.getMessage());
+            }
+        };
+    }
+
+    private ValueEventListener getInterestValueEventListener() {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);
+                    ArrayList<String> hashtagMovements = hashtag.getMovementList();
+                    getMainActivity().firebaseHandler.getBatchMovements(hashtagMovements, getInterestMovementsValueEventListener());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+    }
+
+    private ValueEventListener getInterestMovementsValueEventListener() {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Movement movement = dataSnapshot.getValue(Movement.class);
+                //if the movement is not already in the list AND the user has not already joined the movement
+                if (!interestsMovements.contains(movement) && !getMainActivity().currentUser.isInMovement(movement)) {
+                    interestsMovements.add(movement);
+                    interestsAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         };
     }
@@ -203,7 +283,7 @@ public class RecommendedMovementsTab extends MovementsTab {
 
         // if the dataset was just populated for the first time, need to set up the list view.
         if (popularMovements.size() == 1) {
-            setUpPopularListView();
+            //setUpPopularListView();
         }
 
         popularAdapter.notifyDataSetChanged();
@@ -279,7 +359,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             movements.add(movement);
         }
         if (movements.size() == 1) {
-            setUpNearbyListView();
+            //setUpNearbyListView();
         }
         nearbyAdapter.notifyDataSetChanged();
 
@@ -317,6 +397,22 @@ public class RecommendedMovementsTab extends MovementsTab {
             ranks.put(m.getId(), m.getFollowers().size());
         }
         return ranks;
+    }
+
+    private void setTabColors(int selectedId) {
+        //create buttons
+        final Button selectedButton = (Button) view.findViewById(selectedId);
+        selectedButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorBackground));
+
+        Button unselectedButton;
+        for (int id: tabs) {
+            if (id != selectedId) {
+                unselectedButton = (Button) view.findViewById(id);
+                unselectedButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+            }
+        }
+
+        //set background colors of buttons -- can just hardcode color now
     }
 
 }
