@@ -57,4 +57,19 @@ public class Hashtag {
     public void removeUser(String userID) {
         this.userList.remove(userID);
     }
+
+    public static boolean isHashtagShortEnough(String hashtag) {
+        return hashtag.length() <=13;
+    }
+
+    public static boolean areHashtagsShortEnough(ArrayList<String> hashtags) {
+        for (String h: hashtags) {
+            if (!isHashtagShortEnough(h)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }

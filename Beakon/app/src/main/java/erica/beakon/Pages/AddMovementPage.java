@@ -59,20 +59,17 @@ public class AddMovementPage extends Fragment {
         addMovementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String movementName = nameInput.getText().toString(); // get movement ID
-                String movementDescription = descriptionInput.getText().toString(); // get movement description
-                String movementSteps = stepsInput.getText().toString(); // get movement steps
-                String movementResources = resourcesInput.getText().toString(); // get movement resources
-                final ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().replace("#","").split(" "))); // get movement hashtags (list)
-
-                final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
-
-                final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
-                final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
-                movementList.add(movement.getId());
-                firebaseHandler.addUsertoMovement(((MainActivity) getActivity()).currentUser, movement);
-
-                if (!hashtagsInput.getText().toString().equals("") && movementHashtags.size() <= 3) {
+                ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().replace("#","").split(" "))); // get movement hashtags (list)
+                if (!hashtagsInput.getText().toString().equals("") && movementHashtags.size() <= 3 && Hashtag.areHashtagsShortEnough(movementHashtags)) {
+                    String movementName = nameInput.getText().toString(); // get movement ID
+                    String movementDescription = descriptionInput.getText().toString(); // get movement description
+                    String movementSteps = stepsInput.getText().toString(); // get movement steps
+                    String movementResources = resourcesInput.getText().toString(); // get movement resources
+                    final ArrayList<String> userList = new ArrayList(); // create empty user list to put in new hashtag
+                    final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
+                    final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
+                    movementList.add(movement.getId());
+                    firebaseHandler.addUsertoMovement(((MainActivity) getActivity()).currentUser, movement);
                     //loop through hashtags in handler, check if they already exist here --> update, or if they don't --> add
                     firebaseHandler.getBatchHashtags(movementHashtags, new ValueEventListener() { // called for each hashtag in list; handler loops through them
                         @Override
@@ -92,14 +89,11 @@ public class AddMovementPage extends Fragment {
 
                     ((MainActivity) getActivity()).changeFragment(new MyMovementsTab(), "MyMovementsTab");
                 } else if (movementHashtags.size() > 3){
-                    CharSequence text = "Please enter no more than 3 hashtags.";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast.makeText(context, text, duration).show();
-
+                    sendToastWarning("Please enter no more than 3 hashtags.");
+                } else if (!Hashtag.areHashtagsShortEnough(movementHashtags)) {
+                    sendToastWarning("Your hashtags cannot be more than 13 characters each.");
                 } else {
-                    CharSequence text = "Please enter up to 3 hashtags.";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast.makeText(context, text, duration).show();
+                    sendToastWarning("Please enter up to 3 hashtags.");
                 }
             }
         });
@@ -126,5 +120,10 @@ public class AddMovementPage extends Fragment {
                 return false;
             }
         });
+    }
+
+    private void sendToastWarning(String text) {
+        int duration = Toast.LENGTH_SHORT;
+        Toast.makeText(getContext(), text, duration).show();
     }
 }
