@@ -3,7 +3,7 @@ package erica.beakon.Pages;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +13,15 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import erica.beakon.Adapters.FirebaseHandler;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
-import erica.beakon.Objects.User;
 import erica.beakon.R;
 
 
@@ -48,6 +45,10 @@ public class AddMovementPage extends Fragment {
         final EditText stepsInput = (EditText) view.findViewById(R.id.movement_steps);
         final EditText resourcesInput = (EditText) view.findViewById(R.id.movement_res);
         final EditText hashtagsInput = (EditText) view.findViewById(R.id.movement_hashtags);
+
+        setEnterKeySendToNextEditText(nameInput, descriptionInput);
+        setEnterKeySendToNextEditText(descriptionInput, stepsInput);
+        setEnterKeySendToNextEditText(stepsInput, resourcesInput);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -104,5 +105,26 @@ public class AddMovementPage extends Fragment {
         });
 
         return view;
+    }
+
+    private void setEnterKeySendToNextEditText(final EditText currentET, final EditText nextET) {
+        currentET.setOnKeyListener(new View.OnKeyListener() {
+
+            public boolean onKey(View v, int keyCode, KeyEvent event)
+            {
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (keyCode)
+                    {
+                        case KeyEvent.KEYCODE_ENTER:
+                            nextET.requestFocus();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
     }
 }
