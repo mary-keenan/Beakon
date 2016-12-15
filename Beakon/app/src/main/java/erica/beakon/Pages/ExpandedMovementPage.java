@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -54,7 +55,6 @@ public class ExpandedMovementPage extends Fragment {
         }
 
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
-
         //create TVs
         final TextView numFollowersTV = (TextView) view.findViewById(R.id.num_followers);
         final TextView movementNameTV = (TextView) view.findViewById(R.id.movement_name);
