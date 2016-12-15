@@ -154,6 +154,13 @@ public class FirebaseHandler {
         updateHashtag(hashtag);
     }
 
+    public void addHashtagtoUser(User user, String hashtag){
+        user.addHashtag(hashtag);
+        updateUser(user);
+    }
+
+
+
     public void addMovementtoHashtag(Movement movement, Hashtag hashtag) {
         movement.addHashtag(hashtag.getName());
         hashtag.addMovement(movement.getId());

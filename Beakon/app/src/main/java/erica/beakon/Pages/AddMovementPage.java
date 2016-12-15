@@ -68,11 +68,14 @@ public class AddMovementPage extends Fragment {
                 final String userID = ((MainActivity) getActivity()).currentUser.getId();
 //                userList.add(userID); // hardcoding user ID for now
 
+
+
+
                 final Movement movement = firebaseHandler.addMovement(movementName,movementDescription,movementSteps,movementResources,movementHashtags, userList); // create movement with data
                 final ArrayList<String> movementList = new ArrayList<>(); // create empty movement list to put in new hashtag
                 movementList.add(movement.getId());
 
-                User currentUser = ((MainActivity) getActivity()).currentUser;
+                final User currentUser = ((MainActivity) getActivity()).currentUser;
 
                 firebaseHandler.addUsertoMovement(currentUser, movement);
 
@@ -85,32 +88,66 @@ public class AddMovementPage extends Fragment {
                     firebaseHandler.getBatchHashtags(movementHashtags, new ValueEventListener() { // called for each hashtag in list; handler loops through them
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            final ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
+
+
                             if (dataSnapshot.getValue() != null) { // if the hashtag exists in database
                                 final Hashtag hashtag = dataSnapshot.getValue(Hashtag.class);// get hashtag info from database
                                 firebaseHandler.addMovementtoHashtag(movement, hashtag); // add new movement id to hashtag
                                 firebaseHandler.getUser(userID, new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(dataSnapshot);
                                         HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
-                                        User user = new User(dataSnapshot.child("id").getValue().toString(), dataSnapshot.child("name").getValue().toString(), hashtagList, movementList);
-                                        firebaseHandler.addUsertoHashtag(user, hashtag);
-//                                    firebaseHandler.addUsertoMovement(user, movement);
+
+                                        
+
+                                        firebaseHandler.addUsertoHashtag(currentUser, hashtag);
+
                                     }
 
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
                                     }
                                 });
-                            } else { // if the hasthag doesn't exist in the database
-                                firebaseHandler.addHashtag(dataSnapshot.getKey(), movementList, userList); // add hashtag to database
                             }
+                            else { // if the hashtag doesn't exist in the database
+                                // get hashtag info from database
+                                firebaseHandler.addHashtag(dataSnapshot.getKey(), movementList, userList); // add hashtag to database
+                                final String hashtag = dataSnapshot.getKey();// get hashtag info from database
+
+//                                final String hashtag = dataSnapshot.getKey();
+                                firebaseHandler.getUser(userID, new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(dataSnapshot);
+
+
+
+                                        firebaseHandler.addHashtagtoUser(currentUser, hashtag);
+                                        currentUser.setHashtagList(hashtagList);
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                            }
+
+
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                         }
                     });
+
+
 
                     ((MainActivity) getActivity()).changeFragment(new MyMovementsTab(), "MyMovementsTab");
                 } else {
