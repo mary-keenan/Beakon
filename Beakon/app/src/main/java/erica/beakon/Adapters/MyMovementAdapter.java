@@ -60,14 +60,12 @@ public class MyMovementAdapter extends MovementAdapter {
         convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
 
             public void onSwipeRight() {
-                convertView.findViewById(R.id.card_view_layout).setVisibility(View.GONE);
                 Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
                 firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
 
 
             }
             public void onSwipeLeft() {
-                convertView.findViewById(R.id.card_view_layout).setVisibility(View.GONE);
                 Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
                 firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
 
