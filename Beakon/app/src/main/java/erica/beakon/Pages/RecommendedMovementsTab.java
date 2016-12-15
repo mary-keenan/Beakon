@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -82,7 +83,7 @@ public class RecommendedMovementsTab extends MovementsTab {
         nearbyTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setNearbySelected();
+               setNearbySelected();
             }
         });
 
@@ -115,41 +116,30 @@ public class RecommendedMovementsTab extends MovementsTab {
         }
     }
 
-    private void setNearbySelected() {
-        if (!movements.isEmpty()) {
-            listView.setAdapter(nearbyAdapter);
+    private void setSelected(int tabId, RecommendedMovementsAdapter adapter, ArrayList<Movement> tabMovements) {
+        if (!tabMovements.isEmpty()) {
+            listView.setAdapter(adapter);
             listView.setVisibility(View.VISIBLE);
             view.findViewById(R.id.no_rec_movments_message).setVisibility(View.INVISIBLE);
         } else {
             listView.setVisibility(View.GONE);
             view.findViewById(R.id.no_rec_movments_message).setVisibility(View.VISIBLE);
         }
-        setTabColors(R.id.joined_nearby_button);
-    }
-
-    private void setPopularSelected() {
-        if (!popularMovements.isEmpty()) {
-            listView.setAdapter(popularAdapter);
-            listView.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.INVISIBLE);
-        } else {
-            listView.setVisibility(View.GONE);
-            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.VISIBLE);
-        }
-        setTabColors(R.id.popular_button);
+        setTabColors(tabId);
     }
 
     private void setInterestsSelected() {
-        if (!interestsMovements.isEmpty()) {
-            listView.setAdapter(interestsAdapter);
-            listView.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.INVISIBLE);
-        } else {
-            listView.setVisibility(View.GONE);
-            view.findViewById(R.id.no_rec_movments_message).setVisibility(View.VISIBLE);
-        }
-        setTabColors(R.id.interests_button);
+        setSelected(R.id.interests_button, interestsAdapter, interestsMovements);
     }
+
+    private void setNearbySelected() {
+        setSelected(R.id.joined_nearby_button, nearbyAdapter, movements);
+    }
+
+    private void setPopularSelected() {
+        setSelected(R.id.popular_button, popularAdapter, popularMovements);
+    }
+
 
     //getting movements for nearby and popular lists
 
@@ -196,14 +186,10 @@ public class RecommendedMovementsTab extends MovementsTab {
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG,databaseError.getMessage());
-            }
+            public void onCancelled(DatabaseError databaseError) {Log.d(TAG,databaseError.getMessage());}
         };
     }
 
@@ -219,9 +205,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {Log.d(TAG,databaseError.getMessage());}
         };
     }
 
@@ -238,9 +222,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {Log.d(TAG,databaseError.getMessage());}
         };
     }
 
@@ -279,11 +261,6 @@ public class RecommendedMovementsTab extends MovementsTab {
         if (!userAlreadyIn(movement.getId())) {
             movementPopularRanks.put(movement.getId(), movement.getFollowers().size());
             popularMovements.add(movement);
-        }
-
-        // if the dataset was just populated for the first time, need to set up the list view.
-        if (popularMovements.size() == 1) {
-            //setUpPopularListView();
         }
 
         popularAdapter.notifyDataSetChanged();
@@ -325,8 +302,6 @@ public class RecommendedMovementsTab extends MovementsTab {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    Log.d("GET KEY", dataSnapshot.getKey());
-                    Log.d("GET VALUE", (String) dataSnapshot.getValue());
                     updateNearbyMovementRanks(dataSnapshot.getKey());
                     HashMap movementMap = (HashMap) dataSnapshot.getValue();
                     ArrayList movementIdList = new ArrayList(movementMap.keySet());
@@ -358,9 +333,7 @@ public class RecommendedMovementsTab extends MovementsTab {
         if (!movementsAlreadyHas(movement.getId()) && !userAlreadyIn(movement.getId())) {
             movements.add(movement);
         }
-        if (movements.size() == 1) {
-            //setUpNearbyListView();
-        }
+
         nearbyAdapter.notifyDataSetChanged();
 
     }
@@ -411,8 +384,6 @@ public class RecommendedMovementsTab extends MovementsTab {
                 unselectedButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
             }
         }
-
-        //set background colors of buttons -- can just hardcode color now
     }
 
 }
