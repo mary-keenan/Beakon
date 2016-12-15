@@ -1,7 +1,9 @@
 package erica.beakon.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +32,7 @@ import java.util.HashMap;
 import erica.beakon.MainActivity;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
+import erica.beakon.OnSwipeTouchListener;
 import erica.beakon.Pages.ExpandedHashtagPage;
 import erica.beakon.Pages.ExpandedMovementPage;
 import erica.beakon.Pages.MyMovementsTab;
@@ -45,22 +49,39 @@ public class MyMovementAdapter extends MovementAdapter {
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, movements, R.layout.my_movement_item);
+
     }
 
-    protected void setUpView(final MainActivity activity, final Movement movement, View convertView, int position) {
+    protected void setUpView(final MainActivity activity, final Movement movement, final View convertView,final int position) {
         currentUser = activity.getCurrentUser();
 
         Button deleteBtn = (Button) convertView.findViewById(R.id.deleteButton);
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.completed_box);
+        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
+
+            public void onSwipeRight() {
+                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+
+
+            }
+            public void onSwipeLeft() {
+                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
+                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
+
+            }
+
+
+        });
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     if (dataSnapshot.getValue().equals(true)) {
-                        checkBox.setChecked(true);
+                        setViewtoCheckedStyle(convertView, checkBox);
                     } else if (dataSnapshot.getValue().equals(false)) {
-                        checkBox.setChecked(false);
+                        setViewtoUncheckedStyle(convertView, checkBox);
                     }
                 }
             }
@@ -77,10 +98,14 @@ public class MyMovementAdapter extends MovementAdapter {
                     firebaseHandler.setMovementofUserStatus(currentUser, movement, checkBox.isChecked());
                     currentUser.updateMovements(movement.getId(), checkBox.isChecked());
                     notifyDataSetChanged();
+                    if (checkBox.isChecked()) {
+                        setViewtoCheckedStyle(convertView, checkBox);
+                    } else {
+                        setViewtoUncheckedStyle(convertView, checkBox);
+                    }
                 }
             }
         });
-
 
         //final Movement finalMovement2 = movement;
         deleteBtn.setOnClickListener(new View.OnClickListener(){
@@ -93,6 +118,19 @@ public class MyMovementAdapter extends MovementAdapter {
             }
         });
 
+
+    }
+
+    private void setViewtoCheckedStyle(View view, CheckBox checkBox) {
+        view.findViewById(R.id.card_view_layout).setBackgroundColor(Color.parseColor("#cccccc"));
+        view.findViewById(R.id.deleteButton).setBackgroundColor(Color.parseColor("#aaaaaa"));
+        checkBox.setChecked(true);
+    }
+
+    private void setViewtoUncheckedStyle(View view, CheckBox checkBox) {
+        view.findViewById(R.id.card_view_layout).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+        view.findViewById(R.id.deleteButton).setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+        checkBox.setChecked(false);
     }
 
     public void add(Movement movement) {
