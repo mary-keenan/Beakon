@@ -213,6 +213,12 @@ public class FirebaseHandler {
         }
     }
 
+    public void getBatchMovementofUserStatus(User user, ArrayList<String> movementBatch, ChildEventListener listener) {
+        for (int i = 0; i < movementBatch.size(); i++) {
+            Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movementBatch.get(i));
+            dataRef.addChildEventListener(listener);
+        }
+    }
     public void getMovementofUserStatus(User user, Movement movement, ValueEventListener listener) {
         Query dataRef = ref.child("Users").child(user.getId()).child("movements").child(movement.getId()).child("status");
         dataRef.addValueEventListener(listener);

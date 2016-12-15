@@ -52,7 +52,7 @@ public class MyMovementAdapter extends MovementAdapter {
 
     }
 
-    protected void setUpView(final MainActivity activity, final Movement movement, final View convertView, int position) {
+    protected void setUpView(final MainActivity activity, final Movement movement, final View convertView,final int position) {
         currentUser = activity.getCurrentUser();
 
         Button deleteBtn = (Button) convertView.findViewById(R.id.deleteButton);
@@ -109,7 +109,6 @@ public class MyMovementAdapter extends MovementAdapter {
             }
         });
 
-
         //final Movement finalMovement2 = movement;
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -141,14 +140,3 @@ public class MyMovementAdapter extends MovementAdapter {
         notifyDataSetChanged();
     }
 }
-
-
-//if(previousView!=null){
-//        Movement previousMovement = movements.get(previousPosition);
-//        previousMovement.joined = false;
-//        }
-//
-//        movement.joined = true;
-//        previousView = currentView;
-//        previousPosition = position;
-//        notifyDataSetChanged();

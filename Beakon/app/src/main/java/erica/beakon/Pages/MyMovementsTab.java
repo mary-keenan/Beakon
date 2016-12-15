@@ -6,13 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,79 +38,59 @@ public class MyMovementsTab extends MovementsTab {
     MyMovementAdapter adapter;
     ListView listView;
     TextView message;
-    Button logoutButton;
-    Button userPrefButton;
     Boolean alreadyLoaded = false;
     ArrayList<String> movementsShown = new ArrayList<>();
+    ArrayList<String> completedMovements = new ArrayList<>();
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_my_movements_tab, container, false);
-
         listView = (ListView) view.findViewById(R.id.my_movements_list);
         message = (TextView) view.findViewById(R.id.no_movments_message);
         setUpChangeFragmentsButton(view, new RecommendedMovementsTab(), R.id.movements, R.id.my_movements);
-//        setUpChangeFragmentsButton(view, new AddMovementPage(), R.id.goto_add_movement_button);
-        ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);
-        addMovementBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity) getActivity()).changeFragment(new AddMovementPage(), "AddMovementPage");
-            }
-        });
+        setMenuButtonOnClickListener(R.id.my_movement_tab);
+        setUpAddButton();
+        setUpCompletedMovementsSwitch();
+        if (!movements.isEmpty() && movements != null) {
+            setUpListView();
+        }
+        setUsersMovementsListener();  //this is where the problems start
+        setMovementsStatusListener();
+        return view;
+    }
 
+    private void setUpCompletedMovementsSwitch() {
         final Switch showCompleted = (Switch) view.findViewById(R.id.showCompleted);
 
         showCompleted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (showCompleted.isChecked()) {
-                    Toast.makeText(getContext(),"Showing completed movements", Toast.LENGTH_LONG).show();
-                    for(int i = 0; i<listView.getChildCount(); i++) {
-                        if(listView.getChildAt(i).getVisibility() == View.GONE) {
-                            listView.getChildAt(i).setVisibility(View.VISIBLE);
+                    ArrayList<Movement> toRemove = new ArrayList<Movement>();
+                    for (Movement m: movements) {
+                        if (completedMovements.contains(m.getId())) {
+                            toRemove.add(m);
+                            movementsShown.remove(m.getId());
                         }
                     }
+                    for (Movement m: toRemove) { movements.remove(m); }
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(),"Showing completed movements", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(),"Hiding completed movements", Toast.LENGTH_LONG).show();
-                    for(int i = 0; i<listView.getChildCount(); i++) {
-                        final int finalI = i;
-                        firebaseHandler.getMovementofUserStatus(getMainActivity().currentUser, movements.get(i), new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue().equals(true)) {
-                                    listView.getChildAt(finalI).setVisibility(View.GONE);
-                                }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
-
-                    }
-
+                    getMovements(completedMovements);
                 }
             }
         });
-
-        setMenuButtonOnClickListener(R.id.my_movement_tab);
-        setUpAddButton();
-
-        setUsersMovementsListener();  //this is where the problems start
-        if (!movements.isEmpty() && movements != null) {
-            setUpListView();
-        }
-        return view;
     }
-
-
     private void setUsersMovementsListener() {
         getMainActivity().firebaseHandler.getUserChild(getMainActivity().currentUser.getId(), "movements", populateMovementsEventListener());
+    }
+
+    private void setMovementsStatusListener() {
+        getMainActivity().firebaseHandler.getBatchMovementofUserStatus(getMainActivity().currentUser, new ArrayList(getMainActivity().currentUser.getMovements().keySet()), movementStatusValueEventListener());
     }
 
     private void setUpListView() {
@@ -120,7 +100,7 @@ public class MyMovementsTab extends MovementsTab {
         listView.setAdapter(adapter);
     }
 
-    protected ValueEventListener getMovementAddedValueEventListener() { //set in getMovement()
+    protected ValueEventListener getMovementAddedValueEventListener() { //set in getMovements()
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -154,16 +134,48 @@ public class MyMovementsTab extends MovementsTab {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null){
-                    HashMap movementMap = (HashMap) dataSnapshot.getValue();
-                    Log.d("SNAPSHOT", String.valueOf(dataSnapshot));
-                    Log.d("MOVEMENT MAP", String.valueOf(movementMap));
-                    ArrayList movementIdList = new ArrayList(movementMap.keySet());
-                    getMovement(movementIdList);}
+                    HashMap<String , HashMap<String, Boolean>> movementMap = (HashMap) dataSnapshot.getValue();
+                    ArrayList<String> movementIdList = new ArrayList(movementMap.keySet());
+                    getMovements(movementIdList);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         };
+    }
+
+    private ChildEventListener movementStatusValueEventListener() {
+        return new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                updateCompletedList(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                updateCompletedList(dataSnapshot);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+    }
+
+    private void updateCompletedList(DataSnapshot dataSnapshot) {
+        Boolean completed = (Boolean) dataSnapshot.getValue();
+        String movementId = dataSnapshot.getRef().getParent().getKey();
+        if (completed) {
+            completedMovements.add(movementId);
+        } else {
+            completedMovements.remove(movementId);
+        }
     }
 }

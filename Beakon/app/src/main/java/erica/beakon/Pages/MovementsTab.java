@@ -62,7 +62,7 @@ abstract public class MovementsTab extends Fragment {
         this.movements.remove(movement);
     }
 
-    protected void getMovement(ArrayList<String> id) {
+    protected void getMovements(ArrayList<String> id) {
         if (isAdded()) {
             getMainActivity().firebaseHandler.getBatchMovements(id, getMovementAddedValueEventListener());
         }
