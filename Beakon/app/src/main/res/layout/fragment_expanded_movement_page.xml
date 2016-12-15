@@ -38,7 +38,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_description"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:autoLink="all"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -53,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_steps"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:autoLink="all"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,14 +63,15 @@
                 android:text="Resources"
                 android:id="@+id/movement_resources_title"
                 android:textSize="23dp"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/movement_resources"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:autoLink="all"/>
 
             <TextView
                 android:layout_width="wrap_content"
