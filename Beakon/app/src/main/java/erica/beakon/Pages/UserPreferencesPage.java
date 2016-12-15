@@ -99,7 +99,7 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 final String inputText = newInterest.getText().toString();
-                if (!inputText.equals("")) {
+                if (!inputText.equals("") && inputText.length() <= 13) {
                     newInterest.getText().clear();
                     activity.firebaseHandler.getHashtagOnce(inputText, new ValueEventListener() {
                         @Override
@@ -129,8 +129,12 @@ public class UserPreferencesPage extends android.support.v4.app.Fragment {
                         InputMethodManager imm = (InputMethodManager) (getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
-                } else {
+                } else if (inputText.equals("")){
                     CharSequence text = "Please enter an interest.";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast.makeText(getContext(), text, duration).show();
+                } else {
+                    CharSequence text = "Interests can be no more than 13 characters.";
                     int duration = Toast.LENGTH_SHORT;
                     Toast.makeText(getContext(), text, duration).show();
                 }

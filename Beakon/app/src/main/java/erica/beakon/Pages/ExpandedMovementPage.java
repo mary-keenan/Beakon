@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,8 +55,8 @@ public class ExpandedMovementPage extends Fragment {
         }
 
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
-
         //create TVs
+        final TextView numFollowersTV = (TextView) view.findViewById(R.id.num_followers);
         final TextView movementNameTV = (TextView) view.findViewById(R.id.movement_name);
         movementNameTV.setText(name);
         final TextView description = (TextView) view.findViewById(R.id.movement_description);
@@ -87,6 +89,8 @@ public class ExpandedMovementPage extends Fragment {
                     if (movement.getHashtagList() != null){
                         hashtagNameList = movement.getHashtagList();}; // get hashtag name list from movement}
                     if(movement.getFollowers() != null) {
+                        DecimalFormat formatter = new DecimalFormat("#,###");
+                        numFollowersTV.setText(formatter.format(movement.getFollowers().size()));
                         userIDList = movement.getFollowers();} // get user id list from movement
                     if (hashtagNameList != null){ // if the hashtag list isn't empty
                         firebaseHandler.getBatchHashtags(hashtagNameList, new ValueEventListener() { //get all the movements

@@ -10,56 +10,79 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/top_tabs"
-            android:id="@+id/tab_buttons"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"/>
+            android:orientation="vertical"
+            android:id="@+id/all_tabs">
+
+            <include layout="@layout/top_tabs"
+                android:id="@+id/tab_buttons"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/recs_tab_buttons"
+                android:layout_marginTop="5dp">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:textSize="10sp"
+                    android:layout_weight="0.33"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Popular"
+                    android:id="@+id/popular_button"
+                    android:background="@color/colorBackground" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="0.33"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:textSize="10sp"
+                    android:layout_height="wrap_content"
+                    android:text="Joined Nearby"
+                    android:id="@+id/joined_nearby_button"
+                    android:background="@color/colorAccentLight"/>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="0.33"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:textSize="10sp"
+                    android:layout_height="wrap_content"
+                    android:text="My Interests"
+                    android:id="@+id/interests_button"
+                    android:background="@color/colorBackground" />
+
+            </LinearLayout>
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/no_rec_movments_message"
             android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tab_buttons"
+            android:layout_below="@+id/all_tabs"
             android:text="@string/no_rec_movements"
             android:textSize="30sp"
             android:padding="30dp"
             android:layout_marginTop="30dp"
             android:textAlignment="center"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="16sp"
-            android:layout_below="@+id/tab_buttons"
-            android:id="@+id/nearby_movements_label"
-            android:labelFor="@+id/recommended_nearby_movements_list"
-            android:text="Movements Joined Near You"/>
-
         <ListView
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/recommended_nearby_movements_list"
-            android:layout_below="@+id/nearby_movements_label"></ListView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="16sp"
-            android:labelFor="@+id/recommended_popular_movements_list"
-            android:layout_below="@+id/recommended_nearby_movements_list"
-            android:id="@+id/popular_movements_label"
-            android:text="Popular Movements"/>
-
-        <ListView
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/recommended_popular_movements_list"
-            android:layout_below="@+id/popular_movements_label"></ListView>
+            android:id="@+id/recommended_movements_list"
+            android:layout_below="@+id/all_tabs"></ListView>
 
     </RelativeLayout>
 
