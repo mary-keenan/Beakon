@@ -41,6 +41,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     HashMap<String, Integer> movementNearbyRanks;
     HashMap<String, Integer> movementPopularRanks;
     int[] tabs = {R.id.joined_nearby_button, R.id.interests_button, R.id.popular_button};
+    int currentTab;
 
 
 
@@ -101,6 +102,7 @@ public class RecommendedMovementsTab extends MovementsTab {
             }
         });
     }
+
     private void initializeListViews() {
         listView = (ListView) view.findViewById(R.id.recommended_movements_list);
         nearbyAdapter = new RecommendedMovementsAdapter(getContext(), movements);
@@ -117,6 +119,7 @@ public class RecommendedMovementsTab extends MovementsTab {
     }
 
     private void setSelected(int tabId, RecommendedMovementsAdapter adapter, ArrayList<Movement> tabMovements) {
+        currentTab = tabId;
         if (!tabMovements.isEmpty()) {
             listView.setAdapter(adapter);
             listView.setVisibility(View.VISIBLE);
@@ -217,6 +220,10 @@ public class RecommendedMovementsTab extends MovementsTab {
                 //if the movement is not already in the list AND the user has not already joined the movement
                 if (!interestsMovements.contains(movement) && !getMainActivity().currentUser.isInMovement(movement)) {
                     interestsMovements.add(movement);
+
+                    if (interestsMovements.size() == 1 && currentTab == R.id.interests_button) {
+                        setInterestsSelected();
+                    }
                     interestsAdapter.notifyDataSetChanged();
                 }
             }
@@ -261,6 +268,10 @@ public class RecommendedMovementsTab extends MovementsTab {
         if (!userAlreadyIn(movement.getId())) {
             movementPopularRanks.put(movement.getId(), movement.getFollowers().size());
             popularMovements.add(movement);
+
+            if (popularMovements.size() == 1 && currentTab == R.id.popular_button) {
+                setPopularSelected();
+            }
         }
 
         popularAdapter.notifyDataSetChanged();
@@ -320,6 +331,9 @@ public class RecommendedMovementsTab extends MovementsTab {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Movement movement = dataSnapshot.getValue(Movement.class);
                 addMovement(movement);
+                if (movements.size() == 1 && currentTab == R.id.joined_nearby_button) {
+                    setNearbySelected();
+                }
             }
 
             @Override
