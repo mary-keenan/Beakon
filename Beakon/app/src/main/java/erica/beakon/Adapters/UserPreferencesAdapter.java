@@ -37,9 +37,6 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.user_preferences_item, parent, false);
         }
-
-        final MainActivity activity = (MainActivity)getContext();
-
         final TextView userPreferenceString = (TextView) view.findViewById(R.id.user_preferences_string);
         userPreferenceString.setText(hashtag);
 
@@ -48,9 +45,7 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
         deleteHashtag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.currentUser.removeHashtag(hashtag);
-                activity.firebaseHandler.updateUser(activity.currentUser);
-
+                removeInterest(hashtag);
             }
         });
 
@@ -68,5 +63,13 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
         });
 
         return view;
+    }
+
+    private void removeInterest(String hashtag) {
+        final MainActivity activity = (MainActivity)getContext();
+        activity.currentUser.removeHashtag(hashtag);
+        activity.firebaseHandler.updateUser(activity.currentUser);
+        this.remove(hashtag);
+        this.notifyDataSetChanged();
     }
 }

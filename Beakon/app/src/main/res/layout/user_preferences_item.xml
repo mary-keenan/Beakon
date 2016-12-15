@@ -18,22 +18,17 @@
             android:id="@+id/user_preferences_string"
             android:textSize="20sp"/>
 
+
         <ImageButton
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src = "@drawable/x"
+            android:src = "@drawable/ex"
             android:background="@null"
             android:id="@+id/delete_user_preference"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             />
 
     </LinearLayout>
-
-
-
 
 </RelativeLayout>

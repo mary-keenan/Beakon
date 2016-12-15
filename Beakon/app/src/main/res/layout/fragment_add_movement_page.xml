@@ -12,12 +12,12 @@
         android:adjustViewBounds="true"
         android:src="@drawable/check"
         android:id="@+id/add_movement_button"
-        android:background="@color/colorBackground"
+        android:background="@color/colorAccentLight"
+        android:padding="10dp"
         android:layout_gravity="right|bottom" />
 
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,124 +28,232 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_gravity="center">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <ImageButton
-            android:layout_width="@dimen/image_width"
-            android:layout_height="@dimen/image_height"
-            android:id="@+id/back_add_movement_btn"
-            android:background="@null"
-            android:src="@drawable/back_accent"
-            android:layout_gravity="left|top" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/add_movementTitle"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/add_movement_title"
-            android:layout_toRightOf="@+id/back_add_movement_btn"
-            android:text="Add a Movement"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_movement_help_text"
-            android:layout_marginTop="@dimen/help_text_margin"
-            android:layout_toRightOf="@+id/back_add_movement_btn"
-            android:layout_below="@+id/add_movementTitle"
-            android:layout_marginBottom="@dimen/help_text_margin"/>
-
-        </RelativeLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:layout_width="@dimen/image_width"
+                        android:layout_height="@dimen/image_height"
+                        android:id="@+id/back_add_movement_btn"
+                        android:background="@null"
+                        android:src="@drawable/back_accent"
+                        android:layout_gravity="left|top" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:id="@+id/add_movementTitle"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/add_movement_title"
+                        android:layout_toRightOf="@+id/back_add_movement_btn"
+                        android:text="Add a Movement"/>
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_weight="0.3"
-                android:layout_height="wrap_content"
-                android:text="Name:"
-                android:labelFor="@+id/movement_name"
-                android:textSize="@dimen/add_movement_text"/>
+                </RelativeLayout>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/movement_name"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description:"
-                android:labelFor="@+id/movement_description"
-                android:textSize="@dimen/add_movement_text"/>
-
-                <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/movement_description"
-                android:layout_weight="0.24" />
-
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Steps:"
-                android:labelFor="@+id/movement_steps"
-                android:textSize="@dimen/add_movement_text"/>
-
-                <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/movement_steps"
-                android:layout_weight="0.39" />
-
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Resources:"
-                android:labelFor="@+id/movement_res"
-                android:textSize="@dimen/add_movement_text"/>
-
-                <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/movement_res"
-                android:layout_weight="0.34" />
-
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hashtags:"
-                android:labelFor="@+id/movement_hashtags"
-                android:textSize="@dimen/add_movement_text" />
-
-                <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/movement_hashtags"
-                android:layout_weight="0.34" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_movement_help_text"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_margin="@dimen/help_text_margin"
+                        android:id="@+id/textView4" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_weight="0.3"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/name_label"
+                            android:text="Name:"
+                            android:labelFor="@+id/movement_name"
+                            android:textSize="@dimen/add_movement_text"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:text="A short identifier for your movement"
+                            android:labelFor="@+id/name_label"
+                            android:id="@+id/textView2"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/name_label"
+                            android:layout_toEndOf="@+id/name_label"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginStart="12dp" />
+
+                    </RelativeLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movement_name"/>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Description:"
+                            android:id="@+id/description_label"
+                            android:labelFor="@+id/movement_description"
+                            android:textSize="@dimen/add_movement_text"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:text="A few more descriptive words, \ni.e. how, when, why"
+                            android:labelFor="@+id/name_label"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/description_label"
+                            android:layout_toEndOf="@+id/description_label"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginStart="12dp" />
+
+                    </RelativeLayout>
+
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movement_description"
+                        android:layout_weight="0.24" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/steps_label"
+                            android:text="Steps:"
+                            android:labelFor="@+id/movement_steps"
+                            android:textSize="@dimen/add_movement_text"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:text="How to complete this movement, step-by-step"
+                            android:labelFor="@+id/name_label"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/steps_label"
+                            android:layout_toEndOf="@+id/steps_label"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginStart="12dp" />
+
+                    </RelativeLayout>
+
+                    <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/movement_steps"
+                    android:layout_weight="0.39" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/resources_label"
+                            android:text="Resources:"
+                            android:labelFor="@+id/movement_res"
+                            android:textSize="@dimen/add_movement_text"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:text="Relevant links and extra information \nabout the context of the movement"
+                            android:labelFor="@+id/name_label"
+                            android:id="@+id/textView3"
+                            android:layout_alignParentTop="true"
+                            android:layout_toRightOf="@+id/resources_label"
+                            android:layout_toEndOf="@+id/resources_label"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginStart="12dp" />
+
+                    </RelativeLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movement_res"
+                        android:layout_weight="0.34" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/hashtag_label"
+                            android:text="Hashtags:"
+                            android:labelFor="@+id/movement_hashtags"
+                            android:textSize="@dimen/add_movement_text" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:text="Tag your movement to make it \nmore easily discoverable"
+                            android:labelFor="@+id/name_label"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/hashtag_label"
+                            android:layout_toEndOf="@+id/hashtag_label"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginStart="12dp" />
+
+                    </RelativeLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/movement_hashtags"
+                        android:layout_weight="0.34" />
+
+
+
+                    </LinearLayout>
 
             </LinearLayout>
-
-    </ScrollView>
+        </ScrollView>
 
 
     </LinearLayout>
-
-
-
-
 
 
 </FrameLayout>

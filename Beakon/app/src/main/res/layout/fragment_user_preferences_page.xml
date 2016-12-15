@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,25 +19,23 @@
             android:layout_marginBottom="5dp"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/image_width"
+            android:layout_height="@dimen/image_height"
             android:src="@drawable/back_primary"
             android:background="@null"
             android:id="@+id/back_user_preferences" />
 
-        <TextView
-            android:layout_width="314dp"
-            android:layout_height="wrap_content"
-            android:text="Tell us what you care about so we can recommend movements for you! "
-            android:id="@+id/user_preferences_instructions"
-            android:layout_toRightOf="@+id/back_user_preferences"
-            android:layout_below="@+id/user_preference_title"
-           />
-
-
     </RelativeLayout>
 
-
+    <TextView
+        android:layout_width="314dp"
+        android:layout_height="wrap_content"
+        android:text="Tell us what you care about so we can recommend movements for you! "
+        android:id="@+id/user_preferences_instructions"
+        android:layout_toRightOf="@+id/back_user_preferences"
+        android:layout_below="@+id/user_preference_title"
+        android:layout_margin="@dimen/help_text_margin"
+        />
 
 
     <RelativeLayout

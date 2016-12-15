@@ -3,6 +3,7 @@ package erica.beakon.Pages;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import erica.beakon.LoginPage;
@@ -27,6 +29,7 @@ abstract public class MovementsTab extends Fragment {
 
     static final String SETTINGS_TITLE = "Settings";
     ArrayList<Movement> movements;
+
     ImageButton menuButton;
     View view;
 
@@ -35,14 +38,14 @@ abstract public class MovementsTab extends Fragment {
         // Required empty public constructor
     }
 
-    protected void setUpChangeFragmentsButton(View view, final Fragment fragment, int nextFragmentButtonId) {
+    protected void setUpChangeFragmentsButton(View view, final Fragment fragment, int nextFragmentButtonId, int currentFragmentButtonId) {
         //create buttons
-//        final Button myMovementsButton = (Button) view.findViewById(R.id.my_movements);
+        final Button currentButton = (Button) view.findViewById(currentFragmentButtonId);
         final Button tabChangeButton = (Button) view.findViewById(nextFragmentButtonId);
 
         //set background colors of buttons -- can just hardcode color now
-//        myMovementsButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorBackground));
-//        suggestedMovementsButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAccentLight));
+        currentButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorBackground));
+        tabChangeButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
 
         tabChangeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -59,7 +62,7 @@ abstract public class MovementsTab extends Fragment {
         this.movements.remove(movement);
     }
 
-    protected void getMovement(ArrayList<String> id) {
+    protected void getMovements(ArrayList<String> id) {
         if (isAdded()) {
             getMainActivity().firebaseHandler.getBatchMovements(id, getMovementAddedValueEventListener());
         }
@@ -105,12 +108,8 @@ abstract public class MovementsTab extends Fragment {
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(getActivity(),"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
                         if (item.getTitle().equals(MovementsTab.SETTINGS_TITLE)) {
-                            android.support.v4.app.Fragment UserPref = new UserPreferencesPage();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(currentTab, UserPref);
-                            transaction.commit();
+                            ((MainActivity) getActivity()).changeFragment(new UserPreferencesPage(), "UserPreferencesPage");
                         } else {
                             LoginManager.getInstance().logOut();
                             startActivity(intent);
