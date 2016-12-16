@@ -315,6 +315,8 @@ public class RecommendedMovementsTab extends MovementsTab {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     updateNearbyMovementRanks(dataSnapshot.getKey());
                     HashMap movementMap = (HashMap) dataSnapshot.getValue();
+                    // You should declare the data type of what your ArrayList is storing.
+                    // This will avoid the Android Studio warnings you're getting.
                     ArrayList movementIdList = new ArrayList(movementMap.keySet());
                     getMovements(movementIdList);
                 }
@@ -378,13 +380,7 @@ public class RecommendedMovementsTab extends MovementsTab {
         return false;
     }
 
-    private HashMap<String, Integer> getMovementRanksFromPopularMovements() {
-        HashMap<String, Integer> ranks = new HashMap<>();
-        for (Movement m: popularMovements) {
-            ranks.put(m.getId(), m.getFollowers().size());
-        }
-        return ranks;
-    }
+    // Not used
 
     private void setTabColors(int selectedId) {
         //create buttons

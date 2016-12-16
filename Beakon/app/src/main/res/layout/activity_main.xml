@@ -18,6 +18,7 @@
         android:layout_height="match_parent"
         android:id="@+id/fragment_container">
 
+        <!-- Not being used? Could get rid of them -->
         <!--<LinearLayout-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->

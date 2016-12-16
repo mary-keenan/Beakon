@@ -16,7 +16,7 @@ public class NotifyPermissionsReasonTask extends AsyncTask<String, Integer[], In
     Context context;
     DialogInterface.OnClickListener negativeListener;
     DialogInterface.OnClickListener positiveListener;
-    String permission;
+    // Not used
     AlertDialog.Builder alertDialog;
 
     public NotifyPermissionsReasonTask(Context context, DialogInterface.OnClickListener negativeListener, DialogInterface.OnClickListener positiveListener) {
@@ -41,6 +41,7 @@ public class NotifyPermissionsReasonTask extends AsyncTask<String, Integer[], In
     }
 
     private void showConfirmationAlertDialog() {
+        // Use strings.xml for these
         alertDialog.setTitle("Location Permissions");
         alertDialog.setMessage("In order to receive location based permissions, you must allow Beakon access to your location. Do you still want to deny permission?");
         alertDialog.setCancelable(true);

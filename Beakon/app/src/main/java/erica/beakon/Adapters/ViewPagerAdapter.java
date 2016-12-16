@@ -14,6 +14,7 @@ import erica.beakon.Pages.AddMovementPage;
  * Created by Cecelia on 11/6/16.
  */
 
+// Look like this class is never used
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     static final int NUM_PAGES = 2;
     ArrayList<Fragment> pages;

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Movement implements Serializable {
 
-    String id;
+    private String id;
     private String name;
     private String description;
     private String steps;

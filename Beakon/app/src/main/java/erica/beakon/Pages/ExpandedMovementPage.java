@@ -200,7 +200,6 @@ public class ExpandedMovementPage extends Fragment {
                             public void onDataChange(DataSnapshot userSnapshot) {
                                 ArrayList<String> hashtagList = ((MainActivity) getActivity()).getHashtagList(userSnapshot);
                                 HashMap<String, HashMap<String, Boolean>> movementList = ((MainActivity) getActivity()).getMovements(userSnapshot);
-//                            User follower = userSnapshot.getValue(User.class); //store user info in user object
                                 User follower = new User(userSnapshot.child("id").getValue().toString(), userSnapshot.child("name").getValue().toString(), hashtagList, movementList);
                                 if (!followersShown.contains(follower.getId())) { //if already being shown, don't show movement again
                                     followerAdapter.add(follower); //add user to follower adapter, updates list view

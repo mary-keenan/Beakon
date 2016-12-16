@@ -4,17 +4,12 @@ package erica.beakon.Adapters;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 import android.location.Location;
-import android.renderscript.Sampler;
-import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
-import com.firebase.geofire.LocationCallback;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,9 +17,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import erica.beakon.LoginPage;
 import erica.beakon.Objects.Hashtag;
 import erica.beakon.Objects.Movement;
 import erica.beakon.Objects.User;
@@ -34,7 +27,7 @@ public class FirebaseHandler {
 
     FirebaseDatabase db;
     DatabaseReference ref;
-    LoginPage loginPage;
+    // Not used
 
     String TAG = "FirebaseHandler";
 
@@ -61,9 +54,7 @@ public class FirebaseHandler {
         });
     }
 
-    public void getUserGeoLocation(User user, LocationCallback callback) {
-        getGeoFire().getLocation(user.getId(), callback);
-    }
+    // Not used
 
     public void getNearbyUsers(GeoLocation location, GeoQueryEventListener listener) {
         GeoQuery geoQuery = getGeoFire().queryAtLocation(location, 0.6);
@@ -72,17 +63,11 @@ public class FirebaseHandler {
 
 
     public void addUser(String fbId, String name) {
-//        String userId = loginPage.getCurrentUserID();
+        // Delete commented-out code before
         User user = new User(fbId, name);
         ref.child("Users").child(fbId).setValue(user);
     }
-
-    public User addUser(String name, ArrayList<String> hashtagList, HashMap<String, HashMap<String,Boolean>> movementList) {
-        String userId = loginPage.getCurrentUserID();
-        User user = new User(userId, name, hashtagList, movementList);
-        ref.child("Users").child(userId).setValue(user);
-        return user;
-    }
+    // This function is never used, delete it
 
     public Movement addMovement(String name, String description, String steps, String resources, ArrayList<String> hashtagList, ArrayList<String> followerList) {
         DatabaseReference movementRef = ref.child("Movements").push();
@@ -103,16 +88,7 @@ public class FirebaseHandler {
         return hashtag;
     }
 
-    public void getById(String id, ValueEventListener listener) {
-        Query dataRef;
-        if (id == null) {
-            dataRef = ref.orderByChild("id").getRef();
-        } else {
-            dataRef = ref.orderByChild("id").equalTo(id).getRef();
-        }
-
-        dataRef.addListenerForSingleValueEvent(listener);
-    }
+    // Not used
 
     public void getMovements(ChildEventListener listener) {
         ref.child("Movements").addChildEventListener(listener);
@@ -178,24 +154,16 @@ public class FirebaseHandler {
         updateUser(user);
     }
 
-    public void removeMovementfromHashtag(Movement movement, Hashtag hashtag) {
-        movement.removeHashtag(hashtag.getName());
-        hashtag.removeMovement(movement.getId());
-        updateHashtag(hashtag);
-        updateMovement(movement);
-    }
+    // Not used
 
     public void updateUser(User user) {
         ref.child("Users").child(user.getId()).setValue(user);
     }
 
-    public void updateUser(String userID, String field, String value) {
-        ref.child("Users").child(userID).child(field).setValue(value);
-    }
+    // Not used
 
     public void updateMovement(Movement movement) {
         ref.child("Movements").child(movement.getId()).setValue(movement);
-//        ref.child("Movements").child(movement.getId()).child("status").setValue(false);
     }
 
     public void updateHashtag(Hashtag hashtag) {
@@ -242,14 +210,4 @@ public class FirebaseHandler {
         Query dataRef = ref.child("Users").child(user.getId()).child("hashtagList");
         dataRef.addValueEventListener(listener);
     }
-
-
-//    public void setUserHashtags(User user, String hashtag){
-//        ref.child("Users").child(user.getId()).child("hashtagList").setValue(hashtag);
-//    }
-
-
 }
-
-
-

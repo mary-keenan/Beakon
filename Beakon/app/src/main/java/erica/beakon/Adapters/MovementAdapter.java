@@ -48,7 +48,6 @@ public abstract class MovementAdapter extends ArrayAdapter<Movement> {
         TextView movementNameView = (TextView) convertView.findViewById(R.id.movement_name);
         movementNameView.setText(movement.getName());
         setOnClickMovement(movementNameView, movement);
-        //final Button reject = (Button) convertView.findViewById(R.id.reject);
 
         ArrayList<String> hashtagList = movement.getHashtagList();
         LinearLayout hashtagLayout = (LinearLayout) convertView.findViewById(R.id.hashtag_layout);

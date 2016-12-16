@@ -34,7 +34,6 @@ public class AddMovementPage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_add_movement_page, container, false);
-        final Context context = getActivity().getApplicationContext();
         final FirebaseHandler firebaseHandler = ((MainActivity) getActivity()).getHandler();
 
         //create buttons
@@ -59,7 +58,7 @@ public class AddMovementPage extends Fragment {
         addMovementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> movementHashtags = new ArrayList(Arrays.asList(hashtagsInput.getText().toString().replace("#","").split(" "))); // get movement hashtags (list)
+                ArrayList<String> movementHashtags = new ArrayList<>(Arrays.asList(hashtagsInput.getText().toString().replace("#","").split(" "))); // get movement hashtags (list)
                 if (!hashtagsInput.getText().toString().equals("") && movementHashtags.size() <= 3 && Hashtag.areHashtagsShortEnough(movementHashtags)) {
                     String movementName = nameInput.getText().toString(); // get movement ID
                     String movementDescription = descriptionInput.getText().toString(); // get movement description
@@ -89,6 +88,7 @@ public class AddMovementPage extends Fragment {
 
                     ((MainActivity) getActivity()).changeFragment(new MyMovementsTab(), "MyMovementsTab");
                 } else if (movementHashtags.size() > 3){
+                    // Use strings.xml for all these
                     sendToastWarning("Please enter no more than 3 hashtags.");
                 } else if (!Hashtag.areHashtagsShortEnough(movementHashtags)) {
                     sendToastWarning("Your hashtags cannot be more than 13 characters each.");

@@ -54,13 +54,7 @@ abstract public class MovementsTab extends Fragment {
         });
     }
 
-    protected void removeMovement(int index) {
-        this.movements.remove(index);
-    }
-
-    protected void removeMovement(Movement movement) {
-        this.movements.remove(movement);
-    }
+    // Not used
 
     protected void getMovements(ArrayList<String> id) {
         if (isAdded()) {
@@ -76,17 +70,7 @@ abstract public class MovementsTab extends Fragment {
         return ((MainActivity)getActivity());
     }
 
-    protected Movement getMovementById(String id) {
-        for (Movement m: movements) {
-            if (m != null){
-                if (m.getId().equals(id)) {
-                    return m;
-                }
-            }
-        }
-        return null;
-//        throw new NullPointerException("No movement exists with that id in nearby movements");
-    }
+    // Not used
 
     protected void setUpAddButton() {
         ImageButton addMovementBtn = (ImageButton) view.findViewById(R.id.goto_add_movement_btn);

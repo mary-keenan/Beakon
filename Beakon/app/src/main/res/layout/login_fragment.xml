@@ -4,7 +4,7 @@
     android:padding="16dp"
     >
 
-
+    <!-- Is there a way to make this page not just a FB login button -->
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
