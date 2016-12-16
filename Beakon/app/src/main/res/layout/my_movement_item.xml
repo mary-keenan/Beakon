@@ -68,15 +68,6 @@
         </LinearLayout>
 
 
-        <CheckBox
-            android:text=""
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="match_parent"
-            android:id="@+id/completed_box"
-            android:textColor="@color/colorAccentLight"
-            android:checked="false" />
-
         <Button
             android:layout_width="0dp"
             android:layout_weight="0.15"
