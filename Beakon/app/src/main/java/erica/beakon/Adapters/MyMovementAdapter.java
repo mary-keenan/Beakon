@@ -76,27 +76,33 @@ public class MyMovementAdapter extends MovementAdapter {
                 {
                     prevTime = thisTime;
                     thisTime = SystemClock.uptimeMillis();
-
-                    //Check that thisTime is greater than prevTime
-                    //just incase system clock reset to zero
+                    //Check that thisTime is greater than prevTime just incase system clock reset to zero
                     if(thisTime > prevTime){
-
                         //Check if times are within our max delay
                         if((thisTime - prevTime) <= DOUBLE_CLICK_MAX_DELAY){
-
                             //We have detected a double tap!
-                            Toast.makeText(getContext(), "DOUBLE TAP DETECTED!!!", Toast.LENGTH_LONG).show();
-                            //PUT YOUR LOGIC HERE!!!!
-
+                            if (currentUser!= null) {
+                                Log.d("GETTING MOVEMENT", String.valueOf(currentUser.getMovements().get(movement.getId()).get("status")));
+                                if (currentUser.getMovements().get(movement.getId()).get("status") != true){
+                                    Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
+                                    firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+                                    currentUser.updateMovements(movement.getId(), true);
+                                    notifyDataSetChanged();
+                                }
+                                else {
+                                    Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
+                                    firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
+                                    currentUser.updateMovements(movement.getId(), false);
+                                    notifyDataSetChanged();
+                                }
+                            }
                         }
-                        else
-                        {
+                        else {
                             //Otherwise Reset firstTap
                             firstTap = true;
                         }
                     }
-                    else
-                    {
+                    else {
                         firstTap = true;
                     }
                 }
