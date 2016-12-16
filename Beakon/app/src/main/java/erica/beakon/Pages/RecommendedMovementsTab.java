@@ -315,6 +315,8 @@ public class RecommendedMovementsTab extends MovementsTab {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     updateNearbyMovementRanks(dataSnapshot.getKey());
                     HashMap movementMap = (HashMap) dataSnapshot.getValue();
+                    // You should declare the data type of what your ArrayList is storing.
+                    // This will avoid the Android Studio warnings you're getting.
                     ArrayList movementIdList = new ArrayList(movementMap.keySet());
                     getMovements(movementIdList);
                 }

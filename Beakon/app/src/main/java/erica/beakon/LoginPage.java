@@ -54,7 +54,7 @@ public class LoginPage extends Activity {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-                if (Profile.getCurrentProfile() == null){
+                if (Profile.getCurrentProfile() == null) {
                     profileTracker = new ProfileTracker() {
                         @Override
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
