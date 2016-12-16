@@ -91,7 +91,8 @@ public class MyMovementsTab extends MovementsTab {
     }
 
     private void setMovementsStatusListener() {
-        getMainActivity().firebaseHandler.getBatchMovementofUserStatus(getMainActivity().currentUser, new ArrayList(getMainActivity().currentUser.getMovements().keySet()), movementStatusValueEventListener());
+        // Android studio was complaining about this so I fixed it
+        getMainActivity().firebaseHandler.getBatchMovementofUserStatus(getMainActivity().currentUser, new ArrayList<>(getMainActivity().currentUser.getMovements().keySet()), movementStatusValueEventListener());
     }
 
     private void setUpListView() {
@@ -136,7 +137,7 @@ public class MyMovementsTab extends MovementsTab {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null){
                     HashMap<String , HashMap<String, Boolean>> movementMap = (HashMap) dataSnapshot.getValue();
-                    ArrayList<String> movementIdList = new ArrayList(movementMap.keySet());
+                    ArrayList<String> movementIdList = new ArrayList<>(movementMap.keySet());
                     getMovements(movementIdList);
                 }
             }

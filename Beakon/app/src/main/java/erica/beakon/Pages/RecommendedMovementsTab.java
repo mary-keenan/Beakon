@@ -380,13 +380,7 @@ public class RecommendedMovementsTab extends MovementsTab {
         return false;
     }
 
-    private HashMap<String, Integer> getMovementRanksFromPopularMovements() {
-        HashMap<String, Integer> ranks = new HashMap<>();
-        for (Movement m: popularMovements) {
-            ranks.put(m.getId(), m.getFollowers().size());
-        }
-        return ranks;
-    }
+    // Not used
 
     private void setTabColors(int selectedId) {
         //create buttons

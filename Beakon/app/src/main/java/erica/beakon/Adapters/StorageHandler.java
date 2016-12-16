@@ -14,6 +14,8 @@ import java.util.concurrent.Callable;
 
 import erica.beakon.Objects.Movement;
 
+// Do you use this class? The only use of it I can see is in RecommendedMovementsTab, and you just
+// assign the class to a variable and don't use any of its methods.
 public class StorageHandler {
 
     private static final String TAG = "STORAGE_HANDLER";

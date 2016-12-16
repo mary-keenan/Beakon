@@ -12,8 +12,6 @@ public class Hashtag {
     private ArrayList<String> movementList = new ArrayList<>();
     private ArrayList<String> userList = new ArrayList<>();
 
-    public Hashtag(){}
-
     public Hashtag(String name, ArrayList<String> movementList, ArrayList<String> userList) {
         this.name = name;
         this.movementList = movementList;
@@ -42,10 +40,6 @@ public class Hashtag {
         this.movementList.add(movementID);
     }
 
-    public void removeMovement(String movementID) {
-        this.movementList.remove(movementID);
-    }
-
     public ArrayList<String> getUserList() {
         return userList;
     }
@@ -58,7 +52,7 @@ public class Hashtag {
         this.userList.remove(userID);
     }
 
-    public static boolean isHashtagShortEnough(String hashtag) {
+    private static boolean isHashtagShortEnough(String hashtag) {
         return hashtag.length() <=13;
     }
 

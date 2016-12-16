@@ -37,6 +37,7 @@ public class ExpandedHashtagPage extends Fragment {
     ArrayList<Movement> movementList = new ArrayList<>(); //list of movements fetched using movement IDs
     ArrayList<User> followerList = new ArrayList<>(); //list of followers fetched using user IDs
     Hashtag hashtag;
+    // If you want a default name, you should set it in your onCreateView function instead of here
     String name = "na";
     ArrayList<String> movementsShown = new ArrayList<>(); //prevents duplication
     ArrayList<String> followersShown = new ArrayList<>(); //prevents duplication

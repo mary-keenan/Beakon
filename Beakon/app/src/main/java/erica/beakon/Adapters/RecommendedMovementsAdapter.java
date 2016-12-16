@@ -63,19 +63,7 @@ public class RecommendedMovementsAdapter extends MovementAdapter {
         }
     }
 
-    private void setOnClickMovement(final TextView tv, final Movement movement){
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ExpandedMovementPage movementFragment = new ExpandedMovementPage();
-                Bundle bundle = new Bundle();
-                bundle.putString("name", movement.getName()); //give new fragment the hashtag it's expanding
-                bundle.putString("ID", movement.getId()); //give new fragment the hashtag it's expanding
-                movementFragment.setArguments(bundle);
-                ((MainActivity) getContext()).changeFragment(movementFragment, "expandedMovementPage"); //changes fragments
-            }
-        });
-    }
+    // Not used
 
     //basically the HashtagAdapter, but since I'm using a Table Layout I did it differently (i.e. this instead)
     private void setOnClickHashtag(final TextView tv){

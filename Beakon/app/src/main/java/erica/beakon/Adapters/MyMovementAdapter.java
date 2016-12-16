@@ -51,10 +51,7 @@ public class MyMovementAdapter extends MovementAdapter {
     private DatabaseReference ref = db.getReferenceFromUrl(databaseURL);
     FirebaseHandler firebaseHandler = new FirebaseHandler(db, ref);
     User currentUser;
-    private long thisTime = 0;
-    private long prevTime = 0;
-    private boolean firstTap = true;
-    protected static final long DOUBLE_CLICK_MAX_DELAY = 200L;
+    // Not used
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, movements, R.layout.my_movement_item);
@@ -66,6 +63,7 @@ public class MyMovementAdapter extends MovementAdapter {
 
         Button deleteBtn = (Button) convertView.findViewById(R.id.deleteButton);
 
+        // Nice citing sources!
         //http://stackoverflow.com/questions/4804798/doubletap-in-android
         convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new View.OnTouchListener() {
 
@@ -73,7 +71,7 @@ public class MyMovementAdapter extends MovementAdapter {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
                     if (currentUser!= null) {
-                        if (currentUser.getMovements().get(movement.getId()).get("status") != true) {
+                        if (!currentUser.getMovements().get(movement.getId()).get("status")) {
                             Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
                             firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
                             currentUser.updateMovements(movement.getId(), true);
@@ -92,31 +90,10 @@ public class MyMovementAdapter extends MovementAdapter {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//                Log.d("TEST", "Raw event: " + event.getAction() + ", (" + event.getRawX() + ", " + event.getRawY() + ")");
                 gestureDetector.onTouchEvent(event);
                 return true;
             }
         });
-
-//        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
-//
-//            public void onSwipeRight() {
-//                Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
-//                if (currentUser!= null) {
-//                    firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
-//                    currentUser.updateMovements(movement.getId(), true);
-//                    notifyDataSetChanged();
-////                    setViewtoCheckedStyle(convertView, checkBox);
-//                }
-//            }
-//            public void onSwipeLeft() {
-//                Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
-//                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
-//                currentUser.updateMovements(movement.getId(), false);
-//                notifyDataSetChanged();
-////                setViewtoUncheckedStyle(convertView, checkBox);
-//            }
-//        });
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
@@ -134,23 +111,6 @@ public class MyMovementAdapter extends MovementAdapter {
             public void onCancelled(DatabaseError databaseError) {}
         });
 
-
-        //final Movement finalMovement = movement;
-//        checkBox.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (currentUser!= null) {
-//                    firebaseHandler.setMovementofUserStatus(currentUser, movement, checkBox.isChecked());
-//                    currentUser.updateMovements(movement.getId(), checkBox.isChecked());
-//                    notifyDataSetChanged();
-//                    if (checkBox.isChecked()) {
-//                        setViewtoCheckedStyle(convertView, checkBox);
-//                    } else {
-//                        setViewtoUncheckedStyle(convertView, checkBox);
-//                    }
-//                }
-//            }
-//        });
 
         //final Movement finalMovement2 = movement;
         deleteBtn.setOnClickListener(new View.OnClickListener(){

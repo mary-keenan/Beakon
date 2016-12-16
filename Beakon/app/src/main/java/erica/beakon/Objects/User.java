@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class User {
     private String id;
     private String name;
-    private String email;
+    // Looks like you made an email field but never used it in anything
     private ArrayList<String> hashtagList;
     private HashMap<String, HashMap<String,Boolean>> movements;
 
@@ -58,14 +58,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public ArrayList<String> getHashtagList() {

@@ -54,7 +54,7 @@ public class UserPreferencesAdapter extends ArrayAdapter<String> {
             }
         });
 
-        View wrapper = view.findViewById(R.id.interest_wrapper);
+        // Not used
 
         userPreferenceString.setOnClickListener(new View.OnClickListener() {
             @Override
