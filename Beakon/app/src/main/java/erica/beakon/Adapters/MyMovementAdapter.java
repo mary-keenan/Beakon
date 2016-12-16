@@ -60,15 +60,20 @@ public class MyMovementAdapter extends MovementAdapter {
         convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
 
             public void onSwipeRight() {
-                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
-                firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
-
-
+                Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
+                if (currentUser!= null) {
+                    firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+                    currentUser.updateMovements(movement.getId(), true);
+                    notifyDataSetChanged();
+                    setViewtoCheckedStyle(convertView, checkBox);
+                }
             }
             public void onSwipeLeft() {
-                Toast.makeText(activity, "Done!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
                 firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
-
+                currentUser.updateMovements(movement.getId(), false);
+                notifyDataSetChanged();
+                setViewtoUncheckedStyle(convertView, checkBox);
             }
 
 
