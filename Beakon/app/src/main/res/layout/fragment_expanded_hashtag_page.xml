@@ -11,7 +11,7 @@
         android:layout_gravity="center_horizontal|top"
         android:weightSum="1">
 
-
+        <!-- Please use the strings.xml -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -16,6 +16,8 @@
         android:padding="10dp"
         android:layout_gravity="right|bottom" />
 
+    <!-- So there are a lot of things happening  here. Could you have used Relative Layout
+    and gotten rid of those embedded linear and relative layouts? -->
 
     <LinearLayout
         android:orientation="vertical"

@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/movement_margin">
 
+    <!-- Get rid of unused code -->
     <!--<LinearLayout-->
         <!--android:layout_width="0dp"-->
         <!--android:layout_weight="0.8"-->
