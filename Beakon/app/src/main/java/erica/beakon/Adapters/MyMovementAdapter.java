@@ -3,9 +3,12 @@ package erica.beakon.Adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import junit.framework.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,39 +49,74 @@ public class MyMovementAdapter extends MovementAdapter {
     String databaseURL = "https://beakon-5fa96.firebaseio.com/";
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference ref = db.getReferenceFromUrl(databaseURL);
-    FirebaseHandler firebaseHandler = new FirebaseHandler(db,ref);
+    FirebaseHandler firebaseHandler = new FirebaseHandler(db, ref);
     User currentUser;
+    private long thisTime = 0;
+    private long prevTime = 0;
+    private boolean firstTap = true;
+    protected static final long DOUBLE_CLICK_MAX_DELAY = 200L;
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, movements, R.layout.my_movement_item);
 
     }
 
-    protected void setUpView(final MainActivity activity, final Movement movement, final View convertView,final int position) {
+    protected void setUpView(final MainActivity activity, final Movement movement, final View convertView, final int position) {
         currentUser = activity.getCurrentUser();
 
         Button deleteBtn = (Button) convertView.findViewById(R.id.deleteButton);
-        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
 
-            public void onSwipeRight() {
-                Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
-                if (currentUser!= null) {
-                    firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
-                    currentUser.updateMovements(movement.getId(), true);
-                    notifyDataSetChanged();
-                    setViewtoCheckedStyle(convertView, checkBox);
+        //http://stackoverflow.com/questions/4804798/doubletap-in-android
+        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new View.OnTouchListener() {
+
+            private GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    if (currentUser!= null) {
+                        if (currentUser.getMovements().get(movement.getId()).get("status") != true) {
+                            Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
+                            firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+                            currentUser.updateMovements(movement.getId(), true);
+                            notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
+                            firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
+                            currentUser.updateMovements(movement.getId(), false);
+                            notifyDataSetChanged();
+                        }
+                    }
+                    return super.onDoubleTap(e);
                 }
-            }
-            public void onSwipeLeft() {
-                Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
-                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
-                currentUser.updateMovements(movement.getId(), false);
-                notifyDataSetChanged();
-                setViewtoUncheckedStyle(convertView, checkBox);
-            }
+                // implement here other callback methods like onFling, onScroll as necessary
+            });
 
-
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+//                Log.d("TEST", "Raw event: " + event.getAction() + ", (" + event.getRawX() + ", " + event.getRawY() + ")");
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
         });
+
+//        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
+//
+//            public void onSwipeRight() {
+//                Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
+//                if (currentUser!= null) {
+//                    firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+//                    currentUser.updateMovements(movement.getId(), true);
+//                    notifyDataSetChanged();
+////                    setViewtoCheckedStyle(convertView, checkBox);
+//                }
+//            }
+//            public void onSwipeLeft() {
+//                Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
+//                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
+//                currentUser.updateMovements(movement.getId(), false);
+//                notifyDataSetChanged();
+////                setViewtoUncheckedStyle(convertView, checkBox);
+//            }
+//        });
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
@@ -93,6 +133,7 @@ public class MyMovementAdapter extends MovementAdapter {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+
 
         //final Movement finalMovement = movement;
 //        checkBox.setOnClickListener(new View.OnClickListener() {
