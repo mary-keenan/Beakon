@@ -51,14 +51,12 @@ public abstract class MovementAdapter extends ArrayAdapter<Movement> {
         //final Button reject = (Button) convertView.findViewById(R.id.reject);
 
         ArrayList<String> hashtagList = movement.getHashtagList();
-        LinearLayout hashtagLayout = (LinearLayout) convertView.findViewById(R.id.hashtag_layout0);
+        LinearLayout hashtagLayout = (LinearLayout) convertView.findViewById(R.id.hashtag_layout);
         if (hashtagLayout.getChildCount() == 0) {
-            int rowWidth = ((MainActivity)getContext()).screenSize;
-            int totalWidth = 0;
             if (hashtagList != null) {
                 for (String hashtag: hashtagList) {
                     //add the hashtag to the view and update totalWidth with the new value
-                    totalWidth = addHashtagtoView(hashtag, convertView, hashtagLayout, totalWidth, rowWidth);
+                    addHashtagtoView(hashtag, hashtagLayout);
                 }
             }
         }
@@ -111,28 +109,8 @@ public abstract class MovementAdapter extends ArrayAdapter<Movement> {
         return  tv;
     }
 
-    private int getHashtagTextViewWidth(TextView tv) {
-        tv.measure(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        return tv.getMeasuredWidth();
-    }
-
-    public LinearLayout nextHashtagLayout(View view, LinearLayout currentLayout) {
-        if (currentLayout.getId() == R.id.hashtag_layout0) {
-            return (LinearLayout) view.findViewById(R.id.hashtag_layout1);
-        } else {
-            return(LinearLayout) view.findViewById(R.id.hashtag_layout2);
-        }
-    }
-
-    public int addHashtagtoView(String hashtag, View view, LinearLayout hashtagLayout, int totalWidth, int rowWidth) {
+    public void addHashtagtoView(String hashtag, LinearLayout hashtagLayout) {
         TextView tv = createHashtagTextView(hashtag);
-        int hashtagWidth = getHashtagTextViewWidth(tv);
-        if (totalWidth + hashtagWidth >= rowWidth) { //if adding new hashtag won't go over the limit
-            hashtagLayout = nextHashtagLayout(view, hashtagLayout); //make hashtagLayout the linearlayout below it
-            totalWidth = 0;
-        }
         hashtagLayout.addView(tv);
-        totalWidth += hashtagWidth;
-        return totalWidth;
     }
 }
