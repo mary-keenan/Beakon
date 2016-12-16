@@ -3,9 +3,12 @@ package erica.beakon.Adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -46,6 +49,10 @@ public class MyMovementAdapter extends MovementAdapter {
     private DatabaseReference ref = db.getReferenceFromUrl(databaseURL);
     FirebaseHandler firebaseHandler = new FirebaseHandler(db,ref);
     User currentUser;
+    private long thisTime = 0;
+    private long prevTime = 0;
+    private boolean firstTap = true;
+    protected static final long DOUBLE_CLICK_MAX_DELAY = 1000L;
 
     public MyMovementAdapter(Context context, ArrayList<Movement> movements) {
         super(context, movements, R.layout.my_movement_item);
@@ -56,27 +63,66 @@ public class MyMovementAdapter extends MovementAdapter {
         currentUser = activity.getCurrentUser();
 
         Button deleteBtn = (Button) convertView.findViewById(R.id.deleteButton);
-        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
 
-            public void onSwipeRight() {
-                Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
-                if (currentUser!= null) {
-                    firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
-                    currentUser.updateMovements(movement.getId(), true);
-                    notifyDataSetChanged();
-                    setViewtoCheckedStyle(convertView, checkBox);
+        //http://stackoverflow.com/questions/6716224/ontap-listener-implementation
+        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(firstTap){
+                    thisTime = SystemClock.uptimeMillis();
+                    firstTap = false;
                 }
-            }
-            public void onSwipeLeft() {
-                Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
-                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
-                currentUser.updateMovements(movement.getId(), false);
-                notifyDataSetChanged();
-                setViewtoUncheckedStyle(convertView, checkBox);
-            }
+                else
+                {
+                    prevTime = thisTime;
+                    thisTime = SystemClock.uptimeMillis();
 
+                    //Check that thisTime is greater than prevTime
+                    //just incase system clock reset to zero
+                    if(thisTime > prevTime){
 
+                        //Check if times are within our max delay
+                        if((thisTime - prevTime) <= DOUBLE_CLICK_MAX_DELAY){
+
+                            //We have detected a double tap!
+                            Toast.makeText(getContext(), "DOUBLE TAP DETECTED!!!", Toast.LENGTH_LONG).show();
+                            //PUT YOUR LOGIC HERE!!!!
+
+                        }
+                        else
+                        {
+                            //Otherwise Reset firstTap
+                            firstTap = true;
+                        }
+                    }
+                    else
+                    {
+                        firstTap = true;
+                    }
+                }
+                return false;
+            }
         });
+
+//        convertView.findViewById(R.id.card_view_layout).setOnTouchListener(new OnSwipeTouchListener(activity) {
+//
+//            public void onSwipeRight() {
+//                Toast.makeText(activity, "Completed!", Toast.LENGTH_SHORT).show();
+//                if (currentUser!= null) {
+//                    firebaseHandler.setMovementofUserStatus(currentUser, movement, true);
+//                    currentUser.updateMovements(movement.getId(), true);
+//                    notifyDataSetChanged();
+////                    setViewtoCheckedStyle(convertView, checkBox);
+//                }
+//            }
+//            public void onSwipeLeft() {
+//                Toast.makeText(activity, "Not completed.", Toast.LENGTH_SHORT).show();
+//                firebaseHandler.setMovementofUserStatus(currentUser, movement, false);
+//                currentUser.updateMovements(movement.getId(), false);
+//                notifyDataSetChanged();
+////                setViewtoUncheckedStyle(convertView, checkBox);
+//            }
+//        });
 
         firebaseHandler.getMovementofUserStatus(currentUser, movement, new ValueEventListener() {
             @Override
